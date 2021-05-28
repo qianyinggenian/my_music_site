@@ -38,29 +38,35 @@
       <i class="icon iconfont icon-yinle"></i>
       我的收藏
     </div>
-    <div class="">
-      <el-menu
-          default-active="2"
-          class="el-menu-vertical-demo"
-          @open="handleOpen"
-          @close="handleClose">
-        <el-submenu index="1">
-          <template slot="title">
-            <span>导航一</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item index="1-1">选项1</el-menu-item>
-            <el-menu-item index="1-2">选项2</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-      </el-menu>
+    <div class="songList">
+      <div class="left">
+        <el-collapse v-model="activeNames" @change="handleChange">
+          <el-collapse-item title="创建的歌单" name="1">
+            <div>音乐</div>
+            <div>收藏</div>
+          </el-collapse-item>
+        </el-collapse>
+      </div>
+      <div class="right">
+        <i class="el-icon-plus"></i>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    name: "index"
+    name: "index",
+    components: {
+    },
+    data () {
+      return {
+        activeNames: ''
+      };
+    },
+    methods: {
+      handleChange () {}
+    }
   }
 </script>
 
@@ -80,6 +86,32 @@
       padding: 10px;
       font-size: 14px;
       color: #999999;
+    }
+    .songList {
+      display: flex;
+      height: 20px;
+      padding: 10px;
+      font-size: 14px;
+      color: #999999;
+      .left {
+        width: calc(100% - 15px);
+        /deep/ .el-collapse {
+          border-top: none;
+          border-bottom: none !important;
+          width: 100px;
+          .el-collapse-item__header {
+            border: none;
+            height: 20px;
+            .el-icon-arrow-right:before {
+              content: "\e791" !important;
+            }
+          }
+        }
+      }
+      .right {
+        right: 0;
+        width: 15px;
+      }
     }
   }
 </style>
