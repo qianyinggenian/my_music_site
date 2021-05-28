@@ -92,7 +92,6 @@
       height: 20px;
       padding: 10px;
       font-size: 14px;
-      color: #999999;
       .left {
         width: calc(100% - 15px);
         /deep/ .el-collapse {
@@ -102,6 +101,7 @@
           .el-collapse-item__header {
             border: none;
             height: 20px;
+            color: #999999;
             .el-icon-arrow-right:before {
               content: "\e791" !important;
             }
