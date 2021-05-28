@@ -1,32 +1,62 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <el-container>
+      <el-header>
+        <music-header></music-header>
+      </el-header>
+      <el-container>
+        <el-aside width="200px">
+          <Aside></Aside>
+        </el-aside>
+        <el-container>
+          <el-main>Main
+          </el-main>
+        </el-container>
+      </el-container>
+      <el-footer>Footer</el-footer>
+    </el-container>
   </div>
 </template>
-
-<style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+<script>
+import musicHeader from './components/music-header';
+import Aside from './components/Aside';
+export default {
+  components: {
+    musicHeader,
+    Aside
+  },
+  data () {
+    return {};
   }
-}
+};
+</script>
+<style lang="less">
+  .el-header {
+    background-color: #ec4141;
+    color: #333;
+    line-height: 60px;
+  }
+  .el-footer {
+    background-color: #ffffff;
+    color: #333;
+    border-top: 1px solid #e1e1e1;
+    text-align: center;
+    line-height: 60px;
+  }
+
+  .el-aside {
+    background-color: #ffffff;
+    color: #333;
+    border-right: 1px solid #e1e1e1;
+    /*line-height: 100%;*/
+    height: calc(100vh - 140px);
+  }
+  .el-main {
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: center;
+    /*line-height: 160px;*/
+    height: calc(100vh - 140px);
+  }
+
 </style>
