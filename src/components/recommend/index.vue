@@ -4,6 +4,7 @@
       <carousel
         :type="carouselType"
         :carouselHeight="carouselHeight"
+        :imgList="banners"
       >
       </carousel>
     </div>
@@ -41,13 +42,26 @@
         carouselType: 'card',
         carouselHeight: '230px',
         list: [], // 推荐歌单
-        banner: [] // 轮播图信息
+        banners: [] // 轮播图信息
       };
     },
     created() {
       this.getList();
+      this.getBanner();
     },
     methods: {
+      /**
+       * @Description
+       * @author wangkangzhang
+       * @date 2021/5/31
+      */
+      async getBanner () {
+        const { data: data } = await this.$axios.get('/banner')
+        if (data.code === 200) {
+          this.banners = data.banners
+          console.log('this.banners', this.banners);
+        }
+      },
       /**
        * @Description 获取推荐歌单
        * @author wangkangzhang

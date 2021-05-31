@@ -1,21 +1,23 @@
 <template>
-  <el-carousel
-      :initial-index="initialIndex"
-      :interval="interval"
-      :trigger="trigger"
-      :height="carouselHeight"
-      :autoplay="autoplay"
-      :type="type"
-      :indicator-position="indicatorPosition"
-      :arrow="arrow"
-      :loop="loop"
-      :direction="direction"
-      @change="handleChangeFn"
-  >
-    <el-carousel-item v-for="(item,index) in imgList" :key="index">
-      <img :src=item.imgSrc alt="" height="100%" width="100%">
-    </el-carousel-item>
-  </el-carousel>
+  <div>
+    <el-carousel
+        :initial-index="initialIndex"
+        :interval="interval"
+        :trigger="trigger"
+        :height="carouselHeight"
+        :autoplay="autoplay"
+        :type="type"
+        :indicator-position="indicatorPosition"
+        :arrow="arrow"
+        :loop="loop"
+        :direction="direction"
+        @change="handleChangeFn"
+    >
+      <el-carousel-item v-for="(item,index) in imgList" :key="index">
+        <img :src=item.imageUrl alt="" height="100%" width="100%">
+      </el-carousel-item>
+    </el-carousel>
+  </div>
 </template>
 
 <script>
@@ -23,11 +25,6 @@ export default {
   name: "index",
   data () {
     return {
-      imgList: [
-        {
-          imgSrc: require('./img/1.jpg')
-        }
-      ]
     }
   },
   props: {
@@ -77,19 +74,15 @@ export default {
     direction: {
       type: String,
       default: 'horizontal'
+    },
+    imgList: {
+      type: Array
     }
   },
   created() {
-    this.addImgListFn();
   },
   methods: {
-    addImgListFn () {
-      for (let i = 1; i < 10; i++) {
-        this.imgList.push({
-          imgSrc: require(`./img/${i}.jpg`)
-        });
-      }
-    },
+
     handleChangeFn (val) {
       // console.log('val', val);
     }
