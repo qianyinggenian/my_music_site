@@ -42,8 +42,14 @@
       <div class="left">
         <el-collapse v-model="activeNames" @change="handleChange">
           <el-collapse-item title="创建的歌单" name="1">
-            <div>音乐</div>
-            <div>收藏</div>
+            <div class="Collection">
+              <div class="CollectionOne"><i class="icon iconfont icon-shoucang"></i>收藏</div>
+              <div class="CollectionTwo"><i class="icon iconfont icon-shoucang shoucang"></i></div>
+            </div>
+            <div v-for="(item,index) in songList" :key="index">
+              <i class="icon iconfont icon-yinle"></i>
+            </div>
+            <div><i class="icon iconfont icon-yinle"></i>音乐</div>
           </el-collapse-item>
         </el-collapse>
       </div>
@@ -61,7 +67,8 @@
     },
     data () {
       return {
-        activeNames: ''
+        activeNames: '',
+        songList: []
       };
     },
     methods: {
@@ -90,20 +97,45 @@
     .songList {
       display: flex;
       height: 20px;
-      padding: 10px;
+      padding: 10px 0;
       font-size: 14px;
       .left {
-        width: calc(100% - 15px);
+        width: calc(100vh - 15px);
+        display: flex;
         /deep/ .el-collapse {
           border-top: none;
           border-bottom: none !important;
-          width: 100px;
+          width: 170px;
           .el-collapse-item__header {
             border: none;
             height: 20px;
             color: #999999;
             .el-icon-arrow-right:before {
               content: "\e791" !important;
+            }
+            .el-collapse-item__arrow.is-active {
+              transform: rotate(90deg);
+              position: absolute;
+              left: 100px;
+            }
+            .el-icon-arrow-right {
+              position: absolute;
+              left: 100px;
+            }
+          }
+        }
+        .Collection {
+          display: flex;
+          .CollectionOne {
+            width: 150px;
+          }
+          .CollectionTwo {
+            width: 60px;
+            text-align: center;
+            border: 1px solid #999999;
+            border-radius: 13px;
+            i {
+              font-size: 18px;
             }
           }
         }

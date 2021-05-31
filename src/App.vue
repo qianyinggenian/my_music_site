@@ -9,7 +9,8 @@
           <Aside></Aside>
         </el-aside>
         <el-container>
-          <el-main>Main
+          <el-main>
+            <mainContent></mainContent>
           </el-main>
         </el-container>
       </el-container>
@@ -20,10 +21,12 @@
 <script>
 import musicHeader from './components/music-header';
 import Aside from './components/Aside';
+import mainContent from './components/mainContent';
 export default {
   components: {
     musicHeader,
-    Aside
+    Aside,
+    mainContent
   },
   data () {
     return {};
@@ -52,9 +55,9 @@ export default {
     height: calc(100vh - 140px);
   }
   .el-main {
-    background-color: #E9EEF3;
+    background-color: #ffffff;
     color: #333;
-    text-align: center;
+    padding: 10px !important;
     /*line-height: 160px;*/
     height: calc(100vh - 140px);
   }

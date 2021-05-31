@@ -25,7 +25,7 @@
       </div>
     </div>
     <!-- 搜索部分结束-->
-    <div class="empty"></div>
+<!--    <div class="empty"></div>-->
     <div class="setting">
       <div>
         <el-avatar class="user"> user </el-avatar>
@@ -81,7 +81,7 @@
       width: 200px;
     }
     .search {
-      width: 315px;
+      width: calc(100% - 600px);
       display: flex;
       .left, .right {
         margin-right: 15px;
@@ -109,9 +109,9 @@
         padding-left: 10px;
       }
     }
-    .empty {
-      width: calc(100% - 905px);
-    }
+    /*.empty {*/
+    /*  width: calc(100% - 905px);*/
+    /*}*/
     .setting {
       /*justify-content: flex-end;*/
       right: 0;

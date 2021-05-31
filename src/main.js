@@ -7,6 +7,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import validate from '@/utils/validate';
 import './assets/Icon/iconfont.css'
 import './common/stylesheet/index.less';
+import './axios/index'
 Vue.config.productionTip = false;
 Vue.prototype.$validate = validate;
 Vue.use(ElementUI);
