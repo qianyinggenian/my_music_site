@@ -11,7 +11,7 @@
     <div class="list">
       <div class="listOne" v-for="(item,index) in list" :key="index"  @click="toPlayListDetail(item.id)">
 <!--       <img class="listImg" :src="item.picUrl" alt="">-->
-        <div class="listImg" :style="{background: 'url(' + item.picUrl +')'}">
+        <div class="listImg" :style="{background: 'url(' + item.picUrl +')', backgroundSize:'contain'}">
           <div class="listTitle">{{item.copywriter}}</div>
           <div class="listPlay">
             <i class="el-icon-caret-right "></i>
