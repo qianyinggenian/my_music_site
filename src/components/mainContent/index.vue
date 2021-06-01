@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="个性推荐" name="first">
         <recommend></recommend>
@@ -52,5 +52,13 @@
 </script>
 
 <style lang="less" scoped>
-
+.content {
+  height: calc(100% - 120px);
+  /deep/ .el-tabs__content {
+    /*overflow: hidden;*/
+    position: relative;
+    height: 550px;
+    overflow: auto;
+  }
+}
 </style>
