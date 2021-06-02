@@ -8,6 +8,8 @@ import validate from '@/utils/validate';
 import './assets/Icon/iconfont.css'
 import './common/stylesheet/index.less';
 import './axios/index'
+import VueLazyLoad from 'vue-lazyload'
+Vue.use(VueLazyLoad)
 Vue.config.productionTip = false;
 Vue.prototype.$validate = validate;
 Vue.use(ElementUI);

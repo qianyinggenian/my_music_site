@@ -1,8 +1,8 @@
 <template>
   <div class="content">
-    <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tabs v-if="type === 'music'" v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="个性推荐" name="first">
-        <recommend></recommend>
+        <recommend  @recommend="musicFn"></recommend>
       </el-tab-pane>
       <el-tab-pane label="歌单" name="second">
         <songSheet></songSheet>
@@ -20,6 +20,17 @@
         <latestMusic></latestMusic>
       </el-tab-pane>
     </el-tabs>
+    <el-tabs v-if="type === 'video'" v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="视频" name="first">
+        <recommend></recommend>
+      </el-tab-pane>
+      <el-tab-pane label="MV" name="second">
+        <songSheet></songSheet>
+      </el-tab-pane>
+    </el-tabs>
+    <div v-if="type === 'friend'">
+      ftygsrg
+    </div>
   </div>
 </template>
 
@@ -40,13 +51,40 @@
       singer,
       songSheet
     },
+    props: {
+      type: {
+        type: String,
+        default: 'music'
+      },
+      activeType: {
+        type: String,
+        default: 'first'
+      }
+    },
     data () {
       return {
-        activeName: ''
+        activeName: 'first',
+        // type: ''
       };
     },
+    watch: {
+      type: {
+        handler (newVal) {
+          this.activeName = this.activeType;
+        }
+      },
+    },
+    mounted() {
+      // this.activeName = this.activeType;
+      // console.log('this.activeName', this.activeName);
+    },
     methods: {
-      handleClick () {}
+      handleClick(tab, event) {
+        console.log(tab, event);
+      },
+      musicFn (params) {
+        this.activeName = params.value;
+      }
     }
   }
 </script>

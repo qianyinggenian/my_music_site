@@ -9,7 +9,8 @@
       </carousel>
     </div>
     <!--    推荐歌单开始-->
-    <div>推荐歌单 <i class="el-icon-arrow-right"></i></div>
+    <div @click="songListFn">
+      <span class="title">推荐歌单 <i class="el-icon-arrow-right"></i></span></div>
     <div class="list">
       <div class="listOne" v-for="(item,index) in list" :key="index"  @click="playListDetail(item.id)">
 <!--       <img class="listImg" :src="item.picUrl" alt="">-->
@@ -25,7 +26,7 @@
     </div>
     <!--    推荐歌单结束-->
     <!--    独家放送开始-->
-    <div>独家放送 <i class="el-icon-arrow-right"></i></div>
+    <div><span class="title">独家放送 <i class="el-icon-arrow-right"></i></span></div>
     <div class="sole">
       <div class="soleList"  v-for="(item,index) in soleList" :key="index"  @click="soleListDetail(item.id)">
         <div class="soleListImg" :style="{background: 'url(' + item.sPicUrl +')', backgroundSize:'contain'}">
@@ -38,7 +39,7 @@
     </div>
     <!--    独家放送结束-->
     <!--    最新音乐开始-->
-    <div>最新音乐 <i class="el-icon-arrow-right"></i></div>
+    <div><span class="title">最新音乐 <i class="el-icon-arrow-right"></i></span></div>
     <div class="latestMusic">
       <div class="latestMusicList" v-for="(item,index) in newSongList" :key="index"  @click="musicPlayListDetail(item.id)">
         <div class="musicImg" :style="{background: 'url(' + item.picUrl +')', backgroundSize:'contain'}">
@@ -68,7 +69,7 @@
     </div>
     <!--    最新音乐结束-->
     <!--    推荐MV 开始-->
-    <div>推荐MV <i class="el-icon-arrow-right"></i></div>
+    <div><span class="title">推荐MV <i class="el-icon-arrow-right"></i></span></div>
     <div class="MV">
       <div class="MVList"  v-for="(item,index) in mvList" :key="index"  @click="MVPlayListDetail(item.id)">
         <div class="MVImg" :style="{background: 'url(' + item.picUrl +')', backgroundSize:'cover'}">
@@ -83,7 +84,7 @@
     </div>
     <!--    推荐MV 结束-->
     <!--    主播电台 开始-->
-    <div>主播电台 <i class="el-icon-arrow-right"></i></div>
+    <div><span class="title">主播电台 <i class="el-icon-arrow-right"></i></span></div>
     <div class="radio">
       <div class="radioList" v-for="(item,index) in radioList" :key="index"  @click="MVPlayListDetail(item.id)">
         <div class="bgImg" :style="{background: 'url(' + item.picUrl +')', backgroundSize:'cover'}">
@@ -118,14 +119,24 @@
       };
     },
     mounted() {
-      this.getList();
-      this.getBanner();
-      this.getSoleList();
-      this.getNewSongList();
-      this.getMvList();
-      this.getRadioList();
+      this.getListFn();
     },
     methods: {
+      getListFn () {
+        this.getList();
+        this.getBanner();
+        this.getSoleList();
+        this.getNewSongList();
+        this.getMvList();
+        this.getRadioList();
+      },
+      songListFn () {
+        const params = {
+          type: 'music',
+          value: 'second'
+        };
+        this.$emit('recommend',params);
+      },
       /**
        * @Description
        * @author wangkangzhang
@@ -235,6 +246,9 @@
 <style lang="less" scoped>
 .content {
   padding: 0 30px;
+  .title {
+    cursor:pointer
+  }
   .carousel {}
   .list {
     /*display: flex;*/
@@ -438,15 +452,16 @@
     }
   }
   .radio {
-    height: 200px;
+    height: 250px;
     /*display: flex;*/
     .radioList {
       /*display: flex;*/
-      width: 200px;
+      width: 180px;
       float: left;
+      padding: 10px 9px 10px 0;
       .bgImg {
-        height: 200px;
-        width: 200px;
+        height: 180px;
+        width: 180px;
       }
       .title {
         overflow:hidden;

@@ -6,11 +6,15 @@
       </el-header>
       <el-container>
         <el-aside width="200px">
-          <Aside></Aside>
+          <Aside @aside="asideFn"></Aside>
         </el-aside>
         <el-container>
           <el-main>
-            <mainContent></mainContent>
+            <mainContent
+                :type="type"
+                :activeType="activeType"
+            >
+            </mainContent>
           </el-main>
         </el-container>
       </el-container>
@@ -29,7 +33,19 @@ export default {
     mainContent
   },
   data () {
-    return {};
+    return {
+      type: 'music',
+      activeType: 'first'
+    };
+  },
+  methods: {
+    asideFn (item) {
+      console.log();
+      this.type = item.type;
+      this.activeType = item.value;
+      console.log('item',this.type);
+      console.log('val',this.activeType);
+    }
   }
 };
 </script>
@@ -58,7 +74,7 @@ export default {
     background-color: #ffffff;
     color: #333;
     padding: 10px !important;
-    /*line-height: 160px;*/
+    overflow: hidden !important;
     height: calc(100vh - 140px);
   }
 

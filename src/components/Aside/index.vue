@@ -1,12 +1,12 @@
 <template>
   <div class="content">
-    <div class="title">
+    <div class="title" @click="clickFn('music', 'first')">
       发现音乐
     </div>
-    <div class="title">
+    <div class="title" @click="clickFn('video', 'first')">
       视频
     </div>
-    <div class="title">
+    <div class="title" @click="clickFn('friend', 'first')">
       朋友
     </div>
     <div class="title">
@@ -68,11 +68,20 @@
     data () {
       return {
         activeNames: '',
-        songList: []
+        songList: [],
+        musicValue: ''
       };
     },
     methods: {
-      handleChange () {}
+      handleChange () {},
+      clickFn (item,val) {
+        this.musicValue = 'first';
+        const params = {
+          type: item,
+          value: val
+        };
+        this.$emit('aside',params);
+      }
     }
   }
 </script>
