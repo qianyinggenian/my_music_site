@@ -24,22 +24,64 @@
           <el-popover
               placement="bottom-start"
               :visible-arrow="false"
-              width="600"
+              width="750"
               trigger="click">
             <el-button size="small" slot="reference">{{barName}} <i class="el-icon-arrow-right"></i></el-button>
             <div class="leftContent">
               <div class="top">
-                全部歌单
+                <el-button class="btn" size="small" round>全部歌单</el-button>
               </div>
               <div class="bottom">
-                <div>
-                  <div></div>
+                <div class="bottomContent" style="margin-top: 20px">
+                 <div class="left">{{categories[0]}}
+                 </div>
+                 <div class="right">
+                  <span  v-for="(item,index) in languages" :key="index">{{item.name}}
+                    <i v-if="item.hot" class="icon iconfont icon-hot"></i>
+                  </span>
+                 </div>
+                </div>
+                <div class="bottomContent">
+                  <div class="left">{{categories[1]}}</div>
+                  <div class="right">
+                    <span v-for="(item,index) in styleList" :key="index">{{item.name}}
+                      <i v-if="item.hot" class="icon iconfont icon-hot"></i>
+                    </span>
+                  </div>
+                </div>
+                <div class="bottomContent">
+                  <div class="left">{{categories[2]}}</div>
+                  <div class="right">
+                    <span v-for="(item,index) in sceneList" :key="index">{{item.name}}
+                      <i v-if="item.hot" class="icon iconfont icon-hot"></i>
+                    </span>
+                  </div>
+                </div>
+                <div class="bottomContent">
+                  <div class="left">{{categories[3]}}</div>
+                  <div class="right">
+                    <span v-for="(item,index) in emotionList" :key="index">{{item.name}}
+                      <i v-if="item.hot" class="icon iconfont icon-hot"></i>
+                    </span>
+                  </div>
+               </div>
+                <div class="bottomContent">
+                  <div class="left">{{categories[4]}}</div>
+                  <div class="right" >
+                    <span v-for="(item,index) in themeList" :key="index">{{item.name}}
+                      <i v-if="item.hot" class="icon iconfont icon-hot"></i>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </el-popover>
         </div>
-        <div class="right">sdfger</div>
+        <div class="right">
+          <span v-for="(item,index) in hotList" :key="index">
+            {{item.name}}
+          </span>
+        </div>
       </div>
       <div class="tab-content"></div>
     </div>
@@ -53,7 +95,15 @@
       return {
         selected: '',
         topList: {},
-        barName: '全部歌单'
+        barName: '全部歌单',
+        categories: [], // 分类类型
+        catList: [], // 歌单分类
+        languages: [], // 语种
+        styleList: [], // 风格
+        sceneList: [], // 场景
+        emotionList: [], // 情感
+        themeList: [], // 主题
+        hotList: [], // 热门歌单分类
       };
     },
     watch: {
@@ -70,7 +120,8 @@
       this.getTopList(1, '全部');
       // 获取新的歌单列表
       this.getList(50, this.selected);
-      this.getFn();
+      this.getCatlistFn();
+      this.getHotlistFn();
     },
     methods: {
       // 获取顶部精品歌单
@@ -86,8 +137,36 @@
           this.topList = data.playlists[0]
         }
       },
-      async getFn () {
-        const { data: data } = await this.$axios.get('/playlist/highquality/tags');
+      /**
+       * @Description 获取歌单分类
+       * @author wangkangzhang
+       * @date 2021/6/2
+      */
+      async getCatlistFn () {
+        const { data } = await this.$axios.get('/playlist/catlist');
+        if (data.code === 200) {
+          this.catList = data.sub;
+          this.categories = data.categories;
+        }
+        for (const key of this.catList) {
+          if (key.category === 0) {
+            this.languages.push(key);
+          } else if (key.category === 1) {
+            this.styleList.push(key);
+          } else if (key.category === 2) {
+            this.sceneList.push(key);
+          } else if (key.category === 3) {
+            this.emotionList.push(key);
+          } else {
+            this.themeList.push(key);
+          }
+        }
+      },
+      async getHotlistFn () {
+        const {data} = await this.$axios.get('/playlist/hot');
+        if (data.code === 200) {
+          this.hotList = data.tags;
+        }
       },
       // 获取歌单列表
       async getList(limit, cat, offset = 0) {
@@ -178,26 +257,59 @@
         display: flex;
 
         .left {
-          width: 60%;
+          width: 55%;
           .el-button {
             border-radius: 20px;
           }
-          /deep/ .leftContent {
-            height: 500px;
-            .top {
-              height: 50px;
-              border-bottom: 1px solid red;
-              background-color: #84bb58;
-            }
-            .bottom {
-            }
-          }
         }
         .right {
-          width: 40%;
+          width: 45%;
+          span {
+            padding-left: 8px;
+            font-size: 14px;
+          }
         }
       }
       .tab-content {
+      }
+    }
+  }
+  .leftContent {
+    .top {
+      height: 30px;
+      line-height: 30px;
+      padding: 10px;
+      border-bottom: 1px solid #e5e5e5;
+     .btn {
+        background-color: #fdf5f5;
+        color: #ec4141;
+      }
+    }
+    .bottom {
+      /*display: flex;*/
+      .bottomContent {
+        display: flex;
+        /*height: 100px;*/
+        .left {
+          width: 15%;
+        }
+        .right {
+          width: 85%;
+          span {
+            /*display: flex;*/
+            float: left;
+            width: 100px;
+            height: 20px;
+            padding-bottom: 5px;
+            cursor:pointer;
+          }
+          i {
+            color: #ec4141;
+            position: relative;
+            font-size: 14px;
+            /*display: none;*/
+          }
+        }
       }
     }
   }

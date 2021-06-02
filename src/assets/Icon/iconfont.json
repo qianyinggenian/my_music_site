@@ -6,6 +6,55 @@
   "description": "仿网易云",
   "glyphs": [
     {
+      "icon_id": "695225",
+      "name": "主题",
+      "font_class": "zhuti",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "2127147",
+      "name": "微笑",
+      "font_class": "Smile",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "7219129",
+      "name": "茶杯",
+      "font_class": "chabei",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "8288831",
+      "name": "地球",
+      "font_class": "diqiu",
+      "unicode": "e844",
+      "unicode_decimal": 59460
+    },
+    {
+      "icon_id": "17839648",
+      "name": "风格",
+      "font_class": "tubiaozhizuosvg-29",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "8361846",
+      "name": "云",
+      "font_class": "yun",
+      "unicode": "e6cf",
+      "unicode_decimal": 59087
+    },
+    {
+      "icon_id": "11903701",
+      "name": "hot",
+      "font_class": "hot",
+      "unicode": "e65a",
+      "unicode_decimal": 58970
+    },
+    {
       "icon_id": "4933457",
       "name": "最小化",
       "font_class": "zuixiaohua",
