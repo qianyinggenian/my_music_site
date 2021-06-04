@@ -10,7 +10,12 @@
         </el-carousel-item>
       </el-carousel>
     </div>
-    <div class="middle"></div>
+    <div class="middle">
+      <div class="middleContent" v-for="(item,index) in cateList" :key="index">
+<!--        <div></div>-->
+       <span> {{item.name}}</span>
+      </div>
+    </div>
     <div class="bottom">
       <!--电台个性化推荐开始-->
       <div class="title">
@@ -115,6 +120,8 @@
     },
     data () {
       return {
+        height: '150px',
+        position: 'outside',
         carouselType: 'card',
         carouselHeight: '230px',
         banners: [], // 轮播图信息，
@@ -123,7 +130,8 @@
         theatreList: [], // 声之剧场
         storyList: [], // 音乐故事
         emotionList: [], // 情感调频
-        voiceLoverList: [] // 声音恋人
+        voiceLoverList: [], // 声音恋人
+        cateList: [] // 电台分类
       };
     },
     mounted() {
@@ -150,99 +158,102 @@
        * @date 2021/6/3
       */
       async hotFn () {
-        const { data: data } = await this.$axios.get('/dj/catelist');
+        const { data } = await this.$axios.get('/dj/catelist');
+        if (data.code === 200) {
+          this.cateList = data.categories;
+        }
       },
-        async getInfo () {
-          this.getPersonalizeRecommendFn();
-          this.getCreativeCoverListFn();
-          this.getTheatreListFn();
-          this.getStoryListFn();
-          this.getEmotionListFn();
-          this.getVoiceLoverListFn();
-        },
-        // 电台个性化推荐
-        async getPersonalizeRecommendFn () {
-          const { data } = await this.$axios.get('/dj/personalize/recommend');
-          if (data.code === 200) {
-              this.personalizeList = data.data;
-          }
-        },
-        // 创作翻唱
-        async getCreativeCoverListFn () {
-            const { data } = await this.$axios.get('/dj/radio/hot', {
-              params: {
-                // 获取的数据量
-                limit: 2,
-                offset: 0,
-                cateId: 2001
-              },
-            });
-            if (data.code === 200) {
-                this.creativeCoverList = data.djRadios;
-            }
-        },
-        // 情感调频
-        async getEmotionListFn () {
-          const { data } = await this.$axios.get('/dj/radio/hot?cateId=3');
-          if (data.code === 200) {
-              // this.emotionList = data.djRadios;
-            for (const key of data.djRadios) {
-              this.emotionList.push(key);
-              if (this.emotionList.length >= 6) {
-                break;
-              }
-            }
-          }
-        },
-        // 声音恋人
-        async getVoiceLoverListFn () {
-            const { data } = await this.$axios.get('/dj/radio/hot?cateId=3001');
-            if (data.code === 200) {
-                // this.voiceLoverList = data.djRadios;
-              for (const key of data.djRadios) {
-                this.voiceLoverList.push(key);
-                if (this.voiceLoverList.length >= 6) {
-                  break;
-                }
-              }
-            }
-        },
-        // 声之剧场
-        async getTheatreListFn () {
+      async getInfo () {
+        this.getPersonalizeRecommendFn();
+        this.getCreativeCoverListFn();
+        this.getTheatreListFn();
+        this.getStoryListFn();
+        this.getEmotionListFn();
+        this.getVoiceLoverListFn();
+      },
+      // 电台个性化推荐
+      async getPersonalizeRecommendFn () {
+        const { data } = await this.$axios.get('/dj/personalize/recommend');
+        if (data.code === 200) {
+            this.personalizeList = data.data;
+        }
+      },
+      // 创作翻唱
+      async getCreativeCoverListFn () {
           const { data } = await this.$axios.get('/dj/radio/hot', {
             params: {
               // 获取的数据量
-              limit: 30,
+              limit: 2,
               offset: 0,
-              cateId: 10001
+              cateId: 2001
             },
-        });
+          });
           if (data.code === 200) {
-            // this.theatreList = data.djRadios;
+              this.creativeCoverList = data.djRadios;
+          }
+      },
+      // 情感调频
+      async getEmotionListFn () {
+        const { data } = await this.$axios.get('/dj/radio/hot?cateId=3');
+        if (data.code === 200) {
+            // this.emotionList = data.djRadios;
+          for (const key of data.djRadios) {
+            this.emotionList.push(key);
+            if (this.emotionList.length >= 6) {
+              break;
+            }
+          }
+        }
+      },
+      // 声音恋人
+      async getVoiceLoverListFn () {
+          const { data } = await this.$axios.get('/dj/radio/hot?cateId=3001');
+          if (data.code === 200) {
+              // this.voiceLoverList = data.djRadios;
             for (const key of data.djRadios) {
-              this.theatreList.push(key);
-              if (this.theatreList.length >= 6) {
+              this.voiceLoverList.push(key);
+              if (this.voiceLoverList.length >= 6) {
                 break;
               }
             }
           }
-        },
-        // 音乐故事
-        async getStoryListFn () {
-          const { data } = await this.$axios.get('/dj/radio/hot?cateId=2');
-            // if (data.code === 200) {
-            //     this.storyList = data.djRadios;
-            // }
-          if (data.code === 200) {
-            // this.theatreList = data.djRadios;
-            for (const key of data.djRadios) {
-              this.storyList.push(key);
-              if (this.storyList.length >= 6) {
-                break;
-              }
+      },
+      // 声之剧场
+      async getTheatreListFn () {
+        const { data } = await this.$axios.get('/dj/radio/hot', {
+          params: {
+            // 获取的数据量
+            limit: 30,
+            offset: 0,
+            cateId: 10001
+          },
+      });
+        if (data.code === 200) {
+          // this.theatreList = data.djRadios;
+          for (const key of data.djRadios) {
+            this.theatreList.push(key);
+            if (this.theatreList.length >= 6) {
+              break;
             }
           }
-        },
+        }
+      },
+      // 音乐故事
+      async getStoryListFn () {
+        const { data } = await this.$axios.get('/dj/radio/hot?cateId=2');
+          // if (data.code === 200) {
+          //     this.storyList = data.djRadios;
+          // }
+        if (data.code === 200) {
+          // this.theatreList = data.djRadios;
+          for (const key of data.djRadios) {
+            this.storyList.push(key);
+            if (this.storyList.length >= 6) {
+              break;
+            }
+          }
+        }
+      },
     }
   }
 </script>
@@ -274,9 +285,19 @@
   }
   .middle {
     margin: 0 60px;
-    /*width: 100%;*/
-    height: 150px;
-    background-color: #ec4141;
+    display: flex;
+    .middleContent {
+      width: 100px;
+      height: 30px;
+      line-height: 30px;
+      background-color: #ec4141;
+      border-radius: 15px;
+      /*opacity: 0.5;*/
+      margin: 10px;
+      color: white;
+      font-size: 14px;
+      text-align: center;
+    }
   }
   .bottom {
     margin: 0 50px;
