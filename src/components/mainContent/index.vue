@@ -2,22 +2,22 @@
   <div class="content">
     <el-tabs v-if="type === 'music'" v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="个性推荐" name="first">
-        <recommend  @recommend="musicFn"></recommend>
+        <recommend ref="recommend" @recommend="musicFn"></recommend>
       </el-tab-pane>
       <el-tab-pane label="歌单" name="second">
-        <songSheet></songSheet>
+        <songSheet ref="song"></songSheet>
       </el-tab-pane>
       <el-tab-pane label="主播电台" name="third">
-        <radioStation></radioStation>
+        <radioStation ref="radio"></radioStation>
       </el-tab-pane>
       <el-tab-pane label="排行榜" name="fourth">
-        <rankingList></rankingList>
+        <rankingList ref="ranking"></rankingList>
       </el-tab-pane>
       <el-tab-pane label="歌手" name="five">
-        <singer></singer>
+        <singer ref="singer"></singer>
       </el-tab-pane>
       <el-tab-pane label="最新音乐" name="six">
-        <latestMusic></latestMusic>
+        <latestMusic ref="music"></latestMusic>
       </el-tab-pane>
     </el-tabs>
     <el-tabs v-if="type === 'video'" v-model="activeName" @tab-click="handleClick">
@@ -80,7 +80,7 @@
     },
     methods: {
       handleClick(tab, event) {
-        console.log(tab, event);
+
       },
       musicFn (params) {
         this.activeName = params.value;

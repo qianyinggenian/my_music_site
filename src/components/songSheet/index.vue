@@ -275,7 +275,14 @@
       handleSizeChange (val) {
         console.log('val', val);
       },
-      listDetail () {}
+      async listDetail (id) {
+        const { data } = await this.$axios.get('/playlist/detail', {
+          params: {
+            // 获取的数据量
+            id: id,
+          },
+        });
+      }
     }
   }
 </script>

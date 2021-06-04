@@ -220,7 +220,15 @@
        * @author wangkangzhang
        * @date 2021/5/31
       */
-      playListDetail (id) {},
+      async playListDetail (id) {
+        const { data } = await this.$axios.get('/playlist/detail', {
+          params: {
+            // 获取的数据量
+            id: id,
+            limit: 50
+          },
+        });
+      },
       /**
        * @Description 独家放送详细信息
        * @author wangkangzhang

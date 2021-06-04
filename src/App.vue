@@ -11,8 +11,8 @@
         <el-container>
           <el-main>
             <mainContent
-                :type="type"
-                :activeType="activeType"
+              :type="type"
+              :activeType="activeType"
             >
             </mainContent>
           </el-main>
