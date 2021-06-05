@@ -115,7 +115,8 @@
         soleList: [], // 独家放送信息
         newSongList: [], // 最新音乐
         mvList: [], // MV 信息
-        radioList: [] // 主播电台信息
+        radioList: [], // 主播电台信息
+        playList: [] // 歌单详情
       };
     },
     mounted() {
@@ -221,13 +222,17 @@
        * @date 2021/5/31
       */
       async playListDetail (id) {
-        const { data } = await this.$axios.get('/playlist/detail', {
-          params: {
-            // 获取的数据量
-            id: id,
-            limit: 50
-          },
-        });
+        this.$emit('playList', {id, isShowPlayListDetail: true});
+        // const { data } = await this.$axios.get('/playlist/detail', {
+        //   params: {
+        //     // 获取的数据量
+        //     id: id,
+        //     limit: 50
+        //   },
+        // });
+        // if (data.code === 200) {
+        //   let list = data.playlist;
+        // }
       },
       /**
        * @Description 独家放送详细信息

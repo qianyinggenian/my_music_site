@@ -1,8 +1,9 @@
 <template>
   <div class="content">
-    <el-tabs v-if="type === 'music'" v-model="activeName" @tab-click="handleClick">
+    <div v-if="!isShowPlayListDetail">
+      <el-tabs v-if="type === 'music'" v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="个性推荐" name="first">
-        <recommend ref="recommend" @recommend="musicFn"></recommend>
+        <recommend ref="recommend" @recommend="musicFn" @playList="playListFn"></recommend>
       </el-tab-pane>
       <el-tab-pane label="歌单" name="second">
         <songSheet ref="song"></songSheet>
@@ -20,17 +21,18 @@
         <latestMusic ref="music"></latestMusic>
       </el-tab-pane>
     </el-tabs>
-    <el-tabs v-if="type === 'video'" v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="视频" name="first">
-        <recommend></recommend>
-      </el-tab-pane>
-      <el-tab-pane label="MV" name="second">
-        <songSheet></songSheet>
-      </el-tab-pane>
-    </el-tabs>
-    <div v-if="type === 'friend'">
-      ftygsrg
+      <el-tabs v-if="type === 'video'" v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="视频" name="first">
+          <recommend></recommend>
+        </el-tab-pane>
+        <el-tab-pane label="MV" name="second">
+          <songSheet></songSheet>
+        </el-tab-pane>
+      </el-tabs>
+      <div v-if="type === 'friend'">
+      </div>
     </div>
+    <playListDetail v-if="isShowPlayListDetail" ref="playListDetail"></playListDetail>
   </div>
 </template>
 
@@ -41,6 +43,7 @@
   import latestMusic from '../latestMusic';
   import singer from '../singer';
   import songSheet from '../songSheet';
+  import playListDetail from '../playListDetail';
   export default {
     name: "index",
     components: {
@@ -49,7 +52,8 @@
       radioStation,
       latestMusic,
       singer,
-      songSheet
+      songSheet,
+      playListDetail
     },
     props: {
       type: {
@@ -64,6 +68,8 @@
     data () {
       return {
         activeName: 'first',
+        isShowPlayListDetail: false,
+        playListDetailId: ''
         // type: ''
       };
     },
@@ -84,6 +90,14 @@
       },
       musicFn (params) {
         this.activeName = params.value;
+      },
+      playListFn (params) {
+        console.log('params', params);
+        this.playListDetailId = params.id;
+        this.isShowPlayListDetail = params.isShowPlayListDetail;
+        this.$nextTick(() => {
+          this.$refs.playListDetail.getPlayListDetailFn(this.playListDetailId);
+        });
       }
     }
   }
