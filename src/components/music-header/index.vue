@@ -9,7 +9,7 @@
     <!-- 搜索部分开始-->
     <div class="search">
       <div class="btn">
-        <span class="el-icon-arrow-left left"></span>
+        <span class="el-icon-arrow-left left" @click="prev"></span>
         <span class="el-icon-arrow-right right"></span>
       </div>
       <div class="search-box">
@@ -67,6 +67,12 @@
       return {
         searchValue: ''
       };
+    },
+    methods: {
+      prev () {
+        this.$router.go(-1);
+        console.log(11111);
+      }
     }
   }
 </script>

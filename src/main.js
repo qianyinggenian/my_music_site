@@ -9,7 +9,13 @@ import './assets/Icon/iconfont.css'
 import './common/stylesheet/index.less';
 import './axios/index'
 import VueLazyLoad from 'vue-lazyload'
-Vue.use(VueLazyLoad)
+Vue.use(VueLazyLoad, {
+  preLoad: 1.3,
+  error: import('./assets/images/error.svg'), //加载失败显示的图片
+  loading: require('./assets/images/loadding.svg'), // 加载中显示的图片
+  attempt: 3,
+  // listenEvents: [ 'scroll' ]
+})
 Vue.config.productionTip = false;
 Vue.prototype.$validate = validate;
 Vue.use(ElementUI);

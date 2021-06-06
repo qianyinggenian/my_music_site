@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div v-if="!isShowPlayListDetail">
+    <div v-if="flag">
       <el-tabs v-if="type === 'music'" v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="个性推荐" name="first">
         <recommend ref="recommend" @recommend="musicFn" @playList="playListFn"></recommend>
@@ -32,7 +32,7 @@
       <div v-if="type === 'friend'">
       </div>
     </div>
-    <playListDetail v-if="isShowPlayListDetail" ref="playListDetail"></playListDetail>
+    <playListDetail class="playListDetail" v-if="!flag" ref="playListDetail"></playListDetail>
   </div>
 </template>
 
@@ -63,13 +63,17 @@
       activeType: {
         type: String,
         default: 'first'
-      }
+      },
+      // flag: {
+      //   type: Boolean
+      // }
     },
     data () {
       return {
         activeName: 'first',
         isShowPlayListDetail: false,
-        playListDetailId: ''
+        playListDetailId: '',
+        flag: true
         // type: ''
       };
     },
@@ -80,11 +84,14 @@
         }
       },
     },
-    mounted() {
-      // this.activeName = this.activeType;
-      // console.log('this.activeName', this.activeName);
+    mounted () {
+
     },
     methods: {
+
+      getFlag (params) {
+        this.flag = params.flag;
+      },
       handleClick(tab, event) {
 
       },
@@ -92,9 +99,9 @@
         this.activeName = params.value;
       },
       playListFn (params) {
-        console.log('params', params);
         this.playListDetailId = params.id;
-        this.isShowPlayListDetail = params.isShowPlayListDetail;
+        // this.isShowPlayListDetail = params.isShowPlayListDetail;
+        this.flag = !params.isShowPlayListDetail;
         this.$nextTick(() => {
           this.$refs.playListDetail.getPlayListDetailFn(this.playListDetailId);
         });
@@ -111,6 +118,11 @@
     position: relative;
     height: 550px;
     overflow: auto;
+  }
+  .playListDetail {
+    /*margin: 10px;*/
+    overflow: auto;
+    height: calc(100vh - 160px);
   }
 }
 </style>

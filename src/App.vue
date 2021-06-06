@@ -13,6 +13,8 @@
             <mainContent
               :type="type"
               :activeType="activeType"
+              :flag="flag"
+              ref="mainContent"
             >
             </mainContent>
           </el-main>
@@ -35,16 +37,22 @@ export default {
   data () {
     return {
       type: 'music',
-      activeType: 'first'
+      activeType: 'first',
+      flag: true
     };
   },
   methods: {
     asideFn (item) {
-      console.log();
       this.type = item.type;
       this.activeType = item.value;
-      console.log('item',this.type);
-      console.log('val',this.activeType);
+      const params = {
+        flag: this.flag,
+        type: this.type,
+        activeType: this.activeType
+      };
+      this.$nextTick(() => {
+        this.$refs.mainContent.getFlag(params);
+      });
     }
   }
 };

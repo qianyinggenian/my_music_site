@@ -81,6 +81,7 @@
           value: val
         };
         this.$emit('aside',params);
+        sessionStorage.setItem('flag', true);
       }
     }
   }

@@ -223,16 +223,7 @@
       */
       async playListDetail (id) {
         this.$emit('playList', {id, isShowPlayListDetail: true});
-        // const { data } = await this.$axios.get('/playlist/detail', {
-        //   params: {
-        //     // 获取的数据量
-        //     id: id,
-        //     limit: 50
-        //   },
-        // });
-        // if (data.code === 200) {
-        //   let list = data.playlist;
-        // }
+        // this.$router.push(`/playListDetail?id=${id}`);
       },
       /**
        * @Description 独家放送详细信息

@@ -3,7 +3,7 @@ export default {
     return {
       listColumnInfo: [
         { prop: 'name', label:'音乐标题'},
-        { prop: 'singer', label:'歌手'},
+        { prop: 'singer', label:'歌手',slot: 'singer'},
         { prop: 'album', label:'专辑'},
         { prop: 'duration', label:'时长'}
       ],
