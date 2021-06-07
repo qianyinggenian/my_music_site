@@ -1,26 +1,26 @@
 <template>
-  <div class="content">
-    <div v-if="flag">
-      <el-tabs v-if="type === 'music'" v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="个性推荐" name="first">
-        <recommend ref="recommend" @recommend="musicFn" @playList="playListFn"></recommend>
-      </el-tab-pane>
-      <el-tab-pane label="歌单" name="second">
-        <songSheet ref="song"></songSheet>
-      </el-tab-pane>
-      <el-tab-pane label="主播电台" name="third">
-        <radioStation ref="radio"></radioStation>
-      </el-tab-pane>
-      <el-tab-pane label="排行榜" name="fourth">
-        <rankingList ref="ranking"></rankingList>
-      </el-tab-pane>
-      <el-tab-pane label="歌手" name="five">
-        <singer ref="singer"></singer>
-      </el-tab-pane>
-      <el-tab-pane label="最新音乐" name="six">
-        <latestMusic ref="music"></latestMusic>
-      </el-tab-pane>
-    </el-tabs>
+  <div class="container">
+    <div class="content" v-if="flag">
+      <el-tabs class="tabs" v-if="type === 'music'" v-model="activeName" @tab-click="handleClick">
+          <el-tab-pane label="个性推荐" name="first">
+            <recommend ref="recommend" @recommend="musicFn" @playList="playListFn"></recommend>
+          </el-tab-pane>
+          <el-tab-pane label="歌单" name="second">
+            <songSheet ref="song"></songSheet>
+          </el-tab-pane>
+          <el-tab-pane label="主播电台" name="third">
+            <radioStation ref="radio"></radioStation>
+          </el-tab-pane>
+          <el-tab-pane label="排行榜" name="fourth">
+            <rankingList ref="ranking"></rankingList>
+          </el-tab-pane>
+          <el-tab-pane label="歌手" name="five">
+            <singer ref="singer"></singer>
+          </el-tab-pane>
+          <el-tab-pane label="最新音乐" name="six">
+            <latestMusic ref="music"></latestMusic>
+          </el-tab-pane>
+      </el-tabs>
       <el-tabs v-if="type === 'video'" v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="视频" name="first">
           <recommend></recommend>
@@ -111,18 +111,20 @@
 </script>
 
 <style lang="less" scoped>
-.content {
-  height: calc(100% - 120px);
-  /deep/ .el-tabs__content {
+.container {
+  .content {
+    height: calc(100% - 120px);
+    /deep/ .el-tabs__content {
     /*overflow: hidden;*/
     position: relative;
     height: 550px;
     overflow: auto;
+    }
   }
-  .playListDetail {
-    /*margin: 10px;*/
-    overflow: auto;
-    height: calc(100vh - 160px);
-  }
+    .playListDetail {
+      margin: 10px;
+      overflow: auto;
+      height: calc(100vh - 160px);
+    }
 }
 </style>

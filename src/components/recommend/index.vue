@@ -155,7 +155,7 @@
        * @author wangkangzhang
        * @date 2021/5/31
       */
-      async getList() {
+      async getList () {
         const { data } = await this.$axios.get('/personalized', {
           params: {
             // 获取的数据量
@@ -165,6 +165,15 @@
         if (data.code === 200) {
           this.list = data.result;
         }
+      },
+      // 获取每日推荐歌单
+      async getRecommendResource () {
+        const { data } = await this.$axios.get('/recommend/resource');
+      },
+
+      // 获取每日推荐歌曲
+      async getRecommendSongs () {
+        const { data } = await this.$axios.get('/recommend/songs');
       },
       /**
        * @Description 获取独家放送歌单

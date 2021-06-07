@@ -53,6 +53,7 @@
         <el-table-column
             prop="singer"
             label="歌手"
+            width="200px"
             sortable>
           <template slot-scope="scope">
             <span v-for="(item, index) in scope.row.ar" :key="index">{{item.name}}</span>
@@ -68,10 +69,8 @@
             prop="duration"
             label="时长"
             sortable
+            width="80"
         >
-          <!--        <template slot-scope="scope">-->
-          <!--          <span>formatDuration(scope.row.dt)</span>-->
-          <!--        </template>-->
         </el-table-column>
       </el-table>
     </div>

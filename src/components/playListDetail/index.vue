@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container">
-      <div class="top">
+      <div class="top" v-loading="topLoading">
         <div class="left">
           <img :src="playlist.coverImgUrl" alt="" />
         </div>
@@ -12,13 +12,13 @@
           </div>
           <div class="user">
             <div>
-              <!--            <el-avatar size="small" :src="playlist.creator.avatarUrl"></el-avatar>-->
-              <div class="avatar" :style="{background: 'url(' + playlist.creator.avatarUrl +')', backgroundSize:'contain'}">
-                <img :src="playlist.creator.avatarDetail.identityIconUrl" alt="">
+<!--                 <el-avatar v-if="avatarUrl.length > 0" size="small" :src="avatarUrl"></el-avatar>-->
+              <div class="avatar" v-if="avatarUrl.length > 0" :style="{background: 'url(' + playlist.creator.avatarUrl +')', backgroundSize:'contain'}">
+                <img v-if="identityIconUrl.length > 0 " :src="identityIconUrl" alt="">
               </div>
             </div>
             <div>
-              <span class="username">{{playlist.creator.nickname}}</span>
+              <span class="username" v-if="nickname.length">{{nickname}}</span>
               <span class="createTime">{{createTime}}创建</span>
             </div>
 
@@ -67,18 +67,18 @@
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="歌曲列表" name="first">
             <el-table
-                :data="tableData"
-                style="width: 100%"
-                :row-class-name="tableRowClassName"
+              :data="tableData"
+              style="width: 100%"
+              :row-class-name="tableRowClassName"
             >
               <el-table-column
-                  type="index"
-                  width="40">
+                type="index"
+                width="40">
               </el-table-column>
               <el-table-column
-                  prop="icon"
-                  label=""
-                  width="80"
+                prop="icon"
+                label=""
+                width="80"
               >
                 <template slot-scope="scope">
                   <i class="icon iconfont icon-shoucang Icon"></i>
@@ -86,36 +86,49 @@
                 </template>
               </el-table-column>
               <el-table-column
-                  prop="name"
-                  label="音乐标题"
-                  sortable>
+                prop="name"
+                label="音乐标题"
+                show-overflow-tooltip
+                sortable>
               </el-table-column>
               <el-table-column
-                  prop="singer"
-                  label="歌手"
-                  width="200px"
-                  sortable>
+                prop="singer"
+                label="歌手"
+                width="200px"
+                show-overflow-tooltip
+                sortable>
                 <template slot-scope="scope">
                   <span v-for="(item, index) in scope.row.ar" :key="index">{{item.name}}</span>
                 </template>
               </el-table-column>
               <el-table-column
-                  prop="album"
-                  label="专辑"
-                  sortable
+                prop="album"
+                label="专辑"
+                sortable
+                show-overflow-tooltip
               >
               </el-table-column>
               <el-table-column
-                  prop="duration"
-                  label="时长"
-                  sortable
-                  width="80"
+                prop="duration"
+                label="时长"
+                sortable
+                width="80"
               >
               </el-table-column>
             </el-table>
           </el-tab-pane>
-          <el-tab-pane label="评论" name="second">评论</el-tab-pane>
-          <el-tab-pane label="收藏者" name="third">收藏者</el-tab-pane>
+          <el-tab-pane :label="`评论(${commentTotal})`" name="second">
+            <commentPlaylist
+                v-loading="loading"
+                :comments="comments"
+                :hotComments="hotComments"
+                :commentTotal="commentTotal"
+            >
+            </commentPlaylist>
+          </el-tab-pane>
+          <el-tab-pane label="收藏者" name="third">
+            <subscribers :list="list"></subscribers>
+          </el-tab-pane>
         </el-tabs>
       </div>
     </div>
@@ -124,6 +137,8 @@
 
 <script>
   import tableMix from './tableMix';
+  import subscribers from '../subscribers';
+  import commentPlaylist from '../commentPlaylist';
   // import commonTable from '../commonTable';
   // import Table from '../table';
   export default {
@@ -131,6 +146,8 @@
     components: {
       // commonTable,
       // Table
+      subscribers,
+      commentPlaylist
     },
     mixins: [
       tableMix
@@ -141,7 +158,17 @@
         tableData: [],
         singers: [], // 歌手
         playlist: {},
-        createTime: ''// 创建时间
+        createTime: '',// 创建时间
+        playListDetailId: '',
+        list: [],
+        avatarUrl: '',
+        nickname: '',
+        identityIconUrl: '',
+        comments: [], // 最新评论
+        hotComments: [], // 精彩评论
+        commentTotal: 0, // 评论总条数
+        topLoading: true,
+        loading: true
       };
     },
     methods: {
@@ -155,6 +182,7 @@
       },
       // 获取歌单详情
       async getPlayListDetailFn(id) {
+        this.playListDetailId = id;
         const { data } = await this.$axios.get('/playlist/detail', {
           params: {
             // 获取的数据量
@@ -163,10 +191,12 @@
         });
         if (data.code === 200) {
           this.playlist = data.playlist;
-          this.tableData = data.playlist.tracks;
-          // this.createTime = data.playlist.createTime;
+          this.tableData = data.playlist.tracks; // 歌单列表
+          this.avatarUrl = this.playlist.creator.avatarUrl; // 创建者头像
+          this.nickname = this.playlist.creator.nickname; // 创建者
+          // 创建者身份标识
+          this.identityIconUrl = this.playlist.creator.avatarDetail ? this.playlist.creator.avatarDetail.identityIconUrl : '';
           let date = new Date(data.playlist.createTime);
-          console.log('date', date);
           let year = date.getFullYear();
           let month = date.getMonth() + 1;
           let day = date.getDate();
@@ -184,6 +214,11 @@
             }
             key.duration = this.formatDuration(key.dt);// 时长
           }
+          this.topLoading = false;
+          this.$nextTick(() => {
+            this.getPlaylistSubscribersFn();
+            this.getCommentPlaylistFn();
+          });
         }
       },
       // 歌曲时长转换
@@ -197,6 +232,52 @@
         let second = Math.floor(duration /1000 % 60).toString().padStart(2, '0');
         return minute + ':' + second
       },
+      // 歌单收藏者
+      async getPlaylistSubscribersFn () {
+        const { data } = await this.$axios.get('/playlist/subscribers', {
+          params: {
+            id: this.playListDetailId,
+            limit: 100
+          }
+        });
+        if (data.code === 200 ) {
+          this.list = data.subscribers;
+        }
+      },
+      // 歌单评论
+      async getCommentPlaylistFn () {
+        const { data } = await this.$axios.get('/comment/playlist', {
+          params: {
+            id: this.playListDetailId,
+            limit: 100
+          }
+        });
+        if (data.code === 200) {
+          this.comments = data.comments;
+          this.hotComments = data.hotComments;
+          this.commentTotal = data.total;
+        }
+        for (const key of this.comments) {
+          key.date = this.changeFormatTimeFn(key.time);
+        }
+        for (const key of this.hotComments) {
+          key.date = this.changeFormatTimeFn(key.time);
+        }
+        this.loading = false;
+      },
+      changeFormatTimeFn (time) {
+        let date = new Date(time);
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        if (month < 10) {
+          month = '0' + month
+        }
+        if (day < 10) {
+          day = '0' + day
+        }
+        return year + '-' + month + '-' + day;
+      },
       handleClick () {},
     }
   }
@@ -207,7 +288,7 @@
   .container {
     margin: 10px;
     /*overflow: auto;*/
-    /*height: calc(100vh - 160px);*/
+    /*height: calc(100vh - 200px);*/
   }
   .top {
     height: 250px;
@@ -334,7 +415,7 @@
     /*  -o-text-overflow:ellipsis;*/
     /*}*/
     /deep/ .el-tabs__content {
-      overflow: hidden !important;
+      /*overflow: hidden !important;*/
     }
   }
 </style>
