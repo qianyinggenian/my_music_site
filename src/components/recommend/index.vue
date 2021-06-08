@@ -231,8 +231,8 @@
        * @date 2021/5/31
       */
       async playListDetail (id) {
-        // this.$emit('playList', {id, isShowPlayListDetail: true});
-        this.$router.push(`/playListDetail?id=${id}`);
+        this.$emit('playList', {id, isShowPlayListDetail: true});
+        // this.$router.push(`/playListDetail?id=${id}`);
       },
       /**
        * @Description 独家放送详细信息

@@ -10,14 +10,14 @@
         </el-aside>
         <el-container>
           <el-main>
-            <router-view></router-view>
-<!--            <mainContent-->
-<!--              :type="type"-->
-<!--              :activeType="activeType"-->
-<!--              :flag="flag"-->
-<!--              ref="mainContent"-->
-<!--            >-->
-<!--            </mainContent>-->
+<!--            <router-view></router-view>-->
+            <mainContent
+              :type="type"
+              :activeType="activeType"
+              :flag="flag"
+              ref="mainContent"
+            >
+            </mainContent>
           </el-main>
         </el-container>
       </el-container>
