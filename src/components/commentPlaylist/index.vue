@@ -45,7 +45,7 @@
                 <div class="timeRight">
                   <span class="report">举报</span>
                   <span class="report">|</span>
-                  <span><i class="icon iconfont icon-dianzan"></i>&nbsp;&nbsp;{{item.likedCount}}</span>
+                  <span><i class="icon iconfont icon-dianzan" @click="likeFn(item.commentId)"></i>&nbsp;&nbsp;{{item.likedCount}}</span>
                   <span>|</span>
                   <span><i class="icon iconfont icon-fenxiang1"></i></span>
                   <span>|</span>
@@ -86,7 +86,7 @@
                 <div class="timeRight">
                   <span class="report">举报</span>
                   <span class="report">|</span>
-                  <span><i class="icon iconfont icon-dianzan"></i>&nbsp;&nbsp;{{item.likedCount}}</span>
+                  <span><i class="icon iconfont icon-dianzan" @click="likeFn(item.commentId)"></i>&nbsp;&nbsp;{{item.likedCount}}</span>
                   <span>|</span>
                   <span><i class="icon iconfont icon-fenxiang1"></i></span>
                   <span>|</span>
@@ -133,6 +133,7 @@
     mounted() {
     },
     methods: {
+      // 评论
       async repliedFn () {
         try {
           const { data } = await this.$axios.get('/comment', {
@@ -146,6 +147,25 @@
           if (data.code === 200) {
               this.$message.success('评论成功');
             }
+        } catch (e) {
+          this.$message.error('请登录再评论');
+        }
+      },
+      // 点赞评论
+      async likeFn (cid) {
+        try {
+          const { data } = await this.$axios.get('/comment/like', {
+            params: {
+              cid: cid,
+              id: this.playListDetailId,
+              t: 1,
+              type: 2,
+              content: this.textarea
+            }
+          });
+          if (data.code === 200) {
+            this.$message.success('评论成功');
+          }
         } catch (e) {
           this.$message.error('请登录再评论');
         }

@@ -72,8 +72,8 @@ export default {
     background-color: #ffffff;
     color: #333;
     border-top: 1px solid #e1e1e1;
-    text-align: center;
-    line-height: 60px;
+    /*text-align: center;*/
+    /*line-height: 60px;*/
   }
 
   .el-aside {

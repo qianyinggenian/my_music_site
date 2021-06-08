@@ -1,14 +1,10 @@
 <template>
-  <div class="music">
-    <audio ref="audio" class="dn"
-     :src="url" :preload="audio.preload"
-     @play="onPlay"
-     @error="onError"
-     @waiting="onWaiting"
-     @pause="onPause"
-     @timeupdate="onTimeupdate"
-     @loadedmetadata="onLoadedmetadata"
-    ></audio>
+  <div class="container">
+    <div class="left">
+      <el-avatar shape="square" :size="50" :src="squareUrl"></el-avatar>
+    </div>
+    <div class="center"></div>
+    <div class="right"></div>
   </div>
 </template>
 
@@ -21,19 +17,30 @@
     },
     data () {
       return {
-        url: './music/1.mp3',
+        squareUrl: '',
+        audio: {
+          currentTime: 0,
+          maxTime: 0,
+          playing: false,  //是否自动播放
+          muted: false,   //是否静音
+          speed: 1,
+          waiting: true,
+          preload: 'auto'
+        },
       };
     },
     mounted() {
-      console.log('audio', this.$refs.audio.$el);
+      // console.log('audio', this.$refs.audio.$el);
     }
   }
 </script>
 
 <style lang="less" scoped>
-.music {
-  height: 30px;
-  width: 30px;
-  background-color: #ec4141;
+.container {
+  .left {
+    /*margin-top: 10px;*/
+    position: relative;
+    bottom: -10px;
+  }
 }
 </style>

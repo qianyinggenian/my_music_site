@@ -48,10 +48,6 @@
 
       </div>
 
-
-
-
-
       <!-- <el-button v-show="!controlList.noMuted" type="text" @click="startMutedOrNot">{{audio.muted | transMutedOrNot}}</el-button> -->
 
       <!-- <el-slider v-show="!controlList.noVolume" v-model="volume" :format-tooltip="formatVolumeToolTip" @change="changeVolume" class="slider"></el-slider> -->

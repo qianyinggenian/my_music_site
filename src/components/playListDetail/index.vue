@@ -172,7 +172,7 @@
       };
     },
     mounted() {
-      this.playListDetailId = this.$route.query.id;
+      this.playListDetailId = Number(this.$route.query.id);
       this.getPlayListDetailFn(this.playListDetailId);
     },
     methods: {

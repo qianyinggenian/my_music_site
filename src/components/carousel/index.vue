@@ -14,7 +14,10 @@
         @change="handleChangeFn"
     >
       <el-carousel-item v-for="(item,index) in imgList" :key="index">
-        <img :src=item.imageUrl alt="" height="100%" width="100%">
+        <div class="carousel" @click="clickFn(index)">
+          <img :src=item.imageUrl alt="" height="100%" width="100%">
+          <span>{{item.typeTitle}}</span>
+        </div>
       </el-carousel-item>
     </el-carousel>
   </div>
@@ -82,14 +85,37 @@ export default {
   created() {
   },
   methods: {
-
     handleChangeFn (val) {
       // console.log('val', val);
+    },
+    clickFn (index) {
+      alert(index)
     }
   }
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+  .carousel {
+    /*margin: 0 60px;*/
+    position: relative;
+    img {
+      border-radius: 10px;
+    }
+    span {
+      background-color: #ec4141;
+      /*width: 80px;*/
+      height: 20px;
+      text-align: center;
+      position: absolute;
+      bottom: 0;
+      /*top: 0;*/
+      right: 0;
+      border-bottom-right-radius: 5px;
+      border-top-left-radius: 5px;
+      color: #ffffff;
+      padding: 3px;
+      margin-bottom: 4px;
+    }
+  }
 </style>
