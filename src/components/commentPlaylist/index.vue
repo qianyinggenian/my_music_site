@@ -16,26 +16,12 @@
         <span>#</span>
       </div>
       <div>
-        <el-button size="small" round>评论</el-button>
+        <el-button size="small" round @click="repliedFn">评论</el-button>
       </div>
     </div>
     <div class="content">
       <div class="hotComments" v-if="hotComments.length > 0">
         <div class="title">精彩评论</div>
-<!--        <div v-for="(item,index) in hotComments" :key="index">-->
-<!--          <div class="info">-->
-<!--            <div class="left">-->
-<!--              <el-avatar :size="35" :src="item.user.avatarUrl"></el-avatar>-->
-<!--            </div>-->
-<!--            <div class="right">-->
-<!--              <span class="username">{{item.user.nickname}}:</span>-->
-<!--              <span class="">{{item.content}}</span>-->
-<!--              <span class="time">-->
-
-<!--            </span>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
         <div v-for="(item,index) in hotComments" :key="index">
           <div class="info">
             <div class="left">
@@ -125,21 +111,45 @@
       };
     },
     props: {
+      // 最新评论
       comments: {
         type: Array,
         default: () => []
       },
+      // 精彩评论
       hotComments: {
         type: Array,
         default: () => []
       },
+      // 评论总条数
       commentTotal: {
+        type: Number
+      },
+      // 歌单Id
+      playListDetailId: {
         type: Number
       }
     },
     mounted() {
     },
     methods: {
+      async repliedFn () {
+        try {
+          const { data } = await this.$axios.get('/comment', {
+            params: {
+              id: this.playListDetailId,
+              t: 1,
+              type: 2,
+              content: this.textarea
+            }
+          });
+          if (data.code === 200) {
+              this.$message.success('评论成功');
+            }
+        } catch (e) {
+          this.$message.error('请登录再评论');
+        }
+      }
     }
   }
 </script>

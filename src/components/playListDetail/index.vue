@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container">
-      <div class="top" v-loading="topLoading">
+      <div class="top">
         <div class="left">
           <img :src="playlist.coverImgUrl" alt="" />
         </div>
@@ -58,7 +58,7 @@
             <span>歌曲：{{playlist.trackCount}}</span>
             <span>播放：{{playlist.playCount}}</span>
           </div>
-          <div class="summary">
+          <div class="summary" :title="`${playlist.description}`">
             <span>简介：{{playlist.description}}</span>
           </div>
         </div>
@@ -119,10 +119,10 @@
           </el-tab-pane>
           <el-tab-pane :label="`评论(${commentTotal})`" name="second">
             <commentPlaylist
-                v-loading="loading"
                 :comments="comments"
                 :hotComments="hotComments"
                 :commentTotal="commentTotal"
+                :playListDetailId="playListDetailId"
             >
             </commentPlaylist>
           </el-tab-pane>
@@ -159,7 +159,7 @@
         singers: [], // 歌手
         playlist: {},
         createTime: '',// 创建时间
-        playListDetailId: '',
+        playListDetailId: null,
         list: [],
         avatarUrl: '',
         nickname: '',
@@ -170,6 +170,10 @@
         topLoading: true,
         loading: true
       };
+    },
+    mounted() {
+      this.playListDetailId = this.$route.query.id;
+      this.getPlayListDetailFn(this.playListDetailId);
     },
     methods: {
       // 表格样式
@@ -182,7 +186,7 @@
       },
       // 获取歌单详情
       async getPlayListDetailFn(id) {
-        this.playListDetailId = id;
+        // this.playListDetailId = id;
         const { data } = await this.$axios.get('/playlist/detail', {
           params: {
             // 获取的数据量
@@ -267,16 +271,29 @@
       },
       changeFormatTimeFn (time) {
         let date = new Date(time);
-        let year = date.getFullYear();
+        let years = date.getFullYear();
         let month = date.getMonth() + 1;
-        let day = date.getDate();
+        let days = date.getDate();
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+        let seconds = date.getSeconds();
         if (month < 10) {
           month = '0' + month
         }
-        if (day < 10) {
-          day = '0' + day
+        if (days < 10) {
+          days = '0' + days
         }
-        return year + '-' + month + '-' + day;
+        if (hours < 10) {
+          hours = '0' + hours
+        }
+        if (minutes < 10) {
+          minutes = '0' + minutes
+        }
+        if (seconds < 10) {
+          seconds = '0' + seconds
+        }
+        return years + '-' + month + '-' + days + ' ' + hours + ':' + minutes + ':' + seconds;
+        // return years + '-' + month + '-' + days + ' ' + hours + '-' + minutes + '-' + seconds;
       },
       handleClick () {},
     }
@@ -385,6 +402,9 @@
       .song {
         margin: 10px;
         font-size: 14px;
+        span {
+          padding-right: 10px;
+        }
       }
       .summary {
         margin: 10px;

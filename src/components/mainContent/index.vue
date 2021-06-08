@@ -72,7 +72,7 @@
       return {
         activeName: 'first',
         isShowPlayListDetail: false,
-        playListDetailId: '',
+        playListDetailId: null,
         flag: true
         // type: ''
       };

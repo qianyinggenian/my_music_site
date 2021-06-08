@@ -10,17 +10,20 @@
         </el-aside>
         <el-container>
           <el-main>
-            <mainContent
-              :type="type"
-              :activeType="activeType"
-              :flag="flag"
-              ref="mainContent"
-            >
-            </mainContent>
+            <router-view></router-view>
+<!--            <mainContent-->
+<!--              :type="type"-->
+<!--              :activeType="activeType"-->
+<!--              :flag="flag"-->
+<!--              ref="mainContent"-->
+<!--            >-->
+<!--            </mainContent>-->
           </el-main>
         </el-container>
       </el-container>
-      <el-footer>Footer</el-footer>
+      <el-footer>
+        <musicFooter></musicFooter>
+      </el-footer>
     </el-container>
   </div>
 </template>
@@ -28,11 +31,13 @@
 import musicHeader from './components/music-header';
 import Aside from './components/Aside';
 import mainContent from './components/mainContent';
+import musicFooter from './components/music-footer';
 export default {
   components: {
     musicHeader,
     Aside,
-    mainContent
+    mainContent,
+    musicFooter
   },
   data () {
     return {
