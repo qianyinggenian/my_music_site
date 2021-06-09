@@ -22,7 +22,10 @@
         </el-container>
       </el-container>
       <el-footer>
-        <musicFooter></musicFooter>
+        <router-link to="/musicFooter">
+          <musicFooter></musicFooter>
+        </router-link>
+<!--        <musicFooter></musicFooter>-->
       </el-footer>
     </el-container>
   </div>
@@ -31,7 +34,7 @@
 import musicHeader from './components/music-header';
 import Aside from './components/Aside';
 import mainContent from './components/mainContent';
-import musicFooter from './components/music-footer';
+import musicFooter from './components/musicFooter';
 export default {
   components: {
     musicHeader,

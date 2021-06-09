@@ -17,6 +17,7 @@ import singer from '../components/singer/index'
 import songDetail from '../components/songDetail/index'
 import songSheet from '../components/songSheet/index'
 import mainContent from '../components/mainContent/index';
+import musicFooter from '../components/musicFooter/index';
 
 const router = new VueRouter({
   routes: [
@@ -72,6 +73,10 @@ const router = new VueRouter({
     {
       path: '/songSheet',
       component: songSheet
+    },//
+    {
+      path: '/musicFooter',
+      component: musicFooter
     },
   ],
 })

@@ -172,8 +172,8 @@
       };
     },
     mounted() {
-      this.playListDetailId = Number(this.$route.query.id);
-      this.getPlayListDetailFn(this.playListDetailId);
+      // this.playListDetailId = Number(this.$route.query.id);
+      // this.getPlayListDetailFn(this.playListDetailId);
     },
     methods: {
       // 表格样式
@@ -186,7 +186,7 @@
       },
       // 获取歌单详情
       async getPlayListDetailFn(id) {
-        // this.playListDetailId = id;
+        this.playListDetailId = id;
         const { data } = await this.$axios.get('/playlist/detail', {
           params: {
             // 获取的数据量

@@ -14,7 +14,7 @@
         @change="handleChangeFn"
     >
       <el-carousel-item v-for="(item,index) in imgList" :key="index">
-        <div class="carousel" @click="clickFn(index)">
+        <div class="carousel" @click="clickFn(item)">
           <img :src=item.imageUrl alt="" height="100%" width="100%">
           <span>{{item.typeTitle}}</span>
         </div>
@@ -89,7 +89,11 @@ export default {
       // console.log('val', val);
     },
     clickFn (index) {
-      alert(index)
+      const params = JSON.stringify(index);
+      this.$router.push({
+        components: 'musicFooter',
+        query: {res: params }
+      });
     }
   }
 }
