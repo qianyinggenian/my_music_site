@@ -22,7 +22,7 @@
         </el-container>
       </el-container>
       <el-footer>
-        <router-link to="/musicFooter">
+        <router-link style="text-decoration: none" to="/musicFooter">
           <musicFooter></musicFooter>
         </router-link>
 <!--        <musicFooter></musicFooter>-->
@@ -75,8 +75,6 @@ export default {
     background-color: #ffffff;
     color: #333;
     border-top: 1px solid #e1e1e1;
-    /*text-align: center;*/
-    /*line-height: 60px;*/
   }
 
   .el-aside {
@@ -93,5 +91,4 @@ export default {
     overflow: hidden !important;
     height: calc(100vh - 140px);
   }
-
 </style>
