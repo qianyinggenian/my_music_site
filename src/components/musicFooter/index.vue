@@ -35,8 +35,14 @@
         <i class="icon iconfont icon-laba"></i>
         <el-slider style="width: 100px" v-model="sound"></el-slider>
       </div>
-      <div><i class="icon iconfont icon-bofangliebiao" @click="drawer" ></i></div>
+      <div><i class="icon iconfont icon-bofangliebiao" @click="clickDrawer" ></i></div>
     </div>
+    <el-drawer
+        title="当前播放"
+        :modal="false"
+        :visible.sync="drawer"
+        :with-header="true">
+    </el-drawer>
   </div>
 </template>
 
@@ -92,8 +98,8 @@
     },
     methods: {
       // 当前播放列表触发
-      drawer () {
-        this.$emit('drawer', !this.drawer);
+      clickDrawer () {
+        this.drawer = !this.drawer;
       },
       // 点击单曲循环播放按钮触发
       singleFn () {
@@ -273,6 +279,10 @@
         vertical-align: middle;
       }
     }
+  }
+  /deep/ .el-drawer__open {
+    /*margin: 70px 0 70px 0;*/
+    height: calc(100vh - 80px);
   }
 }
 </style>

@@ -33,12 +33,6 @@
       </div>
     </div>
     <playListDetail class="playListDetail" v-if="!flag" ref="playListDetail"></playListDetail>
-    <el-drawer
-        title="当前播放"
-        :modal="false"
-        :visible.sync="drawer"
-        :with-header="true">
-    </el-drawer>
   </div>
 </template>
 
@@ -78,7 +72,7 @@
         playListDetailId: '',
         flag: true,
         type: 'music',
-        drawer: false
+        drawer: this.$store.state.drawer
       };
     },
     watch: {
