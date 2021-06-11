@@ -35,7 +35,7 @@
         <i class="icon iconfont icon-laba"></i>
         <el-slider style="width: 100px" v-model="sound"></el-slider>
       </div>
-      <div><i class="icon iconfont icon-bofangliebiao"></i></div>
+      <div><i class="icon iconfont icon-bofangliebiao" @click="drawer" ></i></div>
     </div>
   </div>
 </template>
@@ -49,6 +49,7 @@
     },
     data () {
       return {
+        drawer: false,
         songName: '', // 歌曲名称
         singer: '', // 歌手
         play: true, // 是否显示播放按钮
@@ -74,7 +75,7 @@
         },
         data: {},
         songList: [], // 歌曲Url 信息
-        songs: [] // 歌曲详细信息
+        songs: [], // 歌曲详细信息
       };
     },
     watch: {
@@ -90,6 +91,10 @@
       // this.getInfo();
     },
     methods: {
+      // 当前播放列表触发
+      drawer () {
+        this.$emit('drawer', !this.drawer);
+      },
       // 点击单曲循环播放按钮触发
       singleFn () {
         this.random = true;
@@ -119,12 +124,7 @@
         this.single = true;
       },
       getInfo () {
-        // let data = JSON.parse(this.$route.query.res);
-        // const result = Object.assign({}, data);
-        // 活动类型
-        // if (result.targetType === 3000) {
-        //   window.open(`${result.url}`,'_blank');
-        // }
+        const path = this.$route.query.path;
         const encodeId = this.$route.query.encodeId;
         this.getSongUrlFn(encodeId);
         this.getSongDetailFn(encodeId);

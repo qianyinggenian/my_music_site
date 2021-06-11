@@ -10,22 +10,21 @@
         </el-aside>
         <el-container>
           <el-main>
-<!--            <router-view></router-view>-->
-            <mainContent
-              :type="type"
-              :activeType="activeType"
-              :flag="flag"
-              ref="mainContent"
-            >
-            </mainContent>
+            <router-view></router-view>
+<!--            <router-link style="text-decoration: none;color: black" to="/mainContent">-->
+<!--              <mainContent-->
+<!--                  :type="type"-->
+<!--                  :activeType="activeType"-->
+<!--                  :flag="flag"-->
+<!--                  ref="mainContent"-->
+<!--              >-->
+<!--              </mainContent>-->
+<!--            </router-link>-->
           </el-main>
         </el-container>
       </el-container>
       <el-footer>
-        <router-link style="text-decoration: none" to="/musicFooter">
-          <musicFooter></musicFooter>
-        </router-link>
-<!--        <musicFooter></musicFooter>-->
+          <musicFooter @drawer="drawerFn"></musicFooter>
       </el-footer>
     </el-container>
   </div>
@@ -50,6 +49,9 @@ export default {
     };
   },
   methods: {
+    drawerFn (item) {
+      this.drawer = item;
+    },
     asideFn (item) {
       this.type = item.type;
       this.activeType = item.value;
@@ -58,9 +60,9 @@ export default {
         type: this.type,
         activeType: this.activeType
       };
-      this.$nextTick(() => {
-        this.$refs.mainContent.getFlag(params);
-      });
+      // this.$nextTick(() => {
+      //   this.$refs.mainContent.getFlag(params);
+      // });
     }
   }
 };
@@ -70,6 +72,8 @@ export default {
     background-color: #ec4141;
     color: #333;
     line-height: 60px;
+
+    min-width: 1000px;
   }
   .el-footer {
     background-color: #ffffff;
@@ -90,5 +94,6 @@ export default {
     padding: 10px !important;
     overflow: hidden !important;
     height: calc(100vh - 140px);
+    min-width: 1000px;
   }
 </style>

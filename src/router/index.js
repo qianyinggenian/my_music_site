@@ -5,10 +5,7 @@ Vue.use(VueRouter)
 
 // 导入对应的路由
 import Aside from '../components/Aside/index'
-import carousel from '../components/carousel'
 import latestMusic from '../components/latestMusic/index'
-// import mainContent from '../components/mainContent/index'
-import header from '../components/music-header'
 import playListDetail from '../components/playListDetail/index'
 import radioStation from '../components/radioStation/index'
 import rankingList from '../components/rankingList/index'
@@ -17,7 +14,7 @@ import singer from '../components/singer/index'
 import songDetail from '../components/songDetail/index'
 import songSheet from '../components/songSheet/index'
 import mainContent from '../components/mainContent/index';
-import musicFooter from '../components/musicFooter/index';
+// import musicFooter1 from '../components/musicFooter/index';
 
 const router = new VueRouter({
   routes: [
@@ -74,10 +71,10 @@ const router = new VueRouter({
       path: '/songSheet',
       component: songSheet
     },//
-    {
-      path: '/musicFooter',
-      component: musicFooter
-    },
+    // {
+    //   path: '/musicFooter1',
+    //   component: musicFooter1
+    // },
   ],
 })
 

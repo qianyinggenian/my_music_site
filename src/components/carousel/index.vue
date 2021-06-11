@@ -92,7 +92,11 @@ export default {
     },
     clickFn (index) {
       if (index.targetType === 1) {
-        this.$router.push(`/musicFooter?encodeId=${index.encodeId}&targetType=${index.targetType}`);
+        const params = {
+          encodeId: index.encodeId,
+          targetType: index.targetType
+        };
+        this.$router.push(`/musicFooter?encodeId=${index.encodeId}&targetType=${index.targetType}&path=${this.$route.path}`);
       } else if (index.targetType === 10) {
         const params = JSON.stringify(index);
         this.$router.push({
