@@ -24,6 +24,8 @@
 </template>
 
 <script>
+import playListDetail from "@/components/playListDetail/index";
+
 export default {
   name: "index",
   data () {
@@ -89,11 +91,18 @@ export default {
       // console.log('val', val);
     },
     clickFn (index) {
-      const params = JSON.stringify(index);
-      this.$router.push({
-        components: 'musicFooter',
-        query: {res: params }
-      });
+      if (index.targetType === 1) {
+        this.$router.push(`/musicFooter?encodeId=${index.encodeId}&targetType=${index.targetType}`);
+      } else if (index.targetType === 10) {
+        const params = JSON.stringify(index);
+        this.$router.push({
+          path: '/playListDetail',
+          component: playListDetail,
+          query: {res: params }
+        });
+      } else if (index.targetType === 3000) {
+        window.open(`${index.url}`,'_blank');
+      }
     }
   }
 }

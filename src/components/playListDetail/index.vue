@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container">
-      <div class="top">
+      <div class="top" v-loading="topLoading">
         <div class="left">
           <img :src="playlist.coverImgUrl" alt="" />
         </div>
@@ -119,6 +119,7 @@
           </el-tab-pane>
           <el-tab-pane :label="`评论(${commentTotal})`" name="second">
             <commentPlaylist
+                v-loading="loading"
                 :comments="comments"
                 :hotComments="hotComments"
                 :commentTotal="commentTotal"
@@ -171,11 +172,24 @@
         loading: true
       };
     },
+    watch: {
+      '$route': {
+        handler (val) {
+          if (val && val.length > 0) {
+          }
+          this.getInfo();
+        },
+        immediate: true
+      }
+    },
     mounted() {
-      // this.playListDetailId = Number(this.$route.query.id);
-      // this.getPlayListDetailFn(this.playListDetailId);
+      //
     },
     methods: {
+      getInfo() {
+        const id = Number(this.$route.query.id);
+        this.getPlayListDetailFn(id);
+      },
       // 表格样式
       tableRowClassName({row, rowIndex}) {
         if (rowIndex % 2 === 0) {
@@ -187,6 +201,7 @@
       // 获取歌单详情
       async getPlayListDetailFn(id) {
         this.playListDetailId = id;
+        // this.playListDetailId = 128635359;
         const { data } = await this.$axios.get('/playlist/detail', {
           params: {
             // 获取的数据量

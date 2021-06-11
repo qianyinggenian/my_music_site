@@ -56,38 +56,47 @@
       playListDetail
     },
     props: {
-      type: {
-        type: String,
-        default: 'music'
-      },
-      activeType: {
-        type: String,
-        default: 'first'
-      },
-      // flag: {
-      //   type: Boolean
-      // }
+      // type: {
+      //   type: String,
+      //   default: 'music'
+      // },
+      // activeType: {
+      //   type: String,
+      //   default: 'first'
+      // },
     },
     data () {
       return {
         activeName: 'first',
         isShowPlayListDetail: false,
         playListDetailId: '',
-        flag: true
-        // type: ''
+        flag: true,
+        type: 'music'
       };
     },
     watch: {
-      type: {
-        handler (newVal) {
-          this.activeName = this.activeType;
-        }
-      },
+      // type: {
+      //   handler (newVal) {
+      //     this.activeName = this.activeType;
+      //   }
+      // },
+      '$route': {
+        handler (val) {
+          console.log('val', val);
+          this.getInfo();
+        },
+        immediate: true
+      }
     },
     mounted () {
 
     },
     methods: {
+      getInfo() {
+        this.flag = true;
+        this.type = this.$route.query.type ? this.$route.query.type : this.type;
+        this.activeName = this.$route.query.val ? this.$route.query.val : this.activeName;
+      },
 
       getFlag (params) {
         this.flag = params.flag;
@@ -100,7 +109,6 @@
       },
       playListFn (params) {
         this.playListDetailId = params.id;
-        // this.isShowPlayListDetail = params.isShowPlayListDetail;
         this.flag = !params.isShowPlayListDetail;
         this.$nextTick(() => {
           this.$refs.playListDetail.getPlayListDetailFn(this.playListDetailId);

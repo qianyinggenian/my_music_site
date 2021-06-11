@@ -80,7 +80,8 @@
           type: item,
           value: val
         };
-        this.$emit('aside',params);
+        // this.$emit('aside',params);
+        this.$router.push(`/mainContent?type=${item}&value=${val}`);
         sessionStorage.setItem('flag', true);
       }
     }
