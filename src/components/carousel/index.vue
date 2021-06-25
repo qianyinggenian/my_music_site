@@ -25,7 +25,7 @@
 
 <script>
 import playListDetail from "@/components/playListDetail/index";
-
+import {mapState} from 'vuex'
 export default {
   name: "index",
   data () {
@@ -96,7 +96,8 @@ export default {
           encodeId: index.encodeId,
           targetType: index.targetType
         };
-        this.$router.push(`/musicFooter?encodeId=${index.encodeId}&targetType=${index.targetType}&path=${this.$route.path}`);
+        this.$store.dispatch('getSongUrlFn', index.encodeId);
+        this.$store.dispatch('getSongDetailFn', index.encodeId);
       } else if (index.targetType === 10) {
         const params = JSON.stringify(index);
         this.$router.push({
