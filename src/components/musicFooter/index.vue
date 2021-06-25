@@ -69,14 +69,12 @@
     watch: {
       squareUrl: {
         handler (val) {
-          console.log(121212);
           this.play = false;
           this.pause = true;
-          this.$nextTick(() => {
+          this.$nextTick(() =>{
             this.playFn();
           });
-        },
-        immediate: true
+        }
       }
     },
     computed: {
@@ -100,7 +98,6 @@
     methods: {
       // 改变音量
       changeVolume (val) {
-        console.log(val/100);
         this.$refs.audio.volume = val/100;
       },
       // 当前播放列表触发
@@ -137,38 +134,25 @@
       },
       // 歌曲播放
       playFn () {
-        this.$refs.audio.play();
+        this.$nextTick(() => {
+          this.$refs.audio.play();
+        });
         this.play = false;
         this.pause = true;
         this.progressFn();
-        console.log(321321);
-        // this.duration = this.$refs.audio.duration;
-        // const interval = setInterval(() => {
-        //   this.currentTime = this.$refs.audio.currentTime;
-        //   this.percentage = this.currentTime / this.duration * 100;
-        //   if (this.percentage === 100) {
-        //     clearInterval(interval);
-        //   }
-        // }, 1000);
       },
       // 歌曲暂停播放
       pauseFn () {
-        this.$refs.audio.pause();
+        this.$nextTick(() => {
+          this.$refs.audio.pause();
+        });
         this.play = true;
         this.pause = false;
         this.progressFn();
-        // this.duration = this.$refs.audio.duration;
-        // const interval = setInterval(() => {
-        //   this.currentTime = this.$refs.audio.currentTime;
-        //   this.percentage = this.currentTime / this.duration * 100;
-        //   if (this.percentage === 100) {
-        //     clearInterval(interval);
-        //   }
-        // }, 1000);
       },
       progressFn () {
-        this.duration = this.$refs.audio.duration;
         const interval = setInterval(() => {
+          this.duration = this.$refs.audio.duration;
           this.currentTime = this.$refs.audio.currentTime;
           this.percentage = this.currentTime / this.duration * 100;
           if (this.percentage === 100) {
