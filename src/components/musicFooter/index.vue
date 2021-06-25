@@ -35,16 +35,10 @@
       <div><i class="icon iconfont icon-zhuti"></i></div>
       <div class="sound">
         <i class="icon iconfont icon-laba"></i>
-        <el-slider style="width: 100px" v-model="sound"></el-slider>
+        <el-slider style="width: 100px" v-model="sound" @change="changeVolume"></el-slider>
       </div>
       <div><i class="icon iconfont icon-bofangliebiao" @click="clickDrawer" ></i></div>
     </div>
-    <el-drawer
-        title="当前播放"
-        :modal="false"
-        :visible.sync="drawer"
-        :with-header="true">
-    </el-drawer>
   </div>
 </template>
 
@@ -57,7 +51,7 @@
     },
     data () {
       return {
-        drawer: false,
+        drawer: true,
         play: true, // 是否显示播放按钮
         pause: false,  // 是否显示暂停按钮
         list: false, // 是否显示列表循环播放按钮
@@ -65,18 +59,24 @@
         single: false, // 是否显示单选循环播放按钮
         direct: true, // 是否显示顺序播放按钮
         percentage: 0, // 进度
-        sound: 0, // 声音
         currentTime: 0,// 播放的当前位置
         duration: 0, // 时长
         data: {},
+        volume: 0.5,
+        sound: 50
       };
     },
     watch: {
       squareUrl: {
         handler (val) {
-          this.play = true;
-          this.pause = false;
-        }
+          console.log(121212);
+          this.play = false;
+          this.pause = true;
+          this.$nextTick(() => {
+            this.playFn();
+          });
+        },
+        immediate: true
       }
     },
     computed: {
@@ -95,12 +95,17 @@
       }
     },
     mounted() {
-      // this.getInfo();
+      this.$refs.audio.volume = this.volume;
     },
     methods: {
+      // 改变音量
+      changeVolume (val) {
+        console.log(val/100);
+        this.$refs.audio.volume = val/100;
+      },
       // 当前播放列表触发
       clickDrawer () {
-        this.drawer = !this.drawer;
+        this.$store.commit('drawerFn');
       },
       // 点击单曲循环播放按钮触发
       singleFn () {
@@ -130,39 +135,38 @@
         this.direct = false;
         this.single = true;
       },
-      // // 获取歌曲Url
-      // async getSongUrlFn (id) {
-      //   const { data } = await this.$axios.get('/song/url', {
-      //     params: {
-      //       id: id
-      //     }
-      //   });
-      //   if (data.code === 200) {
-      //     this.songList = data.data;
-      //     this.songSrc = this.songList[0].url;
-      //   }
-      //   console.log('audio', this.$refs.audio.$el);
-      // },
-      // // 获取歌曲详细信息
-      // async getSongDetailFn (id) {
-      //   const { data } = await this.$axios.get('/song/detail', {
-      //     params: {
-      //       ids: id
-      //     }
-      //   });
-      //   if (data.code === 200) {
-      //     this.songs = data.songs[0];
-      //     this.squareUrl = this.songs.al.picUrl;
-      //     this.songName = this.songs.name;
-      //     this.singer = this.songs.ar[0].name;
-      //   }
-      // },
       // 歌曲播放
       playFn () {
         this.$refs.audio.play();
         this.play = false;
         this.pause = true;
-        console.log('duration',this.$refs.audio.duration);
+        this.progressFn();
+        console.log(321321);
+        // this.duration = this.$refs.audio.duration;
+        // const interval = setInterval(() => {
+        //   this.currentTime = this.$refs.audio.currentTime;
+        //   this.percentage = this.currentTime / this.duration * 100;
+        //   if (this.percentage === 100) {
+        //     clearInterval(interval);
+        //   }
+        // }, 1000);
+      },
+      // 歌曲暂停播放
+      pauseFn () {
+        this.$refs.audio.pause();
+        this.play = true;
+        this.pause = false;
+        this.progressFn();
+        // this.duration = this.$refs.audio.duration;
+        // const interval = setInterval(() => {
+        //   this.currentTime = this.$refs.audio.currentTime;
+        //   this.percentage = this.currentTime / this.duration * 100;
+        //   if (this.percentage === 100) {
+        //     clearInterval(interval);
+        //   }
+        // }, 1000);
+      },
+      progressFn () {
         this.duration = this.$refs.audio.duration;
         const interval = setInterval(() => {
           this.currentTime = this.$refs.audio.currentTime;
@@ -170,14 +174,8 @@
           if (this.percentage === 100) {
             clearInterval(interval);
           }
-        }, 1000)
-      },
-      // 歌曲暂停播放
-      pauseFn () {
-        this.$refs.audio.pause();
-        this.play = true;
-        this.pause = false;
-      },
+        }, 1000);
+      }
     },
   }
 </script>
@@ -270,10 +268,6 @@
         vertical-align: middle;
       }
     }
-  }
-  /deep/ .el-drawer__open {
-    /*margin: 70px 0 70px 0;*/
-    height: calc(100vh - 80px);
   }
 }
 </style>

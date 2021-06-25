@@ -72,13 +72,13 @@ export default {
     background-color: #ec4141;
     color: #333;
     line-height: 60px;
-
-    min-width: 1000px;
+    width: 100%;
   }
   .el-footer {
     background-color: #ffffff;
     color: #333;
     border-top: 1px solid #e1e1e1;
+    width: 100%;
   }
 
   .el-aside {

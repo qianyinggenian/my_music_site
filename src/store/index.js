@@ -22,12 +22,10 @@ export default new Vuex.Store({
     },
     playFn (state, value) {
       state.playList = value;
-      console.log('playList', state.playList);
       state.songSrc = value.url;
     },
     songDetailFn(state, value) {
       state.songDetail = value;
-      console.log('songDetail', state.songDetail);
       state.squareUrl = value.al.picUrl;
       state.songName = value.name;
       state.singer = value.ar[0].name;
@@ -40,7 +38,6 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         axios.get(`/song/url?id=${id}`).then(res => {
           resolve(res);
-          console.log('urlRes', res.data.data);
           content.commit('playFn', res.data.data[0]);
         }, reason => {
           reject(reason);
@@ -52,7 +49,6 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         axios.get(`/song/detail?ids=${id}`).then(res => {
           resolve(res);
-          console.log('urlRes2', res);
           content.commit('songDetailFn', res.data.songs[0]);
         }, reason => {
           reject(reason);

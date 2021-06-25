@@ -319,7 +319,8 @@
 <style lang="less" scoped>
   .container {
     margin: 10px;
-    /*overflow: auto;*/
+    overflow: auto;
+    height: 100%;
     /*height: calc(100vh - 200px);*/
   }
   .top {
@@ -433,6 +434,7 @@
     }
   }
   .bottom {
+    height: calc(100vh - 420px);
     /deep/ .el-table .warning-row {
       background: oldlace;
     }
@@ -443,14 +445,8 @@
     .Icon {
       margin: 0 5px;
     }
-    /*/deep/ .cell {*/
-    /*  overflow:hidden;*/
-    /*  white-space: nowrap;*/
-    /*  text-overflow: ellipsis;*/
-    /*  -o-text-overflow:ellipsis;*/
-    /*}*/
     /deep/ .el-tabs__content {
-      /*overflow: hidden !important;*/
+      overflow: hidden !important;
     }
   }
 </style>

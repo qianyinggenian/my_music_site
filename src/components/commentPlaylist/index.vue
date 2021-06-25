@@ -175,7 +175,7 @@
 </script>
 
 <style lang="less" scoped>
-.btn {
+  .btn {
   margin-top: 10px;
   display: flex;
   height: 30px;
