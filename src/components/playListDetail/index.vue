@@ -191,6 +191,10 @@
       cellDblclick (row, column, cell, event) {
         this.$store.dispatch('getSongUrlFn', row.id);
         this.$store.dispatch('getSongDetailFn', row.id);
+        this.$message({
+          message: '已添加到播放列表',
+          type: 'success'
+        });
       },
       getInfo() {
         const id = Number(this.$route.query.id);
@@ -314,16 +318,8 @@
           seconds = '0' + seconds
         }
         return years + '-' + month + '-' + days + ' ' + hours + ':' + minutes + ':' + seconds;
-        // return years + '-' + month + '-' + days + ' ' + hours + '-' + minutes + '-' + seconds;
       },
       handleClick () {},
-      dblclickFn () {
-        console.log(111);
-        alert('asdwed');
-      },
-      clickFn () {
-        alert(111111111111);
-      }
     }
   }
 </script>

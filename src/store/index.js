@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import {formatDuration} from '@/utils/util'
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -24,11 +25,23 @@ export default new Vuex.Store({
       state.songSrc = value.url;
     },
     songDetailFn(state, value) {
-      state.playList.push(value);
       state.songDetail = value;
       state.squareUrl = value.al.picUrl;
       state.songName = value.name;
       state.singer = value.ar[0].name;
+      const params = {
+        singer: value.ar[0].name,
+        name: value.name,
+        id: value.id,
+        duration: formatDuration(value.dt)
+      };
+      // 去重
+      state.playList = state.playList.filter(item => item.id !== value.id);
+      // 插入到最前面
+      state.playList.unshift(params);
+    },
+    clearPlayList (state) {
+      state.playList = [];
     }
   },
   // 异步方法

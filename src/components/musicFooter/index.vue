@@ -13,10 +13,10 @@
         <i class="icon iconfont icon-bofangliebiao" title="列表播放" v-if="list" @click="listFn"></i>
         <i class="icon iconfont icon-suijibofang" title="随机播放" v-if="random" @click="randomFn"></i>
         <i class="icon iconfont icon-danquxunhuan" title="单曲循环" v-if="single" @click="singleFn"></i>
-        <i class="icon iconfont icon-shangyishou1"></i>
+        <i class="icon iconfont icon-shangyishou1" @click="prev"></i>
         <i class="el-icon-video-pause" v-if="pause" @click="pauseFn"></i>
         <i class="el-icon-video-play" v-if="play" @click="playFn"></i>
-        <i class="icon iconfont icon-xiayishou"></i>
+        <i class="icon iconfont icon-xiayishou" @click="next"></i>
       </div>
       <div class="progress">
         <el-slider v-model="percentage" :show-tooltip="false"></el-slider>
@@ -29,15 +29,17 @@
       </audio>
     </div>
     <div class="right">
-      <div>标准</div>
-      <div><i class="icon iconfont icon-zhuti"></i></div>
+      <div class="div">标准</div>
+      <div class="div"><i class="icon iconfont icon-zhuti"></i></div>
       <div class="sound">
         <i class="icon iconfont icon-laba"></i>
         <el-slider style="width: 100px" v-model="sound" @change="changeVolume"></el-slider>
       </div>
-      <div><i class="icon iconfont icon-bofangliebiao" @click="clickDrawer" ></i></div>
-      <el-drawer
+      <div class="div"><i class="icon iconfont icon-bofangliebiao" @click="clickDrawer" ></i></div>
+      <div >
+       <el-drawer
           class="drawer"
+          ref="drawer"
           title="当前播放"
           :modal="false"
           size="25%"
@@ -47,16 +49,41 @@
           <div class="currentPlaylist-top">
             <div class="title">当前播放</div>
             <div class="top-btn">
-              <div class="total">共{{}}首</div>
+              <div class="total">共{{$store.state.playList.length}}首</div>
               <div class="btn">
                 <span><i class="el-icon-folder-add"></i> 收藏全部</span>
-                <span>清空列表</span>
+                <span @click="handleClear">清空列表</span>
               </div>
             </div>
           </div>
-          <div class="currentPlaylist-bottom"></div>
+          <div class="currentPlaylist-bottom">
+            <el-table
+                :data="playList"
+                :row-class-name="tableRowClassName"
+                :height="height"
+                style="width: 100%">
+              <el-table-column
+                  prop="name"
+                  label="歌曲"
+                  show-overflow-tooltip
+                  min-width="50%">
+              </el-table-column>
+              <el-table-column
+                  prop="singer"
+                  label="歌手"
+                  show-overflow-tooltip
+                  min-width="30%">
+              </el-table-column>
+              <el-table-column
+                  prop="duration"
+                  label="时长"
+                  min-width="20%">
+              </el-table-column>
+            </el-table>
+          </div>
         </div>
       </el-drawer>
+      </div>
     </div>
   </div>
 </template>
@@ -82,7 +109,8 @@
         duration: 0, // 时长
         data: {},
         volume: 0.5,
-        sound: 50
+        sound: 50,
+        height: 550
       };
     },
     watch: {
@@ -98,23 +126,43 @@
     },
     computed: {
       ...mapState,
+      // 返回歌曲图像url
       squareUrl () {
         return this.$store.state.squareUrl;
       },
+      // 返回歌曲src
       songSrc () {
         return this.$store.state.songSrc;
       },
+      // 返回歌曲名称
       songName () {
         return this.$store.state.songName;
       },
+      // 返回歌手名称
       singer () {
         return this.$store.state.singer;
+      },
+      playList () {
+        return this.$store.state.playList;
       }
     },
     mounted() {
+      // 初始音量
       this.$refs.audio.volume = this.volume;
     },
     methods: {
+      // 表格样式
+      tableRowClassName({row, rowIndex}) {
+        if (rowIndex % 2 === 0) {
+          return 'warning-row';
+        } else  {
+          return '';
+        }
+      },
+      //清空列表
+      handleClear () {
+        this.$store.commit('clearPlayList');
+      },
       // 改变音量
       changeVolume (val) {
         this.$refs.audio.volume = val/100;
@@ -122,6 +170,9 @@
       // 当前播放列表触发
       clickDrawer () {
         this.$store.commit('drawerFn');
+        setTimeout(() => {
+          this.height = this.$refs.drawer.$el.clientHeight - 80;
+        },100);
       },
       // 点击单曲循环播放按钮触发
       singleFn () {
@@ -169,6 +220,11 @@
         this.pause = false;
         this.progressFn();
       },
+      // 播放上一首
+      prev () {},
+      // 播放下一首
+      next () {},
+      // 歌曲进度
       progressFn () {
         const interval = setInterval(() => {
           this.duration = this.$refs.audio.duration;
@@ -191,16 +247,23 @@
     /*margin-top: 10px;*/
     position: relative;
     bottom: -10px;
-    width: 300px;
+    width: 400px;
     display: flex;
+    .singer {
+      padding: 0 10px;
+    }
     .singer-top {
-      width: 200px;
+      width: 300px;
       overflow:hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       -o-text-overflow:ellipsis;
     }
-    .singer-bottom {}
+    .singer-bottom {
+      color: #cccccc;
+      font-size: 14px;
+      padding-top: 10px;
+    }
   }
   .middle {
     width: calc(100% - 550px);
@@ -237,7 +300,7 @@
     right: 0;
     bottom: 10px;
     display: flex;
-    div {
+    .div {
       color: black;
       padding: 0 10px;
     }
@@ -273,12 +336,13 @@
     }
   }
   .currentPlaylist {
-    height: clac(100% - 80px);
     .currentPlaylist-top {
       margin-top: 10px;
+      border-bottom: 1px solid  #cccccc;
       .title {
         font-weight: bold;
         font-size: 24px;
+        padding: 0 10px;
       }
       .top-btn {
         margin-top: 10px;
@@ -287,6 +351,7 @@
         .total {
           color: #cccccc;
           font-size: 12px;
+          padding: 0 10px;
         }
         .btn {
           position: absolute;
@@ -296,14 +361,23 @@
           }
           span {
             padding: 0 10px;
+            cursor:pointer
           }
           span:nth-child(2) {
             color: #56A2E8;
+            /*cursor:pointer*/
           }
         }
       }
     }
-    .currentPlaylist-bottom {}
+    .currentPlaylist-bottom {
+      /deep/ .el-table .warning-row {
+        background: oldlace;
+      }
+      /deep/ .el-table .red-row {
+        color: #ec4141;
+      }
+    }
   }
 }
 /deep/ .drawer {

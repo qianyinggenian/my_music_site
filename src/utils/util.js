@@ -41,3 +41,14 @@ export function browserType () {
     return 'isIE';
   }
 }
+// 歌曲时长转换
+export function formatDuration(duration) {
+  // 分钟：向下取整，转为字符，不足两位前边补零
+  // 毫秒 换算成 分：秒形式，即 00:00
+  //duration / 1000得到秒，再除以60得到分
+  let minute = Math.floor(duration / 1000 / 60).toString().padStart(2, '0');
+  // .toString().padStart(2, '0')
+  //duration / 1000得到秒，再除以60得到分
+  let second = Math.floor(duration /1000 % 60).toString().padStart(2, '0');
+  return minute + ':' + second
+}
