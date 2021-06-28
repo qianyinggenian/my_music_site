@@ -110,7 +110,17 @@
         data: {},
         volume: 0.5,
         sound: 50,
-        height: 550
+        height: 550,
+        arr: [
+          {
+            value: 1,
+            name: 'haha'
+          },
+          {
+            value: 2,
+            name: 'hehe'
+          }
+        ]
       };
     },
     watch: {
@@ -149,6 +159,11 @@
     mounted() {
       // 初始音量
       this.$refs.audio.volume = this.volume;
+      const index = this.arr.findIndex(function(val){
+        console.log('val', val);
+        return val.value === 1
+      });
+      console.log('index',index);
     },
     methods: {
       // 表格样式
