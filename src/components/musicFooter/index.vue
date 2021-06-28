@@ -3,8 +3,6 @@
     <div class="left">
       <el-avatar shape="square" :size="50" :src="squareUrl"></el-avatar>
       <div class="singer">
-<!--        <div class="singer-top" :title="`${songName}`">{{songName}}</div>-->
-<!--        <div class="singer-bottom">{{singer}}</div>-->
         <div class="singer-top" :title="`${songName}`">{{songName}}</div>
         <div class="singer-bottom">{{singer}}</div>
       </div>
@@ -38,6 +36,27 @@
         <el-slider style="width: 100px" v-model="sound" @change="changeVolume"></el-slider>
       </div>
       <div><i class="icon iconfont icon-bofangliebiao" @click="clickDrawer" ></i></div>
+      <el-drawer
+          class="drawer"
+          title="当前播放"
+          :modal="false"
+          size="25%"
+          :visible.sync="$store.state.drawer"
+          :with-header="false">
+        <div class="currentPlaylist">
+          <div class="currentPlaylist-top">
+            <div class="title">当前播放</div>
+            <div class="top-btn">
+              <div class="total">共{{}}首</div>
+              <div class="btn">
+                <span><i class="el-icon-folder-add"></i> 收藏全部</span>
+                <span>清空列表</span>
+              </div>
+            </div>
+          </div>
+          <div class="currentPlaylist-bottom"></div>
+        </div>
+      </el-drawer>
     </div>
   </div>
 </template>
@@ -253,5 +272,42 @@
       }
     }
   }
+  .currentPlaylist {
+    height: clac(100% - 80px);
+    .currentPlaylist-top {
+      margin-top: 10px;
+      .title {
+        font-weight: bold;
+        font-size: 24px;
+      }
+      .top-btn {
+        margin-top: 10px;
+        display: flex;
+        position: relative;
+        .total {
+          color: #cccccc;
+          font-size: 12px;
+        }
+        .btn {
+          position: absolute;
+          right: 0;
+          i {
+            font-size: 22px;
+          }
+          span {
+            padding: 0 10px;
+          }
+          span:nth-child(2) {
+            color: #56A2E8;
+          }
+        }
+      }
+    }
+    .currentPlaylist-bottom {}
+  }
+}
+/deep/ .drawer {
+  padding: 0 !important;
+  height: calc(100% - 80px) !important;
 }
 </style>

@@ -7,7 +7,7 @@ export default new Vuex.Store({
   // data
   state: {
     drawer: false,
-    playList: {},
+    playList: [], // 当前播放列表
     songs: [],
     squareUrl: '', // 歌曲图片来源
     songName: '', // 歌曲名称
@@ -21,10 +21,10 @@ export default new Vuex.Store({
       state.drawer = !state.drawer;
     },
     playFn (state, value) {
-      state.playList = value;
       state.songSrc = value.url;
     },
     songDetailFn(state, value) {
+      state.playList.push(value);
       state.songDetail = value;
       state.squareUrl = value.al.picUrl;
       state.songName = value.name;

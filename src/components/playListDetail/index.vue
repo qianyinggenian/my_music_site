@@ -70,6 +70,7 @@
               :data="tableData"
               style="width: 100%"
               :row-class-name="tableRowClassName"
+              @cell-dblclick="cellDblclick"
             >
               <el-table-column
                 type="index"
@@ -186,6 +187,11 @@
       //
     },
     methods: {
+      // 双击播放
+      cellDblclick (row, column, cell, event) {
+        this.$store.dispatch('getSongUrlFn', row.id);
+        this.$store.dispatch('getSongDetailFn', row.id);
+      },
       getInfo() {
         const id = Number(this.$route.query.id);
         this.getPlayListDetailFn(id);
@@ -311,6 +317,13 @@
         // return years + '-' + month + '-' + days + ' ' + hours + '-' + minutes + '-' + seconds;
       },
       handleClick () {},
+      dblclickFn () {
+        console.log(111);
+        alert('asdwed');
+      },
+      clickFn () {
+        alert(111111111111);
+      }
     }
   }
 </script>

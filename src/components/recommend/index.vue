@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="container">
     <div class="carousel">
       <carousel
         :type="carouselType"
@@ -41,7 +41,7 @@
     <!--    最新音乐开始-->
     <div><span class="title">最新音乐 <i class="el-icon-arrow-right"></i></span></div>
     <div class="latestMusic">
-      <div class="latestMusicList" v-for="(item,index) in newSongList" :key="index"  @click="musicPlayListDetail(item.id)">
+      <div class="latestMusicList" v-for="(item,index) in newSongList" :key="index"  @click="musicPlayListDetail(item)">
         <div class="musicImg" :style="{background: 'url(' + item.picUrl +')', backgroundSize:'contain'}">
           <div class="musicPlayBtn">
             <i class="el-icon-caret-right "></i>
@@ -245,7 +245,10 @@
        * @author wangkangzhang
        * @date 2021/6/1
       */
-      musicPlayListDetail (id) {},
+      musicPlayListDetail (item) {
+        this.$store.dispatch('getSongUrlFn', item.id);
+        this.$store.dispatch('getSongDetailFn', item.id);
+      },
       /**
        * @Description 推荐详细信息
        * @author wangkangzhang
@@ -257,22 +260,24 @@
 </script>
 
 <style lang="less" scoped>
-.content {
+.container {
   padding: 0 30px;
   .title {
     cursor:pointer
   }
-  .carousel {}
+  .carousel {
+  }
   .list {
     /*display: flex;*/
     float: left;
     width: 100%;
-    height: 560px;
+    /*height: 560px;*/
+    min-width: 100%;
     .listOne {
       width: 215px;
       float: left;
       position: relative;
-      height: 215px;
+      height: 250px;
       padding: 10px 11px 40px 0;
       .listTitle {
         width: 205px;
@@ -353,6 +358,7 @@
   .latestMusic {
     height: 250px;
     width: 100%;
+    min-width: 1134px;
     padding-top: 15px;
     .latestMusicList {
       height: 50px;

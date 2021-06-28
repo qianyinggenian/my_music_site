@@ -31,14 +31,6 @@
       </el-tabs>
       <div v-if="type === 'friend'">
       </div>
-      <el-drawer
-          class="drawer"
-          title="当前播放"
-          :modal="false"
-          size="20%"
-          :visible.sync="$store.state.drawer"
-          :with-header="true">
-      </el-drawer>
     </div>
     <playListDetail class="playListDetail" v-if="!flag" ref="playListDetail"></playListDetail>
   </div>
@@ -144,9 +136,5 @@
       overflow: auto;
       height: calc(100vh - 160px);
     }
-  /deep/ .drawer {
-    /*margin: 70px 0 70px 0;*/
-    height: calc(100% - 80px) !important;
-  }
 }
 </style>
