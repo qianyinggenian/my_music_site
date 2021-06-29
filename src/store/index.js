@@ -10,10 +10,11 @@ export default new Vuex.Store({
     drawer: false,
     playList: [], // 当前播放列表
     songs: [],
-    squareUrl: '', // 歌曲图片来源
+    squareUrl: '', // 歌曲封面来源
     songName: '', // 歌曲名称
     singer: '', // 歌手
     songDetail: {},
+    songId: '',
     songSrc: '' // 歌曲来源
   },
   // methods
@@ -29,10 +30,13 @@ export default new Vuex.Store({
       state.squareUrl = value.al.picUrl;
       state.songName = value.name;
       state.singer = value.ar[0].name;
+      state.songId = value.id;
       const params = {
         singer: value.ar[0].name,
         name: value.name,
         id: value.id,
+        squareUrl: state.squareUrl,
+        songSrc: state.songSrc,
         duration: formatDuration(value.dt)
       };
       // 去重
@@ -40,9 +44,18 @@ export default new Vuex.Store({
       // 插入到最前面
       state.playList.unshift(params);
     },
+    // 清空列表
     clearPlayList (state) {
       state.playList = [];
-    }
+    },
+     // 歌曲切换
+    handleSwitch (state, val) {
+      state.squareUrl = val.squareUrl;
+      state.songName = val.name;
+      state.singer = val.singer;
+      state.songId = val.id;
+      state.songSrc = val.songSrc;
+    },
   },
   // 异步方法
   actions: {

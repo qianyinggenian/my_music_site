@@ -60,6 +60,7 @@
             <el-table
                 :data="playList"
                 :row-class-name="tableRowClassName"
+                @cell-dblclick="cellDblclick"
                 :height="height"
                 style="width: 100%">
               <el-table-column
@@ -89,7 +90,8 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex';
+  import {mapState} from 'vuex';
+
   export default {
     name: "index",
     components: {
@@ -111,21 +113,14 @@
         volume: 0.5,
         sound: 50,
         height: 550,
-        arr: [
-          {
-            value: 1,
-            name: 'haha'
-          },
-          {
-            value: 2,
-            name: 'hehe'
-          }
-        ]
+        Id: '',
+        tableData: []
       };
     },
     watch: {
       squareUrl: {
         handler (val) {
+          console.log(2222222);
           this.play = false;
           this.pause = true;
           this.$nextTick(() =>{
@@ -136,7 +131,7 @@
     },
     computed: {
       ...mapState,
-      // 返回歌曲图像url
+      // 返回歌曲封面url
       squareUrl () {
         return this.$store.state.squareUrl;
       },
@@ -153,19 +148,17 @@
         return this.$store.state.singer;
       },
       playList () {
+        this.tableData = this.$store.state.playList;
         return this.$store.state.playList;
       }
     },
     mounted() {
       // 初始音量
       this.$refs.audio.volume = this.volume;
-      const index = this.arr.findIndex(function(val){
-        console.log('val', val);
-        return val.value === 1
-      });
-      console.log('index',index);
     },
     methods: {
+      // 双击播放
+      cellDblclick () {},
       // 表格样式
       tableRowClassName({row, rowIndex}) {
         if (rowIndex % 2 === 0) {
@@ -189,28 +182,28 @@
           this.height = this.$refs.drawer.$el.clientHeight - 80;
         },100);
       },
-      // 点击单曲循环播放按钮触发
+      // 点击单曲循环播放按钮触发，随机播放
       singleFn () {
         this.random = true;
         this.list = false;
         this.direct = false;
         this.single = false;
       },
-      // 点击随机播放按钮触发
+      // 点击随机播放按钮触发，顺序播放
       randomFn () {
         this.random = false;
         this.list = false;
         this.direct = true;
         this.single = false;
       },
-      // 顺序播放按钮触发
+      // 顺序播放按钮触发，列表播放
       directFn () {
         this.random = false;
         this.list = true;
         this.direct = false;
         this.single = false;
       },
-      // 点击列表播放按钮触发
+      // 点击列表播放按钮触发，单曲循环
       listFn () {
         this.random = false;
         this.list = false;
@@ -235,10 +228,30 @@
         this.pause = false;
         this.progressFn();
       },
+      // 定位当前播放歌曲在列表中的位置
+      handleLocate () {
+        this.Id = this.$store.state.songId;
+        return this.tableData.findIndex(val => val.id === this.Id);
+      },
       // 播放上一首
-      prev () {},
+      prev () {
+        console.log(this.tableData);
+        const index = this.handleLocate();
+        if (index !== 0 ) {
+          this.$store.commit('handleSwitch', this.tableData[index-1]);
+        } else {
+          this.$store.commit('handleSwitch', this.tableData[this.tableData.length - 1]);
+        }
+      },
       // 播放下一首
-      next () {},
+      next () {
+       const index = this.handleLocate();
+       if (index+1 < this.tableData.length) {
+         this.$store.commit('handleSwitch', this.tableData[index+1]);
+       } else {
+         this.$store.commit('handleSwitch', this.tableData[0]);
+       }
+      },
       // 歌曲进度
       progressFn () {
         const interval = setInterval(() => {
