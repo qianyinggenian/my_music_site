@@ -19,10 +19,13 @@
         <i class="icon iconfont icon-xiayishou" @click="next"></i>
       </div>
       <div class="progress">
-        <el-slider v-model="percentage" :show-tooltip="false"></el-slider>
+        <span>{{startTime}}</span>
+        <el-slider v-model="percentage" :show-tooltip="false" @change="handleCurrentTime"></el-slider>
+        <span>{{endTime}}</span>
       </div>
       <audio
         :src="songSrc"
+        :loop="loop"
         ref="audio"
       >
         您的浏览器不支持 audio 标签。
@@ -32,7 +35,8 @@
       <div class="div">标准</div>
       <div class="div"><i class="icon iconfont icon-zhuti"></i></div>
       <div class="sound">
-        <i class="icon iconfont icon-laba"></i>
+        <i class="icon iconfont icon-laba" v-if="showIcon" @click="handleSound"></i>
+        <i class="icon iconfont icon-jingyin" v-if="!showIcon" @click="handleSound"></i>
         <el-slider style="width: 100px" v-model="sound" @change="changeVolume"></el-slider>
       </div>
       <div class="div"><i class="icon iconfont icon-bofangliebiao" @click="clickDrawer" ></i></div>
@@ -60,6 +64,7 @@
             <el-table
                 :data="playList"
                 :row-class-name="tableRowClassName"
+                :row-style="handleRowStyle"
                 @cell-dblclick="cellDblclick"
                 :height="height"
                 style="width: 100%">
@@ -91,7 +96,7 @@
 
 <script>
   import {mapState} from 'vuex';
-
+  import {changDuration} from '@/utils/util'
   export default {
     name: "index",
     components: {
@@ -109,23 +114,37 @@
         percentage: 0, // 进度
         currentTime: 0,// 播放的当前位置
         duration: 0, // 时长
+        showIcon: true,
+        endTime: '',
+        startTime: '',
         data: {},
         volume: 0.5,
         sound: 50,
+        sound1: 0,
         height: 550,
         Id: '',
-        tableData: []
+        loop: '',
+        tableData: [],
+        ended: false,
+        index: 0
       };
     },
     watch: {
       squareUrl: {
         handler (val) {
-          console.log(2222222);
           this.play = false;
           this.pause = true;
           this.$nextTick(() =>{
             this.playFn();
           });
+        }
+      },
+      ended: {
+        handler (val) {
+          if (val) {
+            this.handlePlay();
+            this.ended = false;
+          }
         }
       }
     },
@@ -157,14 +176,36 @@
       this.$refs.audio.volume = this.volume;
     },
     methods: {
+      // 是否静音
+      handleSound () {
+        this.showIcon = !this.showIcon;
+        if(this.showIcon){
+          this.$refs.audio.muted = '';
+        }
+        else{
+          // 静音
+          this.$refs.audio.muted = 'muted';
+        }
+      },
       // 双击播放
-      cellDblclick () {},
+      cellDblclick (row, column, cell, event) {
+        console.log('row', row);
+        console.log('column', column);
+        console.log('cell', cell);
+        this.$store.commit('handleSwitch', row);
+        this.index = this.tableData.findIndex(val => val.id === row.id);
+      },
       // 表格样式
       tableRowClassName({row, rowIndex}) {
         if (rowIndex % 2 === 0) {
           return 'warning-row';
         } else  {
           return '';
+        }
+      },
+      handleRowStyle ({row, rowIndex}) {
+        if (rowIndex === this.index) {
+          return { color: 'red' };
         }
       },
       //清空列表
@@ -188,6 +229,7 @@
         this.list = false;
         this.direct = false;
         this.single = false;
+        // this.handlePlay();
       },
       // 点击随机播放按钮触发，顺序播放
       randomFn () {
@@ -210,6 +252,33 @@
         this.direct = false;
         this.single = true;
       },
+      // 按需播放
+      handlePlay () {
+        // 随机播放
+        if (this.random) {
+          const random = Math.floor(Math.random() * this.tableData.length);
+          this.$store.commit('handleSwitch', this.tableData[random]);
+        } else if (this.direct || this.list) {
+          // 顺序播放
+          const index = this.handleLocate();
+          if (index < this.tableData.length) {
+            this.$store.commit('handleSwitch', this.tableData[index+1]);
+          } else {
+            this.$store.commit('handleSwitch', this.tableData[0]);
+          }
+        } else {
+          // 单曲循环
+          this.loop = 'loop';
+          // this.$nextTick(() => {
+          //   this.$refs.audio.loop = 'loop';
+          // });
+        }
+      },
+      // 播放进度拖拽
+      handleCurrentTime (val) {
+        this.duration = this.$refs.audio.duration;
+        this.$refs.audio.currentTime = val*this.duration/100;
+      },
       // 歌曲播放
       playFn () {
         this.$nextTick(() => {
@@ -231,6 +300,7 @@
       // 定位当前播放歌曲在列表中的位置
       handleLocate () {
         this.Id = this.$store.state.songId;
+        this.index = this.tableData.findIndex(val => val.id === this.Id);
         return this.tableData.findIndex(val => val.id === this.Id);
       },
       // 播放上一首
@@ -257,9 +327,16 @@
         const interval = setInterval(() => {
           this.duration = this.$refs.audio.duration;
           this.currentTime = this.$refs.audio.currentTime;
+          this.endTime = changDuration(this.duration);
+          this.startTime = changDuration(this.currentTime);
           this.percentage = this.currentTime / this.duration * 100;
           if (this.percentage === 100) {
+            this.handlePlay();
             clearInterval(interval);
+            // this.$nextTick(() => {
+            //   this.ended = this.$refs.audio.ended;
+            //   console.log('ended',this.ended);
+            // });
           }
         }, 1000);
       }
@@ -305,8 +382,13 @@
     }
     .progress {
       text-align: center;
+      span {
+        font-size: 12px;
+        padding: 0 10px;
+      }
       .el-slider {
         width: 350px;
+        height: 7px;
         display: inline-block;
         /deep/ .el-slider__runway {
           margin: 0!important;
