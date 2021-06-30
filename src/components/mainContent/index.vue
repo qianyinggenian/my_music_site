@@ -56,14 +56,6 @@
       playListDetail
     },
     props: {
-      // type: {
-      //   type: String,
-      //   default: 'music'
-      // },
-      // activeType: {
-      //   type: String,
-      //   default: 'first'
-      // },
     },
     data () {
       return {
@@ -76,14 +68,8 @@
       };
     },
     watch: {
-      // type: {
-      //   handler (newVal) {
-      //     this.activeName = this.activeType;
-      //   }
-      // },
       '$route': {
         handler (val) {
-          console.log('val', val);
           this.getInfo();
         },
         immediate: true
@@ -95,8 +81,13 @@
     methods: {
       getInfo() {
         this.flag = true;
-        this.type = this.$route.query.type ? this.$route.query.type : this.type;
-        this.activeName = this.$route.query.val ? this.$route.query.val : this.activeName;
+        if (Object.keys(this.$route.query).length === 0) {
+          this.type = 'music';
+          this.activeName = 'first';
+        } else {
+          this.type = this.$route.query.type ? this.$route.query.type : this.type;
+          this.activeName = this.$route.query.val ? this.$route.query.val : this.activeName;
+        }
       },
 
       getFlag (params) {

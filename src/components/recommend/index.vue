@@ -132,11 +132,7 @@
         this.getRadioList();
       },
       songListFn () {
-        const params = {
-          type: 'music',
-          value: 'second'
-        };
-        this.$emit('recommend',params);
+        this.$router.push(`/mainContent?type=music&val=second`);
       },
       /**
        * @Description
@@ -147,7 +143,6 @@
         const { data: data } = await this.$axios.get('/banner');
         if (data.code === 200) {
           this.banners = data.banners;
-          console.log('this.banners', this.banners);
         }
       },
       /**
@@ -222,7 +217,6 @@
         const { data } = await this.$axios.get('/personalized/djprogram');
         if (data.code === 200) {
           this.radioList = data.result;
-          console.log('radioList', this.radioList);
         }
       },
       /**

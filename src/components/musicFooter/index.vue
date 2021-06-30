@@ -189,9 +189,6 @@
       },
       // 双击播放
       cellDblclick (row, column, cell, event) {
-        console.log('row', row);
-        console.log('column', column);
-        console.log('cell', cell);
         this.$store.commit('handleSwitch', row);
         this.index = this.tableData.findIndex(val => val.id === row.id);
       },
@@ -305,12 +302,13 @@
       },
       // 播放上一首
       prev () {
-        console.log(this.tableData);
         const index = this.handleLocate();
         if (index !== 0 ) {
           this.$store.commit('handleSwitch', this.tableData[index-1]);
+          this.index = index -1;
         } else {
           this.$store.commit('handleSwitch', this.tableData[this.tableData.length - 1]);
+          this.index = this.tableData.length - 1;
         }
       },
       // 播放下一首
@@ -318,8 +316,10 @@
        const index = this.handleLocate();
        if (index+1 < this.tableData.length) {
          this.$store.commit('handleSwitch', this.tableData[index+1]);
+         this.index = index + 1;
        } else {
          this.$store.commit('handleSwitch', this.tableData[0]);
+         this.index = 0;
        }
       },
       // 歌曲进度

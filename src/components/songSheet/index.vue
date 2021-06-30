@@ -86,22 +86,6 @@
         </div>
         <div class="tab-content">
           <div class="content" v-for="(item,index) in list" :key="index"  @click="listDetail(item.id)">
-<!--            <div class="img" style="background-size: contain" :style="{background: 'url(' + item.coverImgUrl +')', backgroundSize:'contain'}">-->
-<!--              <div class="count">-->
-<!--                <i class="el-icon-caret-right"></i>-->
-<!--                <span v-if="item.playCount >= 10000">-->
-<!--              {{Math.round(item.playCount/10000)}}万-->
-<!--            </span>-->
-<!--                <span v-else>{{item.playCount}}</span>-->
-<!--              </div>-->
-<!--              <div class="btn">-->
-<!--                <i class="el-icon-caret-right"></i>-->
-<!--              </div>-->
-<!--              <div class="user">-->
-<!--                <i class="el-icon-user"></i>-->
-<!--                {{item.creator.nickname}}-->
-<!--              </div>-->
-<!--            </div>-->
             <div class="img">
               <img class="img" :src="item.coverImgUrl" alt="">
               <div class="count">
@@ -162,24 +146,13 @@
         more: true
       };
     },
-    watch: {
-      // 监听 selected 变化
-      // selected() {
-      //   console.log('gaibian');
-      //   // 获取新的顶部精品歌单
-      //   this.getTopList(1, this.selected);
-      //
-      //   // 获取新的歌单列表
-      //   this.getList(50, this.selected);
-      // },
-    },
     mounted() {
       this.getTopList(1, '全部');
       // 获取新的歌单列表
       this.getList(50, this.selected);
-      this.getCatlistFn();
-      this.getHotlistFn();
-      this.getlistFn();
+      this.getCatListFn();
+      this.getHotListFn();
+      this.getListFn();
     },
     methods: {
       select (val) {
@@ -207,7 +180,7 @@
        * @author wangkangzhang
        * @date 2021/6/2
       */
-      async getCatlistFn () {
+      async getCatListFn () {
         const { data } = await this.$axios.get('/playlist/catlist');
         if (data.code === 200) {
           this.catList = data.sub;
@@ -232,13 +205,13 @@
        * @author wangkangzhang
        * @date 2021/6/3
       */
-      async getHotlistFn () {
+      async getHotListFn () {
         const {data} = await this.$axios.get('/playlist/hot');
         if (data.code === 200) {
           this.hotList = data.tags;
         }
       },
-      async getlistFn () {
+      async getListFn () {
         const {data} = await this.$axios.get('/playlist/highquality/tags');
         if (data.code === 200) {
           // this.hotList = data.tags;
@@ -275,13 +248,8 @@
       handleSizeChange (val) {
         console.log('val', val);
       },
-      async listDetail (id) {
-        const { data } = await this.$axios.get('/playlist/detail', {
-          params: {
-            // 获取的数据量
-            id: id,
-          },
-        });
+      listDetail (id) {
+        this.$router.push(`/playListDetail?id=${id}`);
       }
     }
   }

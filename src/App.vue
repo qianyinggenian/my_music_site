@@ -11,15 +11,6 @@
         <el-container>
           <el-main>
             <router-view></router-view>
-<!--            <router-link style="text-decoration: none;color: black" to="/mainContent">-->
-<!--              <mainContent-->
-<!--                  :type="type"-->
-<!--                  :activeType="activeType"-->
-<!--                  :flag="flag"-->
-<!--                  ref="mainContent"-->
-<!--              >-->
-<!--              </mainContent>-->
-<!--            </router-link>-->
           </el-main>
         </el-container>
       </el-container>
@@ -73,13 +64,14 @@ export default {
     color: #333;
     line-height: 60px;
     width: 100%;
-    min-width: 1200px;
+    min-width: 960px;
   }
   .el-footer {
     background-color: #ffffff;
     color: #333;
     border-top: 1px solid #e1e1e1;
     width: 100%;
+    min-width: 960px;
   }
 
   .el-aside {
