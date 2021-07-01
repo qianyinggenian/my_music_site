@@ -74,7 +74,7 @@
             >
               <el-table-column
                 type="index"
-                width="40">
+                width="50">
               </el-table-column>
               <el-table-column
                 prop="icon"

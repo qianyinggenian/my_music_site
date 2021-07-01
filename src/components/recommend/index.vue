@@ -271,7 +271,7 @@
       width: 215px;
       float: left;
       position: relative;
-      height: 250px;
+      height: 215px;
       padding: 10px 11px 40px 0;
       .listTitle {
         width: 205px;
