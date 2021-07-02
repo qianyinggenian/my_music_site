@@ -161,12 +161,55 @@
         </div>
       </div>
     </div>
+    <div class="ranking">
+      <div class="coverImg">
+        <div>
+          <div class="cover" :style="{background: 'url(' + artistTopList.coverUrl +')', backgroundSize: 'contain'}">
+            <div class="playBtn">
+              <div class="icon">
+<!--                <i class="el-icon-caret-right"></i>-->
+              </div>
+<!--              <div class="updateTime">{{item.updateTime}}</div>-->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="table">
+        <div style="height: 210px;margin-bottom: 10px">
+          <el-table
+              v-loading="artistLoading"
+              :data="artist"
+              :show-header="false"
+              stripe
+              size="mini"
+              style="width: 100%">
+            <el-table-column
+                type="index"
+                width="50">
+            </el-table-column>
+            <el-table-column
+                prop="name"
+                label="歌曲"
+                show-overflow-tooltip
+                min-width="60%">
+            </el-table-column>
+          </el-table>
+          <div class="showAll" v-if="artist.length > 0" @click="handleClickFn">
+            查看全部 <i class="el-icon-arrow-right"></i>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+  import cloudMusicRanking from '../cloudMusicRanking';
   export default {
     name: "index",
+    components: {
+      cloudMusicRanking
+    },
     data () {
       return {
         tableData: [],
@@ -175,10 +218,13 @@
         newList: [],
         originalList: [],
         hotList: [],
+        artist: [],
+        artistTopList: {},
         soaringListLoading: true,
         newListLoading: true,
         originalListLoading: true,
         hotListLoading: true,
+        artistLoading: true,
       };
     },
     mounted () {
@@ -194,10 +240,12 @@
         const { data } = await this.$axios.get('/toplist');
         if (data.code === 200) {
           this.rankingList = data.list;
+          this.artistTopList = data.artistToplist;
           this.getSoaringList();
           this.getNewList();
           this.getOriginalList();
           this.getHotList();
+          this.getArtist();
           for (const key of this.rankingList) {
             key.updateTime = this.changeFormatTimeFn(key.updateTime);
 
@@ -255,7 +303,7 @@
           this.originalListLoading = false;
         }
       },
-      // 获取原创榜详情
+      // 获取热榜详情
       async getHotList () {
         const { data } = await this.$axios.get('/playlist/detail', {
           params: {
@@ -268,9 +316,21 @@
           this.hotListLoading = false;
         }
       },
+      // 获取歌手榜单信息
+      async getArtist () {
+        const { data } = await this.$axios.get('/toplist/artist');
+        if (data.code === 200) {
+          this.artist = data.list.artists.slice(0,5);
+          this.artistLoading = false;
+        }
+      },
       // 点击查看全部触发
       clickFn (val) {
         this.$router.push(`/playListDetail?id=${this.rankingList[val].id}`);
+      },
+      // 歌手榜点击查看全部触发
+      handleClickFn () {
+        this.$router.push(`/cloudMusicRanking`);
       }
     }
   }
