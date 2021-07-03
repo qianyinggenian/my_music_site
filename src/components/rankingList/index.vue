@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <span class="title">官放榜</span>
+    <span class="title">官方榜</span>
     <div class="ranking">
       <div class="coverImg">
         <div v-for="(item,index) in rankingList" :key="index">
@@ -163,15 +163,9 @@
     </div>
     <div class="ranking">
       <div class="coverImg">
-        <div>
-          <div class="cover" :style="{background: 'url(' + artistTopList.coverUrl +')', backgroundSize: 'contain'}">
-            <div class="playBtn">
-              <div class="icon">
-<!--                <i class="el-icon-caret-right"></i>-->
-              </div>
-<!--              <div class="updateTime">{{item.updateTime}}</div>-->
-            </div>
-          </div>
+        <div class="cover">
+          <img :src="artistTopList.coverUrl" alt="">
+          <div class="time">{{update}}更新</div>
         </div>
       </div>
       <div class="table">
@@ -200,6 +194,22 @@
         </div>
       </div>
     </div>
+    <div class="title">全球榜</div>
+    <div class="allRanking">
+      <div class="coverImg" v-for="(item,index) in allRankingList" :key="index">
+        <div class="content" :style="{background: 'url(' + item.coverImgUrl +')', backgroundSize:'cover'}">
+          <div class="playCount">
+            <i class="el-icon-caret-right"></i>
+            <span v-if="item.playCount < 10000">{{item.playCount}}</span>
+            <span v-else>{{Math.round(item.playCount/10000)}}万</span>
+          </div>
+          <div class="btn">
+            <i class="el-icon-caret-right"></i>
+          </div>
+        </div>
+        <span class="name">{{item.name}}</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -214,6 +224,7 @@
       return {
         tableData: [],
         rankingList: [],
+        allRankingList: [],
         soaringList: [],
         newList: [],
         originalList: [],
@@ -225,6 +236,7 @@
         originalListLoading: true,
         hotListLoading: true,
         artistLoading: true,
+        update: ''
       };
     },
     mounted () {
@@ -240,7 +252,12 @@
         const { data } = await this.$axios.get('/toplist');
         if (data.code === 200) {
           this.rankingList = data.list;
+          this.allRankingList = data.list.slice(4);
           this.artistTopList = data.artistToplist;
+          const date = new Date();
+          const months = date.getMonth() + 1;
+          const days = date.getDate();
+          this.update = months +  '月' + days + '日';
           this.getSoaringList();
           this.getNewList();
           this.getOriginalList();
@@ -354,7 +371,6 @@
         line-height: 170px;
         border-radius: 5px;
         margin-bottom: 50px;
-        /*position: relative;*/
         display: flex;
         align-items: center;/*垂直居中*/
         justify-content: center;/*水平居中*/
@@ -391,16 +407,75 @@
             color: #ffffff;
           }
         }
+        .time {
+          position: absolute;
+          margin-top: 60px;
+          color: #FFFFFF;
+          font-size: 12px;
+        }
+      }
+      img {
+        border-radius: 5px;
+        width: 170px;
+        height: 170px;
       }
     }
     .table {
       margin-left: 30px;
-      width: calc(100% - 200px);
+      width: calc(100% - 235px);
       .showAll {
         margin: 5px 0;
         cursor: pointer;
       }
       margin-bottom: 20px;
+    }
+  }
+  .allRanking {
+    .coverImg {
+      float: left;
+      /*display: flex;*/
+      padding: 12px 24px 12px 0;
+      /*position: relative;*/
+      .content {
+        width: 210px;
+        /*float: left;*/
+        border-radius: 5px;
+        height: 210px;
+        /*line-height: 210px;*/
+        align-items: center;/*垂直居中*/
+        justify-content: center;/*水平居中*/
+        text-align: center;
+        position: relative;
+        .playCount {
+          position: absolute;
+          margin: 5px;
+          right: 0;
+          top: 0;
+          height: 20px;
+          /*width: 100px;*/
+          color: #FFFFFF;
+          i {
+            padding-right: 10px;
+          }
+        }
+        .btn {
+          line-height: 210px;
+          i {
+            visibility: hidden;
+          }
+          &:hover i {
+            visibility: visible;
+            background-color: #FFFFFF;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 20px;
+            opacity: 0.8;
+            font-size: 26px;
+            color: #ec4141;
+          }
+        }
+      }
     }
   }
 }

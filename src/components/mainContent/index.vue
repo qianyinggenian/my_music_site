@@ -118,7 +118,7 @@
     /deep/ .el-tabs__content {
     /*overflow: hidden;*/
     position: relative;
-    height: 550px;
+    height: 500px;
     overflow: auto;
     }
   }
