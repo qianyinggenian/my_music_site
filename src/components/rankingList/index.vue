@@ -18,6 +18,7 @@
         <div style="height: 210px;margin-bottom: 10px">
           <el-table
               v-loading="soaringListLoading"
+              @cell-dblclick="cellDblclick"
               :data="soaringList"
               :show-header="false"
               stripe
@@ -54,6 +55,7 @@
         <div style="height: 210px;margin-bottom: 10px">
           <el-table
               v-loading="newListLoading"
+              @cell-dblclick="cellDblclick"
               :data="newList"
               :show-header="false"
               stripe
@@ -90,6 +92,7 @@
         <div style="height: 210px;margin-bottom: 10px">
           <el-table
               v-loading="originalListLoading"
+              @cell-dblclick="cellDblclick"
               :data="originalList"
               :show-header="false"
               stripe
@@ -126,6 +129,7 @@
         <div style="height: 210px;">
           <el-table
               v-loading="hotListLoading"
+              @cell-dblclick="cellDblclick"
               :data="hotList"
               :show-header="false"
               stripe
@@ -243,6 +247,15 @@
       this.getTopList();
     },
     methods: {
+      // 双击播放
+      cellDblclick (row, column, cell, event) {
+        this.$store.dispatch('getSongUrlFn', row.id);
+        this.$store.dispatch('getSongDetailFn', row.id);
+        this.$message({
+          message: '已添加到播放列表',
+          type: 'success'
+        });
+      },
       /**
        * @Description 获取所有榜单
        * @author wangkangzhang
@@ -434,13 +447,13 @@
     .coverImg {
       float: left;
       /*display: flex;*/
-      padding: 12px 24px 12px 0;
+      padding: 12px 15px 12px 0;
       /*position: relative;*/
       .content {
-        width: 210px;
+        width: 200px;
         /*float: left;*/
         border-radius: 5px;
-        height: 210px;
+        height: 200px;
         /*line-height: 210px;*/
         align-items: center;/*垂直居中*/
         justify-content: center;/*水平居中*/

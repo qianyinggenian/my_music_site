@@ -2,7 +2,7 @@
   <div class="container" ref="container">
     <span class="title">云音乐歌手榜</span>
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="华语" name="first">
+      <el-tab-pane label="华语" name="1">
         <div class="top-card" ref="topCard">
           <div class="top" v-for="(item,index) in artist" :key="index">
             <div class="content" v-if="index < 3">
@@ -11,36 +11,11 @@
                 <div class="hot">热度：{{item.score}}</div>
               </div>
               <div class="cover">
-<!--                :style="{background: 'url(' + item.img1v1Url +')', backgroundSize:'cover'}"-->
                 <img :src="item.img1v1Url" alt="">
               </div>
             </div>
             <div class="num">{{index + 1}}</div>
           </div>
-<!--          <div class="top">-->
-<!--            <div class="content">-->
-<!--              <div class="singer">-->
-<!--                <div class="name">薛之谦</div>-->
-<!--                <div class="hot">热度</div>-->
-<!--              </div>-->
-<!--              <div class="cover">-->
-<!--                <img src="./img/2.jpg" alt="">-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div class="num">2</div>-->
-<!--          </div>-->
-<!--          <div class="top">-->
-<!--            <div class="content">-->
-<!--              <div class="singer">-->
-<!--                <div class="name">薛之谦</div>-->
-<!--                <div class="hot">热度</div>-->
-<!--              </div>-->
-<!--              <div class="cover">-->
-<!--                <img src="./img/2.jpg" alt="">-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div class="num">3</div>-->
-<!--          </div>-->
         </div>
         <div class="table">
           <el-table
@@ -82,22 +57,33 @@
           </el-table>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="欧美" name="second">配置管理</el-tab-pane>
-      <el-tab-pane label="韩国" name="third">角色管理</el-tab-pane>
-      <el-tab-pane label="日本" name="fourth">定时任务补偿</el-tab-pane>
+      <el-tab-pane label="欧美" name="2">
+        <detail ref="europeAndAmerica" :artist="artist"></detail>
+      </el-tab-pane>
+      <el-tab-pane label="韩国" name="3">
+        <detail ref="Korea" :artist="artist"></detail>
+      </el-tab-pane>
+      <el-tab-pane label="日本" name="4">
+        <detail ref="Japan" :artist="artist"></detail>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
+  import detail from "./detail";
   export default {
     name: "index",
+    components: {
+      detail
+    },
     data () {
       return {
-        activeName: 'first',
+        activeName: '1',
         artist: [],
         artistLoading: true,
-        height: 0
+        height: 0,
+        type: 1 // 1-华语、 2-欧美、 3-韩国、 4-日本
       };
     },
     mounted () {
@@ -106,11 +92,16 @@
     methods: {
       // 切换触发
       handleClick (val) {
-        console.log('val', val.name);
+        this.getArtist(val.name);
       },
       // 获取歌手榜单信息
-      async getArtist () {
-        const { data } = await this.$axios.get('/toplist/artist');
+      async getArtist (val) {
+        console.log('val', val);
+        const { data } = await this.$axios.get('/toplist/artist',{
+          params: {
+            type: Number(val) || this.type
+          }
+        });
         if (data.code === 200) {
           this.artist = data.list.artists;
           this.artistLoading = false;
