@@ -201,7 +201,7 @@
     <div class="title">全球榜</div>
     <div class="allRanking">
       <div class="coverImg" v-for="(item,index) in allRankingList" :key="index">
-        <div class="content" :style="{background: 'url(' + item.coverImgUrl +')', backgroundSize:'cover'}">
+        <div class="content" :style="{background: 'url(' + item.coverImgUrl +')', backgroundSize:'cover'}"  @click="listDetail(item.id)">
           <div class="playCount">
             <i class="el-icon-caret-right"></i>
             <span v-if="item.playCount < 10000">{{item.playCount}}</span>
@@ -361,6 +361,9 @@
       // 歌手榜点击查看全部触发
       handleClickFn () {
         this.$router.push(`/cloudMusicRanking`);
+      },
+      listDetail (id) {
+        this.$router.push(`/playListDetail?id=${id}`);
       }
     }
   }

@@ -17,8 +17,113 @@
             placeholder="请输入内容"
             prefix-icon="el-icon-search"
             size="small"
+            @focus="focusFn"
+            @blur="blurFn"
             v-model="searchValue">
         </el-input>
+        <el-popover
+            placement="bottom"
+            width="400"
+            trigger="manual"
+            v-model="visible">
+          <div style="width: 400px">
+            <div v-if="showList" class="searchHistory">
+              <span>搜索历史 <i class="el-icon-delete"></i></span>
+            </div>
+            <div v-if="showList" class="hotSearchList">
+              热搜榜
+              <div class="searchList"
+                   :ref="`list${index}`"
+                   @mouseover="mouseOver(`list${index}`)"
+                   @mouseleave="mouseLeave(`list${index}`)"
+                   v-for="(item, index) in detailList">
+                <div class="list-left">{{index + 1}}</div>
+                <div class="list-right">
+                  <div class="list-searchWord">
+                    <span class="searchWord">{{item.searchWord}}</span>
+                    <i v-if="item.iconType === 5" class="el-icon-top"></i>
+                    <span class="score">{{item.score}}</span>
+                  </div>
+                  <div class="list-content" :title="item.content">
+                    {{item.content}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-if="showResult" class="searchResult">
+              <div style="margin-bottom: 5px">搜“<span style="color: #56A2E8;">{{searchValue}}</span>”相关结果 <i class="el-icon-arrow-right"></i></div>
+              <!--单曲开始-->
+              <div v-if="songs.length > 0" class="result-title"> <i class="icon iconfont icon-yinle1"></i>单曲</div>
+              <div class="searchResultList"
+                   v-if="songs.length > 0"
+                   :ref="`songs${index}`"
+                   @mouseover="mouseOver(`songs${index}`)"
+                   @mouseleave="mouseLeave(`songs${index}`)"
+                   v-for="(item, index) in songs">
+                <div class="result-list-left">{{index + 1}}</div>
+                <div class="result-list-right">
+                  <div class="result-content">
+                    <span class="searchWord">{{item.name}}</span>
+                    <span style="padding: 0 5px">-</span>
+                    <span class="name" v-for="(val, key) in item.artists">{{val.name}}</span>
+                  </div>
+                </div>
+              </div>
+              <!--单曲结束-->
+              <!--歌手开始-->
+              <div v-if="artists.length > 0" class="result-title"> <i class="el-icon-user"></i>歌手</div>
+              <div class="searchResultList"
+                   v-if="artists.length > 0"
+                   :ref="`artists${index}`"
+                   @mouseover="mouseOver(`artists${index}`)"
+                   @mouseleave="mouseLeave(`artists${index}`)"
+                   v-for="(item, index) in artists">
+                <div class="result-list-left">{{index + 1}}</div>
+                <div class="result-list-right">
+                  <div class="result-content">
+                    <span class="searchWord">{{item.name}}</span>
+                  </div>
+                </div>
+              </div>
+              <!--歌手结束-->
+              <!--专辑开始-->
+              <div v-if="albums.length > 0" class="result-title"> <i class="icon iconfont icon-zhuanjiguangpan"></i>专辑</div>
+              <div class="searchResultList"
+                   v-if="albums.length > 0"
+                   :ref="`albums${index}`"
+                   @mouseover="mouseOver(`albums${index}`)"
+                   @mouseleave="mouseLeave(`albums${index}`)"
+                   v-for="(item, index) in albums">
+                <div class="result-list-left">{{index + 1}}</div>
+                <div class="result-list-right">
+                  <div class="result-content">
+<!--                    {{item.name}}-->
+                    <span class="searchWord">{{item.name}}</span>
+                    <span style="padding: 0 5px">-</span>
+                    <span class="name">{{item.artist.name}}</span>
+                  </div>
+                </div>
+              </div>
+              <!--专辑结束-->
+              <!--歌单开始-->
+              <div v-if="playlists.length > 0" class="result-title"> <i class="icon iconfont icon-gedan"></i>歌单</div>
+              <div class="searchResultList"
+                   v-if="playlists.length > 0"
+                   :ref="`playlists${index}`"
+                   @mouseover="mouseOver(`playlists${index}`)"
+                   @mouseleave="mouseLeave(`playlists${index}`)"
+                   v-for="(item, index) in playlists">
+                <div class="result-list-left">{{index + 1}}</div>
+                <div class="result-list-right">
+                  <div class="result-content">
+                    <span class="searchWord">{{item.name}}</span>
+                  </div>
+                </div>
+              </div>
+              <!--歌单结束-->
+            </div>
+          </div>
+        </el-popover>
       </div>
       <div class="maikefeng">
         <span class="icon iconfont icon-maikefeng"></span>
@@ -65,16 +170,119 @@
     name: "index",
     data () {
       return {
-        searchValue: ''
+        searchValue: '',
+        visible: false,
+        detailList: [],
+        active: "",
+        showList: true,
+        showResult: false,
+        searchSuggest: {},
+        songs: [], // 歌曲
+        artists: [], // 歌手
+        playlists: [], // 歌单
+        albums: [] // 专辑
       };
     },
+    watch: {
+      searchValue: {
+        handler (val) {
+          if (val.length === 0) {
+            this.showList = true;
+          } else {
+            this.showList = false;
+            this.getSearchSuggest();
+          }
+        }
+      }
+    },
     methods: {
+      // 返回上一步
       prev () {
         this.$router.go(-1);
       },
+      // 后退一步
       back () {
         this.$router.go(1);
-      }
+      },
+      // 搜索框获得焦点
+      focusFn () {
+        this.visible = true;
+        // this.getSearchDefault();
+        this.getSearchHot();
+        this.getSearchHotDetail();
+      },
+      // 移入
+      mouseOver(index) {
+        const list = this.$refs[index];
+        list[0].style.backgroundColor = "#f3f3f3"
+      },
+      // 移出
+      mouseLeave(index) {
+        const list = this.$refs[index];
+        list[0].style.backgroundColor = ""
+      },
+      // 搜索框失去焦点
+      blurFn () {
+        // this.visible = false;
+      },
+      // 搜索
+      async getCloudSearch () {
+        const { data } = await this.$axios.get('/cloudsearch', {
+          params: {
+            // 获取的数据量
+            keywords: this.searchValue
+          },
+        });
+        if (data.code === 200) {
+        }
+      },
+      //默认搜索关键词
+      async getSearchDefault () {
+        const { data } = await this.$axios.get('/search/default');
+        if (data.code === 200) {
+        }
+      },
+      //热搜列表(简略)
+      async getSearchHot () {
+        const { data } = await this.$axios.get('/search/hot');
+        if (data.code === 200) {
+        }
+      },
+      //热搜列表(详细)
+      async getSearchHotDetail () {
+        const { data } = await this.$axios.get('/search/hot/detail');
+        if (data.code === 200) {
+          this.detailList = data.data;
+        }
+      },
+      //搜索建议
+      async getSearchSuggest () {
+        const { data } = await this.$axios.get('/search/suggest', {
+          params: {
+            // 获取的数据量
+            keywords: this.searchValue
+          },
+        });
+        if (data.code === 200) {
+          this.searchSuggest = data.result;
+          this.showResult = !!data.result;
+          this.songs = data.result.songs;
+          this.artists = data.result.artists;
+          this.playlists = data.result.playlists;
+          this.albums = data.result.albums;
+        }
+      },
+      //搜索多重匹配
+      async getSearchMultiMatch () {
+        const { data } = await this.$axios.get('/search/multimatch', {
+          params: {
+            // 获取的数据量
+            keywords: this.searchValue
+          },
+        });
+        if (data.code === 200) {
+        }
+      },
     }
   }
 </script>
@@ -153,6 +361,80 @@
       }
       .icon {
         padding: 10px;
+      }
+    }
+    .hotSearchList {
+      height: 400px;
+      overflow-y: auto;
+      .searchList {
+        display: flex;
+        width: 100%;
+        margin: 10px 0;
+        padding: 5px 0;
+        .list-left {
+          width: 30px;
+          line-height: 30px;
+          height: 30px;
+          text-align: center;
+        }
+        .list-right {
+          width: calc(100% - 30px);
+          .list-searchWord {
+            .score {
+              padding: 10px;
+              color: #929292;
+              font-size: 12px;
+            }
+            .searchWord {
+            }
+            i {
+              color: #ec4141;
+              padding: 0 10px;
+              font-weight: bold;
+            }
+          }
+          .list-content {
+            width: 350px;
+            overflow:hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            -o-text-overflow:ellipsis;
+            color: #929292;
+            font-size: 12px;
+          }
+        }
+      }
+    }
+    .searchResult {
+      height: 400px;
+      overflow-y: auto;
+      .result-title {
+        background-color: #f5f5f7;
+      }
+      .searchResultList {
+        display: flex;
+        width: 100%;
+        margin: 5px 0;
+        padding: 5px 0;
+        .result-list-left {
+          width: 30px;
+          /*line-height: 30px;*/
+          /*height: 30px;*/
+          text-align: center;
+        }
+        .result-list-right {
+          width: calc(100% - 30px);
+          .result-content {
+            .name {
+              padding: 10px;
+              color: #929292;
+              font-size: 12px;
+            }
+            .searchWord {
+              color: #56A2E8;
+            }
+          }
+        }
       }
     }
   }

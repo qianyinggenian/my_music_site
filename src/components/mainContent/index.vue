@@ -89,10 +89,6 @@
           this.activeName = this.$route.query.val ? this.$route.query.val : this.activeName;
         }
       },
-
-      getFlag (params) {
-        this.flag = params.flag;
-      },
       handleClick(tab, event) {
 
       },
