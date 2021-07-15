@@ -19,6 +19,7 @@
             size="small"
             @focus="focusFn"
             @blur="blurFn"
+            @keyup.enter.native="getCloudSearch"
             v-model="searchValue">
         </el-input>
         <el-popover
@@ -28,7 +29,17 @@
             v-model="visible">
           <div style="width: 400px">
             <div v-if="showList" class="searchHistory">
-              <span>搜索历史 <i class="el-icon-delete"></i></span>
+              <div>搜索历史 <i class="el-icon-delete" @click="handleDelete"></i></div>
+              <div class="historicalContent">
+                <div class="content"
+                     :ref="`label${index}`"
+                     @mouseover="mouseOver(`label${index}`, 'icon')"
+                     @mouseleave="mouseLeave(`label${index}`,'icon')"
+                     v-for="(item, index) in history" :key="index">
+                    <span>{{item.value}}</span>
+                    <i class="el-icon-close" style="height: 22px;line-height: 22px" @click="handleDelete(item.id)"></i>
+                </div>
+              </div>
             </div>
             <div v-if="showList" class="hotSearchList">
               热搜榜
@@ -166,6 +177,7 @@
 </template>
 
 <script>
+  import { randomID } from '@/utils/util'
   export default {
     name: "index",
     data () {
@@ -180,7 +192,9 @@
         songs: [], // 歌曲
         artists: [], // 歌手
         playlists: [], // 歌单
-        albums: [] // 专辑
+        albums: [], // 专辑
+        history: [],
+        searchHistory: [] // 搜索历史
       };
     },
     watch: {
@@ -188,12 +202,17 @@
         handler (val) {
           if (val.length === 0) {
             this.showList = true;
+            this.showResult = false;
+            this.history = JSON.parse(localStorage.getItem('searchHistory'));
           } else {
             this.showList = false;
+            this.showResult = true;
             this.getSearchSuggest();
           }
         }
       }
+    },
+    mounted () {
     },
     methods: {
       // 返回上一步
@@ -207,19 +226,25 @@
       // 搜索框获得焦点
       focusFn () {
         this.visible = true;
-        // this.getSearchDefault();
+        this.history = JSON.parse(localStorage.getItem('searchHistory'));
         this.getSearchHot();
         this.getSearchHotDetail();
       },
       // 移入
-      mouseOver(index) {
+      mouseOver(index, val) {
         const list = this.$refs[index];
-        list[0].style.backgroundColor = "#f3f3f3"
+        list[0].style.backgroundColor = "#f3f3f3";
+        if (val && val === 'icon') {
+          list[0].children[1].style.display = 'block';
+        }
       },
       // 移出
-      mouseLeave(index) {
+      mouseLeave(index,val) {
         const list = this.$refs[index];
-        list[0].style.backgroundColor = ""
+        list[0].style.backgroundColor = "";
+        if (val && val === 'icon') {
+          list[0].children[1].style.display = 'none';
+        }
       },
       // 搜索框失去焦点
       blurFn () {
@@ -227,6 +252,12 @@
       },
       // 搜索
       async getCloudSearch () {
+        const params = {
+          value: this.searchValue,
+          id: randomID()
+        };
+        this.searchHistory.push(params);
+        localStorage.setItem('searchHistory',JSON.stringify(this.searchHistory));
         const { data } = await this.$axios.get('/cloudsearch', {
           params: {
             // 获取的数据量
@@ -264,12 +295,12 @@
           },
         });
         if (data.code === 200) {
-          this.searchSuggest = data.result;
-          this.showResult = !!data.result;
-          this.songs = data.result.songs;
-          this.artists = data.result.artists;
-          this.playlists = data.result.playlists;
-          this.albums = data.result.albums;
+          this.searchSuggest = data.result ? data.result : this.searchSuggest;
+          // this.showResult = !!data.result;
+          this.songs = data.result.songs ? data.result.songs : this.songs;
+          this.artists = data.result.artists ? data.result.artists : this.artists;
+          this.playlists = data.result.playlists ? data.result.playlists : this.playlists;
+          this.albums = data.result.albums ? data.result.albums : this.albums;
         }
       },
       //搜索多重匹配
@@ -283,6 +314,15 @@
         if (data.code === 200) {
         }
       },
+      // 删除搜索历史
+      handleDelete (id) {
+        if (id) {
+
+        } else {
+          localStorage.removeItem("searchHistory");
+          this.history = [];
+        }
+      }
     }
   }
 </script>
@@ -363,6 +403,33 @@
         padding: 10px;
       }
     }
+    .searchHistory {
+      margin-bottom: 10px;
+      .historicalContent {
+        margin-top: 10px;
+        display: flex;
+        width: 100%;
+        .content {
+          border-radius: 20px;
+          border: 1px solid #d8d8d8;
+          padding: 0 10px;
+          font-size: 16px;
+          margin: 0 5px;
+          text-align: center;
+          display: flex;
+          justify-content: center;
+          justify-items: center;
+        }
+        i {
+          display: none;
+        }
+        /*&:hover .content i {*/
+        /*    display: block;*/
+        /*    height: 22px;*/
+        /*    line-height: 22px;*/
+        /*  }*/
+      }
+    }
     .hotSearchList {
       height: 400px;
       overflow-y: auto;
@@ -436,6 +503,10 @@
           }
         }
       }
+    }
+   /deep/ .el-input__inner:focus {
+      border-color: #ec4141 !important;
+      outline: 0;
     }
   }
 </style>

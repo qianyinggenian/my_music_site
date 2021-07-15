@@ -19,7 +19,7 @@
         <img v-lazy="topList.coverImgUrl" alt="" class="bg" />
         <div class="bg-mask"></div>
       </div>
-      <div class="tab-container">
+      <div class="tab-container" v-loading="loading">
         <div class="tab-bar">
           <div class="left">
             <el-popover
@@ -143,18 +143,22 @@
         total: 0, // 总数
         pageSize: 50,
         pageNum: 0,
-        more: true
+        more: true,
+        loading: true
       };
     },
     mounted() {
-      this.getTopList(1, '全部');
-      // 获取新的歌单列表
-      this.getList(50, this.selected);
-      this.getCatListFn();
-      this.getHotListFn();
-      this.getListFn();
+
     },
     methods: {
+      handleGetList () {
+        this.getTopList(1, '全部');
+        // 获取新的歌单列表
+        this.getList(50, this.selected);
+        this.getCatListFn();
+        this.getHotListFn();
+        this.getListFn();
+      },
       select (val) {
         this.selected = val;
           this.getTopList(1, this.selected);
@@ -229,6 +233,7 @@
         if (data.code === 200) {
           this.list = data.playlists;
           this.total = data.total;
+          this.loading = false;
         }
       },
       /**

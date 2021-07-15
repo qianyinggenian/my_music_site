@@ -135,11 +135,14 @@
       };
     },
     mounted() {
-      this.getBanner();
-      this.hotFn();
-      this.getInfo();
+
     },
     methods: {
+      handleGetList () {
+        this.getBanner();
+        this.hotFn();
+        this.getInfo();
+      },
       /**
        * @Description 电台轮播图
        * @author wangkangzhang

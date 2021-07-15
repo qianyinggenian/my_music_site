@@ -244,7 +244,7 @@
       };
     },
     mounted () {
-      this.getTopList();
+      // this.getTopList();
     },
     methods: {
       // 双击播放

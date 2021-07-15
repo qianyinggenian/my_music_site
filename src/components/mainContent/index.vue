@@ -90,7 +90,19 @@
         }
       },
       handleClick(tab, event) {
-
+        if (tab.name === 'second') {
+          this.$nextTick(() => {
+            this.$refs.song.handleGetList();
+          });
+        } else if (tab.name === 'third') {
+          this.$refs.radio.handleGetList();
+        } else if (tab.name === 'fourth') {
+          this.$refs.ranking.handleGetList();
+        } else if (tab.name === 'five') {
+          this.$refs.singer.handleGetList();
+        } else {
+          this.$refs.music.handleGetList();
+        }
       },
       musicFn (params) {
         this.activeName = params.value;
