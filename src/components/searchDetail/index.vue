@@ -72,6 +72,9 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+ /deep/ .el-tabs__content {
+    overflow: auto;
+    height: calc(100vh - 120px);
+  }
 </style>
