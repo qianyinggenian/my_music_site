@@ -271,8 +271,10 @@
           },
         });
         if (data.code === 200) {
+
+          // this.$router.push(`/searchDetail?val=${this.searchValue}`);
           this.$router.push({
-            path: '/searchDetail',
+            path: `/searchDetail?value=${this.searchValue}`,
           }, () => {});
           const item = {
             arr: data.result.songs,

@@ -34,20 +34,40 @@
         handler (val) {
           this.count = val
         }
-      }
+      },
+      $route: {
+        handler (val) {
+          console.log('val', val);
+          this.value = val.query.value;
+          this.activeName = 'first';
+        }
+      },
     },
     data() {
       return {
         activeName: 'first',
-        count: 0
+        count: 0,
+        value: ''
       };
     },
     mounted () {
+      // this.value = this.$route.query.value
     },
     methods: {
       handleClick(tab, event) {
-        console.log(tab, event);
+        if (tab.name === 'second') {
+          this.getList(100)
+        }
       },
+      async getList (val) {
+        const { data } = await this.$axios.get('/cloudsearch', {
+          params: {
+            // 获取的数据量
+            keywords: this.value,
+            type: val
+          },
+        });
+      }
     }
   }
 </script>
