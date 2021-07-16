@@ -97,7 +97,7 @@
         } else if (tab.name === 'third') {
           this.$refs.radio.handleGetList();
         } else if (tab.name === 'fourth') {
-          this.$refs.ranking.handleGetList();
+          this.$refs.ranking.getTopList();
         } else if (tab.name === 'five') {
           this.$refs.singer.handleGetList();
         } else {

@@ -177,7 +177,8 @@
 </template>
 
 <script>
-  import { randomID } from '@/utils/util'
+  import { randomID } from '@/utils/util';
+  // import { mapState } from 'vuex';
   export default {
     name: "index",
     data () {
@@ -196,6 +197,9 @@
         history: [],
         searchHistory: [] // 搜索历史
       };
+    },
+    computed: {
+      // ...mapState['history']
     },
     watch: {
       searchValue: {
@@ -248,15 +252,17 @@
       },
       // 搜索框失去焦点
       blurFn () {
-        // this.visible = false;
+        this.visible = false;
       },
       // 搜索
       async getCloudSearch () {
         const params = {
           value: this.searchValue,
           id: randomID()
-        };
-        this.searchHistory.push(params);
+        }; // 去重
+        this.searchHistory = this.searchHistory.filter(item => item.value !== this.searchValue);
+        this.searchHistory.unshift(params);
+        // this.$store.commit('handleHistory', params);
         localStorage.setItem('searchHistory',JSON.stringify(this.searchHistory));
         const { data } = await this.$axios.get('/cloudsearch', {
           params: {
@@ -265,6 +271,14 @@
           },
         });
         if (data.code === 200) {
+          this.$router.push({
+            path: '/searchDetail',
+          }, () => {});
+          const item = {
+            arr: data.result.songs,
+            songCount: data.result.songCount
+          };
+          this.$store.commit('handleTableData', item);
         }
       },
       //默认搜索关键词
@@ -317,7 +331,10 @@
       // 删除搜索历史
       handleDelete (id) {
         if (id) {
-
+          // this.$store.commit('handleDeleteHistory', id);
+          this.history = JSON.parse(localStorage.getItem('searchHistory'));
+          this.history = this.history.filter(val => val.id !== id);
+          localStorage.setItem('searchHistory', JSON.stringify(this.history));
         } else {
           localStorage.removeItem("searchHistory");
           this.history = [];
@@ -408,13 +425,17 @@
       .historicalContent {
         margin-top: 10px;
         display: flex;
+        /*float: left;*/
+        /*white-space: normal;*/
+        flex-wrap:wrap;
         width: 100%;
         .content {
           border-radius: 20px;
           border: 1px solid #d8d8d8;
           padding: 0 10px;
+          margin: 5px 5px;
           font-size: 16px;
-          margin: 0 5px;
+          /*margin: 0 5px;*/
           text-align: center;
           display: flex;
           justify-content: center;
@@ -423,11 +444,6 @@
         i {
           display: none;
         }
-        /*&:hover .content i {*/
-        /*    display: block;*/
-        /*    height: 22px;*/
-        /*    line-height: 22px;*/
-        /*  }*/
       }
     }
     .hotSearchList {

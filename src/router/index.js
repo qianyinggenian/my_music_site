@@ -15,7 +15,7 @@ import songDetail from '../components/songDetail/index'
 import songSheet from '../components/songSheet/index'
 import mainContent from '../components/mainContent/index';
 import cloudMusicRanking from '../components/cloudMusicRanking/index'
-// import musicFooter1 from '../components/musicFooter/index';
+import searchDetail from '../components/searchDetail/index';
 
 const router = new VueRouter({
   routes: [
@@ -75,12 +75,12 @@ const router = new VueRouter({
     {
       path:'/cloudMusicRanking',
       component: cloudMusicRanking
-    }
-    // {
-    //   path: '/musicFooter1',
-    //   component: musicFooter1
-    // },
+    },
+    {
+      path: '/searchDetail',
+      component: searchDetail
+    },
   ],
-})
+});
 
 export default router
