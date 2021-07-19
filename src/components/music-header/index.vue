@@ -35,7 +35,9 @@
                      :ref="`label${index}`"
                      @mouseover="mouseOver(`label${index}`, 'icon')"
                      @mouseleave="mouseLeave(`label${index}`,'icon')"
-                     v-for="(item, index) in history" :key="index">
+                     v-for="(item, index) in history" :key="index"
+                     @click="handleSearch(item.value)"
+                >
                     <span>{{item.value}}</span>
                     <i class="el-icon-close" style="height: 22px;line-height: 22px" @click="handleDelete(item.id)"></i>
                 </div>
@@ -253,6 +255,10 @@
       // 搜索框失去焦点
       blurFn () {
         this.visible = false;
+      },
+      handleSearch (val) {
+        this.searchValue = val;
+        this.getCloudSearch();
       },
       // 搜索
       async getCloudSearch () {

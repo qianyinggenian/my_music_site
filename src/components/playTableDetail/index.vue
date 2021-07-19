@@ -1,14 +1,15 @@
 <template>
   <div>
     <el-table
-        :data="tableData"
+        :data="tableData || arr"
         style="width: 100%"
+        size="mini"
         :row-class-name="tableRowClassName"
         @cell-dblclick="cellDblclick"
     >
       <el-table-column
           type="index"
-          width="50">
+          width="40">
       </el-table-column>
       <el-table-column
           prop="icon"
@@ -66,9 +67,13 @@
   export default {
     name: "index",
     props: {
+      tableData: {
+        type: Array,
+        default: () => []
+      }
     },
     computed: {
-      tableData () {
+      arr () {
         return this.$store.state.tableData;
       }
     },
@@ -97,6 +102,8 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+ i {
+   padding: 0 5px;
+ }
 </style>
