@@ -270,24 +270,9 @@
         this.searchHistory.unshift(params);
         // this.$store.commit('handleHistory', params);
         localStorage.setItem('searchHistory',JSON.stringify(this.searchHistory));
-        const { data } = await this.$axios.get('/cloudsearch', {
-          params: {
-            // 获取的数据量
-            keywords: this.searchValue
-          },
-        });
-        if (data.code === 200) {
-
-          // this.$router.push(`/searchDetail?val=${this.searchValue}`);
-          this.$router.push({
-            path: `/searchDetail?value=${this.searchValue}`,
-          }, () => {});
-          const item = {
-            arr: data.result.songs,
-            songCount: data.result.songCount
-          };
-          this.$store.commit('handleTableData', item);
-        }
+        this.$router.push({
+          path: `/searchDetail?value=${this.searchValue}`,
+        }, () => {});
       },
       //默认搜索关键词
       async getSearchDefault () {

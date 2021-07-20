@@ -15,10 +15,8 @@ export default new Vuex.Store({
     singer: '', // 歌手
     songDetail: {},
     songId: '',
-    history: [],
-    tableData: [],
     songCount: 0,
-    searchHistory: [],
+    searchValue: '',
     songSrc: '' // 歌曲来源
   },
   // methods
@@ -59,19 +57,6 @@ export default new Vuex.Store({
       state.singer = val.singer;
       state.songId = val.id;
       state.songSrc = val.songSrc;
-    },
-    handleHistory (state, value) {
-      state.history.unshift(value);
-      localStorage.setItem('searchHistory',JSON.stringify(state.history));
-    },
-    handleDeleteHistory (state, value) {
-      state.history = JSON.parse(localStorage.getItem('searchHistory'));
-      state.history = state.history.filter(val => val.id !== value);
-      localStorage.setItem('searchHistory', JSON.stringify(state.history));
-    },
-    handleTableData (state, value) {
-      state.tableData = value.arr;
-      state.songCount = value.songCount;
     }
   },
   // 异步方法

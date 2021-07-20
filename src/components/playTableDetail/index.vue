@@ -9,7 +9,8 @@
     >
       <el-table-column
           type="index"
-          width="40">
+          :index="indexMethod"
+          width="50">
       </el-table-column>
       <el-table-column
           prop="icon"
@@ -70,6 +71,14 @@
       tableData: {
         type: Array,
         default: () => []
+      },
+      pageNum: {
+        type: Number,
+        default: 0
+      },
+      pageSize: {
+        type: Number,
+        default: 30
       }
     },
     computed: {
@@ -78,6 +87,14 @@
       }
     },
     methods: {
+      // 自定义索引
+      indexMethod(index) {
+        if (this.pageNum >= 1) {
+          return (this.pageNum - 1 )* this.pageSize + index + 1;
+        } else {
+          return this.pageNum * this.pageSize + index + 1;
+        }
+      },
       duration (item) {
         return formatDuration(item)
       },
