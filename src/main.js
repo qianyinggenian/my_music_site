@@ -15,7 +15,13 @@ Vue.use(VueLazyLoad, {
   loading: require('./assets/images/loadding.svg'), // 加载中显示的图片
   attempt: 3,
   // listenEvents: [ 'scroll' ]
-})
+});
+// 导入Aplayer
+import APlayer from '@moefe/vue-aplayer';
+Vue.use(APlayer, {
+  defaultCover: './assets/images/cat.jpg',
+  productionTip: true,
+});
 Vue.config.productionTip = false;
 Vue.prototype.$validate = validate;
 Vue.use(ElementUI);

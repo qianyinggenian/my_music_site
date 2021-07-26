@@ -84,7 +84,54 @@
           </el-table-column>
         </el-table>
       </el-tab-pane>
-      <el-tab-pane label="歌单" name="fourth">歌单</el-tab-pane>
+      <el-tab-pane label="歌单" name="fourth">
+        <el-table
+            :data="playlists"
+            :show-header="false"
+            stripe
+            style="width: 100%">
+          <el-table-column
+              type="index"
+              :index="indexMethod"
+              min-width="5%">
+          </el-table-column>
+          <el-table-column
+              prop="coverImgUrl"
+              label="封面"
+              show-overflow-tooltip
+              min-width="10%">
+            <template slot-scope="scope">
+              <div>
+                <img width="60" height="60" :src="scope.row.coverImgUrl" alt="">
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+              prop="name"
+              label="歌单"
+              show-overflow-tooltip
+              min-width="30%">
+          </el-table-column>
+          <el-table-column
+              prop="trackCount"
+              label="数量"
+              show-overflow-tooltip
+              min-width="20%">
+            <template slot-scope="scope">
+              <span>{{scope.row.trackCount}}首</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+              prop="creator"
+              label="创建者"
+              show-overflow-tooltip
+              min-width="40%">
+            <template slot-scope="scope">
+              <span>by {{scope.row.creator.nickname}}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
       <el-tab-pane label="歌词" name="fifth">歌词</el-tab-pane>
       <el-tab-pane label="播客" name="sixth">播客</el-tab-pane>
       <el-tab-pane label="用户" name="seventh">用户</el-tab-pane>
@@ -145,7 +192,8 @@
         label: '首单曲',
         tableData: [],
         artists: [],
-        albums: []
+        albums: [],
+        playlists: []
       };
     },
     mounted () {
@@ -215,6 +263,7 @@
             this.label = '张专辑';
           } else if (type === 'fourth') {
             this.count = data.result.playlistCount;
+            this.playlists = data.result.playlists;
             this.label = '个歌单';
           } else if (type === 'fifth') {
             this.count = data.result.songCount;

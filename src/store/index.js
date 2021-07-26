@@ -17,6 +17,7 @@ export default new Vuex.Store({
     songId: '',
     songCount: 0,
     searchValue: '',
+    lyric: '', // 歌词
     songSrc: '' // 歌曲来源
   },
   // methods
@@ -57,6 +58,10 @@ export default new Vuex.Store({
       state.singer = val.singer;
       state.songId = val.id;
       state.songSrc = val.songSrc;
+    },
+    handleLyric (state, val) {
+      state.lyric = val;
+      console.log('lyric', state.lyric);
     }
   },
   // 异步方法
@@ -83,6 +88,45 @@ export default new Vuex.Store({
         })
       })
     },
+    // 获取歌词
+    getMusicLyric(content, id) {
+      return new Promise((resolve, reject) => {
+        axios.get(`/lyric?id=${id}`).then(res => {
+          resolve(res);
+          content.commit('handleLyric', res.data.lrc.lyric);
+        }, reason => {
+          reject(reason)
+        })
+      })
+    },
+    // 下载音乐
+    downloadMusic (state, songName) {
+      console.log('state', state);
+      axios({
+        method: 'get',
+        // url: `https:/xxx.com${url}`,
+        url: `${state.state.songSrc}`,
+        // url: 'http://m801.music.126.net/20210723112237/700849b3070ee6585a42a46d9b1409f3/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/8708798537/d7df/5b6b/20be/c45ae8acfea229a31cd7bc85ce136669.mp3',
+        // 必须显式指明响应类型是一个Blob对象，这样生成二进制的数据，才能通过window.URL.createObjectURL进行创建成功
+        responseType: 'blob',
+      }).then((res) => {
+        if (!res) {
+          return
+        }
+        // 将lob对象转换为域名结合式的url
+        let blobUrl = window.URL.createObjectURL(res.data);
+        let link = document.createElement('a');
+        document.body.appendChild(link);
+        link.style.display = 'none';
+        link.href = blobUrl;
+        // 设置a标签的下载属性，设置文件名及格式，后缀名最好让后端在数据格式中返回
+        link.download = `${songName}.mp3`;
+        // 自触发click事件
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+      })
+    }
   },
   // 模块
   modules: {

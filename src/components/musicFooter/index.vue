@@ -2,6 +2,9 @@
   <div class="container">
     <div class="left">
       <el-avatar shape="square" :size="50" :src="squareUrl"></el-avatar>
+      <div class="turn-top" @click="handleTurnTop">
+        <i class="el-icon-arrow-up"></i>
+      </div>
       <div class="singer">
         <div class="singer-top" :title="`${songName}`">{{songName}}</div>
         <div class="singer-bottom">{{singer}}</div>
@@ -90,6 +93,16 @@
         </div>
       </el-drawer>
       </div>
+      <el-drawer
+          title="我是标题"
+          class="turnTop"
+          :modal="false"
+          size="100%"
+          :visible.sync="turnTop"
+          :with-header="false"
+          :direction="direction">
+        <lrc></lrc>
+      </el-drawer>
     </div>
   </div>
 </template>
@@ -97,13 +110,17 @@
 <script>
   import {mapState} from 'vuex';
   import {changDuration} from '@/utils/util'
+  import lrc from '@/components/lrc'
   export default {
     name: "index",
     components: {
       // vueAudio
+      lrc
     },
     data () {
       return {
+        turnTop: false,
+        direction: 'btt',
         drawer: true,
         play: true, // 是否显示播放按钮
         pause: false,  // 是否显示暂停按钮
@@ -176,6 +193,9 @@
       this.$refs.audio.volume = this.volume;
     },
     methods: {
+      handleTurnTop () {
+        this.turnTop = !this.turnTop;
+      },
       // 是否静音
       handleSound () {
         this.showIcon = !this.showIcon;
@@ -327,6 +347,7 @@
         const interval = setInterval(() => {
           this.duration = this.$refs.audio.duration;
           this.currentTime = this.$refs.audio.currentTime;
+          console.log('this.currentTime', this.currentTime);
           this.endTime = changDuration(this.duration);
           this.startTime = changDuration(this.currentTime);
           this.percentage = this.currentTime / this.duration * 100;
@@ -356,6 +377,24 @@
     display: flex;
     .singer {
       padding: 0 10px;
+    }
+    .turn-top {
+      display: none;
+    }
+    &:hover .turn-top {
+      display: block;
+      cursor: pointer;
+      position: absolute;
+      left: 0;
+      height: 50px;
+      width: 50px;
+      line-height: 50px;
+      text-align: center;
+      background-color: #cccccc;
+      opacity: 0.6;
+      i {
+        font-size: 24px;
+      }
     }
     .singer-top {
       width: 300px;
@@ -492,6 +531,11 @@
 }
 /deep/ .drawer {
   padding: 0 !important;
-  height: calc(100% - 80px) !important;
+  height: calc(100% - 70px) !important;
+}
+/deep/ .turnTop {
+  padding: 0 !important;
+  height: calc(100% - 70px) !important;
+  z-index: 2000 !important;
 }
 </style>

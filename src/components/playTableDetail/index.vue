@@ -19,7 +19,7 @@
       >
         <template slot-scope="scope">
           <i class="icon iconfont icon-shoucang Icon"></i>
-          <i class="icon iconfont icon-xiazai Icon"></i>
+          <i class="icon iconfont icon-xiazai Icon" @click="fn(scope.row)"></i>
         </template>
       </el-table-column>
       <el-table-column
@@ -65,6 +65,7 @@
 <script>
   import { mapState } from 'vuex';
   import { formatDuration } from '@/utils/util'
+  import axios from "axios";
   export default {
     name: "index",
     props: {
@@ -87,6 +88,10 @@
       }
     },
     methods: {
+      async fn (row) {
+        await this.$store.dispatch('getSongUrlFn', row.id);
+        await  this.$store.dispatch('downloadMusic', row.name);
+      },
       // 自定义索引
       indexMethod(index) {
         if (this.pageNum >= 1) {
@@ -110,6 +115,7 @@
       cellDblclick (row, column, cell, event) {
         this.$store.dispatch('getSongUrlFn', row.id);
         this.$store.dispatch('getSongDetailFn', row.id);
+        this.$store.dispatch('getMusicLyric', row.id);
         this.$message({
           message: '已添加到播放列表',
           type: 'success'
