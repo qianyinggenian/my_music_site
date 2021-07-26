@@ -101,7 +101,8 @@
           :visible.sync="turnTop"
           :with-header="false"
           :direction="direction">
-        <lrc></lrc>
+        <div>sdrfew</div>
+        <lrc :lyric="lyric"></lrc>
       </el-drawer>
     </div>
   </div>
@@ -186,6 +187,9 @@
       playList () {
         this.tableData = this.$store.state.playList;
         return this.$store.state.playList;
+      },
+      lyric () {
+        return this.$store.state.lyric;
       }
     },
     mounted() {
@@ -347,7 +351,8 @@
         const interval = setInterval(() => {
           this.duration = this.$refs.audio.duration;
           this.currentTime = this.$refs.audio.currentTime;
-          console.log('this.currentTime', this.currentTime);
+          // console.log('this.currentTime', this.currentTime);
+          this.$store.commit('handleCurrentTime', this.currentTime);
           this.endTime = changDuration(this.duration);
           this.startTime = changDuration(this.currentTime);
           this.percentage = this.currentTime / this.duration * 100;

@@ -18,7 +18,13 @@ export default new Vuex.Store({
     songCount: 0,
     searchValue: '',
     lyric: '', // 歌词
+    currentTime: null,
     songSrc: '' // 歌曲来源
+  },
+  getters: {
+    getLyric (state) {
+      return state.lyric
+    }
   },
   // methods
   mutations: {
@@ -61,7 +67,12 @@ export default new Vuex.Store({
     },
     handleLyric (state, val) {
       state.lyric = val;
-      console.log('lyric', state.lyric);
+      console.log('state.lyric', state.lyric);
+      console.log(12121212);
+    },
+    handleCurrentTime (state, val) {
+      state.currentTime = val;
+      // console.log('val1111', val);
     }
   },
   // 异步方法
