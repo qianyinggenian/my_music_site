@@ -96,13 +96,13 @@
       <el-drawer
           title="我是标题"
           class="turnTop"
+          ref="turnTop"
           :modal="false"
           size="100%"
           :visible.sync="turnTop"
           :with-header="false"
           :direction="direction">
-        <div>sdrfew</div>
-        <lrc :lyric="lyric"></lrc>
+        <lrc ref="lyric" :lyric="lyric" :lyricStr="lyric"></lrc>
       </el-drawer>
     </div>
   </div>
@@ -136,8 +136,8 @@
         endTime: '',
         startTime: '',
         data: {},
-        volume: 0.5,
-        sound: 50,
+        volume: 0.3,
+        sound: 30,
         sound1: 0,
         height: 550,
         Id: '',
@@ -199,6 +199,9 @@
     methods: {
       handleTurnTop () {
         this.turnTop = !this.turnTop;
+        this.$nextTick(() => {
+          this.$refs.lyric.handleLrc(this.$store.state.lyric);
+        });
       },
       // 是否静音
       handleSound () {

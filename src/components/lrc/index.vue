@@ -1,9 +1,17 @@
 <template>
 <!--  歌词滚动：参考：https://blog.csdn.net/xzwwjl1314/article/details/107186824/-->
   <div class="container">
-    <ul ref="lyricUL">
-      <li v-for="(item, i) in lyricsObjArr" :style="{color: lyricIndex === i ? '#161616' : '#666666'}" :key="item.uid" :data-index='i' ref="lyric">{{item.lyric}}</li>
-    </ul>
+    <div class="left">
+      <img ref="img" src="./img/1.png" alt="" width="150" height="150">
+    </div>
+    <div class="middle">
+      <div class="content">
+        <div ref="lyricUL">
+          <div v-for="(item, i) in lyricsObjArr" :style="{color: lyricIndex === i ? '#ec4141' : '#666666'}" :key="item.uid" :data-index='i' ref="lyric">{{item.lyric}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="right"></div>
   </div>
 </template>
 
@@ -22,40 +30,42 @@
       };
     },
     props: {
-      lyric: {
-        type: String
-      }
+      // lyric: {
+      //   type: String
+      // },
+      // lyricStr: {
+      //   type: String
+      // }
     },
    computed: {
      // ...mapState,
-     // asd () {
-     //   return this.$store.state.lyric;
-     // },
      handleCurrentTime () {
        return this.$store.state.currentTime;
      }
     },
     watch: {
-      asd: {
-        handler (val){
-          console.log(123, val);
-        }
-      },
       handleCurrentTime: {
         handler (val) {
           this.currentTime = val;
           this.fn()
         }
-      }
+      },
+      // lyricStr: {
+      //   handler (val) {
+      //     this.lyric = val;
+      //     this.handleLrc();
+      //   }
+      // }
     },
     mounted() {
-      console.log('lyric', this.lyric);
-      // this.lyric = this.$store.state.lyric;
-      this.handleLrc();
-      // this.fn();
+      // console.log('lyric', this.lyric);
+      // this.handleLrc();
+      console.dir(this.$refs.img);
     },
     methods: {
-      handleLrc () {
+      handleLrc (val) {
+        this.lyric = val ? val : this.lyric;
+        this.lyricsObjArr = [];
         const regNewLine = /\n/;
         const lineArr = this.lyric.split(regNewLine); // 每行歌词的数组
         const regTime = /\[\d{2}:\d{2}.\d{2,3}\]/;
@@ -93,7 +103,9 @@
             const index = this.$refs.lyric[i].dataset.index;
             if (i === parseInt(index)) {
               this.lyricIndex = i;
-              this.$refs.lyricUL.style.transform = `translateY(${170 - (30 * (i + 1))}px)`;
+              // this.$refs.lyricUL.style.transform = `translateY(${170 - (30 * (i + 1))}px)`;
+              this.$refs.lyricUL.style.transform = `translateY(${100 - (30 * (i + 1))}px)`;
+              // this.$refs.lyric.style.transform = `translateY(${100 - (30 * (i + 1))}px)`;
             }
           }
         }
@@ -108,16 +120,46 @@
     width: 100%;
     display: flex;
     /*background-color: #ec4141;*/
-    justify-items: center;
-    text-align: center;
+    /*justify-items: center;*/
+    /*text-align: center;*/
     background: -webkit-linear-gradient(#c6c7d4, #ffffff); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#c6c7d4, #ffffff); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#c6c7d4, #ffffff); /* Firefox 3.6 - 15 */
     background: linear-gradient(#c6c7d4, #ffffff); /* 标准的语法 */
-    ul {
-      width: 100%;
-      list-style: none;
+    .left {
+      flex: 1;
+      /*display: flex;*/
+      /*justify-content: center;*/
       text-align: center;
+      img {
+        transform:rotateZ(45deg);
+      }
+    }
+    .middle {
+      flex: 1;
+      .content {
+        text-align: center;
+        justify-items: center;
+        justify-content: center;
+        display: flex;
+        height: calc(100vh - 200px);
+        overflow-y: auto;
+        margin-top: 50px;
+        overflow-x: hidden;
+      }
+      ul {
+        /*width: 100%;*/
+        background-color: #84bb58;
+        list-style: none;
+        /*display: flex;*/
+        text-align: center;
+        li {
+          width: 100%;
+        }
+      }
+    }
+    .right {
+      flex: 1;
     }
   }
 </style>
