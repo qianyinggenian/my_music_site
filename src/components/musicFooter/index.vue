@@ -102,7 +102,7 @@
           :visible.sync="turnTop"
           :with-header="false"
           :direction="direction">
-        <lrc ref="lyric" :lyric="lyric" :lyricStr="lyric"></lrc>
+        <lrc ref="lyric" :lyric="lyric" :isPlay="!play" :lyricStr="lyric"></lrc>
       </el-drawer>
     </div>
   </div>
@@ -144,7 +144,8 @@
         loop: '',
         tableData: [],
         ended: false,
-        index: 0
+        index: 0,
+        isPlay: true
       };
     },
     watch: {
@@ -318,6 +319,7 @@
           this.$refs.audio.pause();
         });
         this.play = true;
+        this.isPlay = false;
         this.pause = false;
         this.progressFn();
       },
@@ -354,7 +356,6 @@
         const interval = setInterval(() => {
           this.duration = this.$refs.audio.duration;
           this.currentTime = this.$refs.audio.currentTime;
-          // console.log('this.currentTime', this.currentTime);
           this.$store.commit('handleCurrentTime', this.currentTime);
           this.endTime = changDuration(this.duration);
           this.startTime = changDuration(this.currentTime);
@@ -362,10 +363,6 @@
           if (this.percentage === 100) {
             this.handlePlay();
             clearInterval(interval);
-            // this.$nextTick(() => {
-            //   this.ended = this.$refs.audio.ended;
-            //   console.log('ended',this.ended);
-            // });
           }
         }, 1000);
       }

@@ -67,8 +67,6 @@ export default new Vuex.Store({
     },
     handleLyric (state, val) {
       state.lyric = val;
-      console.log('state.lyric', state.lyric);
-      console.log(12121212);
     },
     handleCurrentTime (state, val) {
       state.currentTime = val;

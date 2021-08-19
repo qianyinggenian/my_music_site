@@ -2,7 +2,18 @@
 <!--  歌词滚动：参考：https://blog.csdn.net/xzwwjl1314/article/details/107186824/-->
   <div class="container">
     <div class="left">
-      <img ref="img" src="./img/1.png" alt="" width="150" height="150">
+      <div>
+        <div>
+          <img class="img" ref="img" src="./img/1.png" alt="" width="150" height="150">
+        </div>
+        <div class="avatar">
+          <div class="avatarOne">
+            <img class="" ref="avatar" :src="squareUrl" alt="" width="200" height="200">
+<!--            <el-avatar ref="avatar" :size="200" ></el-avatar>-->
+          </div>
+<!--          <img class="avatarOne" ref="avatar" :src="squareUrl" alt="" width="200" height="200">-->
+        </div>
+      </div>
     </div>
     <div class="middle">
       <div class="content">
@@ -26,41 +37,44 @@
         lyricsObjArr: [],
         lyricIndex: 0,
         lyric: '',
-        currentTime: null
+        currentTime: null,
+        // isPlay: false
       };
     },
     props: {
-      // lyric: {
-      //   type: String
-      // },
-      // lyricStr: {
-      //   type: String
-      // }
+      isPlay: {
+        type: Boolean
+      }
     },
    computed: {
      // ...mapState,
      handleCurrentTime () {
        return this.$store.state.currentTime;
+     },
+     // 返回歌曲封面url
+     squareUrl () {
+       return this.$store.state.squareUrl;
      }
     },
     watch: {
       handleCurrentTime: {
         handler (val) {
           this.currentTime = val;
-          this.fn()
+          this.LrcTransform();
+          // this.isPlay = !!val;
         }
       },
-      // lyricStr: {
-      //   handler (val) {
-      //     this.lyric = val;
-      //     this.handleLrc();
-      //   }
-      // }
+      isPlay: {
+        handler (val) {
+          if (!val) {
+            this.imgTransform();
+          }
+        }
+      }
     },
     mounted() {
-      // console.log('lyric', this.lyric);
-      // this.handleLrc();
       console.dir(this.$refs.img);
+      // this.imgTransform()
     },
     methods: {
       handleLrc (val) {
@@ -97,17 +111,28 @@
         }
         return Number(sec + '.' + ms);
       },
-      fn () {
+      LrcTransform () {
         for (let i = 0; i < this.lyricsObjArr.length; i++) {
           if (this.currentTime > (parseInt(this.lyricsObjArr[i].time))) {
             const index = this.$refs.lyric[i].dataset.index;
             if (i === parseInt(index)) {
               this.lyricIndex = i;
-              // this.$refs.lyricUL.style.transform = `translateY(${170 - (30 * (i + 1))}px)`;
               this.$refs.lyricUL.style.transform = `translateY(${100 - (30 * (i + 1))}px)`;
-              // this.$refs.lyric.style.transform = `translateY(${100 - (30 * (i + 1))}px)`;
             }
           }
+        }
+        this.imgTransform(this.isPlay);
+      },
+      imgTransform (val) {
+        if (val) {
+          this.$nextTick(() => {
+            // this.$refs.avatar.$el.style.animation = `rotate 6s linear infinite`;
+            // this.$refs.avatar.$el.style.animationPlayState = 'running';
+          });
+        } else {
+          this.$nextTick(() => {
+            this.$refs.avatar.$el.style.animationPlayState = 'paused';
+          });
         }
       }
     }
@@ -119,21 +144,41 @@
     height: 100%;
     width: 100%;
     display: flex;
-    /*background-color: #ec4141;*/
-    /*justify-items: center;*/
-    /*text-align: center;*/
     background: -webkit-linear-gradient(#c6c7d4, #ffffff); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#c6c7d4, #ffffff); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#c6c7d4, #ffffff); /* Firefox 3.6 - 15 */
     background: linear-gradient(#c6c7d4, #ffffff); /* 标准的语法 */
     .left {
       flex: 1;
-      /*display: flex;*/
-      /*justify-content: center;*/
-      text-align: center;
-      img {
+      display: flex;
+      justify-content: center;
+      .img {
         transform:rotateZ(45deg);
       }
+      .avatar {
+        background-color: #ec4141;
+        height: 250px;
+        width: 250px;
+        display: flex;
+        justify-content: center;
+        .avatarOne {
+          justify-items: center;
+          align-items: center;
+          display: flex;
+          img {
+            line-height: 250px;
+            border-radius: 50%;
+          }
+        }
+      }
+      /*@keyframes rotate{*/
+      /*  0%{*/
+      /*    transform: rotateZ(0deg);!*从0度开始*!*/
+      /*  }*/
+      /*  100%{*/
+      /*    transform: rotateZ(360deg);!*360度结束*!*/
+      /*  }*/
+      /*}*/
     }
     .middle {
       flex: 1;
