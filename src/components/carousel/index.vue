@@ -88,7 +88,6 @@ export default {
   },
   methods: {
     handleChangeFn (val) {
-      // console.log('val', val);
     },
     clickFn (index) {
       if (index.targetType === 1) {
