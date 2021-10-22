@@ -76,9 +76,7 @@
       width: 33.3%;
       height: 100px;
       border-radius: 5px;
-      /*background-color: #ec4141;*/
       position: relative;
-      /*-webkit-clip-path: polygon(100% 1%, 100% 100%, -15% 100%, 12% 0%);*/
       .content {
         height: 100px;
         width: 380px;
