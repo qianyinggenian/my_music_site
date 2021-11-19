@@ -124,9 +124,9 @@
     min-width: calc(100% - 100px);
     height: calc(100% - 120px);
     /deep/ .el-tabs__content {
-    /*overflow: hidden;*/
     position: relative;
-    height: 500px;
+    /*height: 500px;*/
+      height: calc(100% - 120px);
     overflow: auto;
     }
   }

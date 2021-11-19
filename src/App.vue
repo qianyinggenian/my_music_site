@@ -78,7 +78,6 @@ export default {
     background-color: #ffffff;
     color: #333;
     border-right: 1px solid #e1e1e1;
-    /*line-height: 100%;*/
     height: calc(100vh - 140px);
   }
   .el-main {
@@ -86,7 +85,9 @@ export default {
     color: #333;
     padding: 10px !important;
     overflow: hidden !important;
-    height: calc(100vh - 140px);
+    /*overflow: auto;*/
+    /*height: calc(100% - 250px);*/
+    height: 100%;
     min-width: 1000px;
   }
 </style>
