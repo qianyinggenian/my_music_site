@@ -24,6 +24,22 @@
         <div class="">{{item.name}}</div>
       </div>
     </div>
+    <!--    推荐歌单开始-->
+    <div @click="songListFn">
+      <span class="title">推荐歌单 <i class="el-icon-arrow-right"></i></span></div>
+    <div class="list-container">
+      <div class="list-content" v-for="(item,index) in list" :key="index"  @click="playListDetail(item.id)">
+        <!--       <img class="listImg" :src="item.picUrl" alt="">-->
+        <div class="listImg" :style="{background: 'url(' + item.picUrl +')', backgroundSize:'contain'}">
+          <div class="listTitle">{{item.copywriter}}</div>
+          <div class="playCount"><i class="el-icon-caret-right "></i>{{item.playCount}}</div>
+          <div class="playBtn">
+            <i class="el-icon-caret-right "></i>
+          </div>
+        </div>
+        <div class="">{{item.name}}</div>
+      </div>
+    </div>
     <!--    推荐歌单结束-->
     <!--    独家放送开始-->
     <div><span class="title">独家放送 <i class="el-icon-arrow-right"></i></span></div>
@@ -318,6 +334,16 @@
           display: block;
         }
       }
+    }
+  }
+  .list-container {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    .list-content {
+      width: 19%;
+      height: 20%;
+      padding: 5px;
     }
   }
   .sole {
