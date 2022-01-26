@@ -85,8 +85,6 @@ export default {
     color: #333;
     padding: 10px !important;
     overflow: hidden !important;
-    /*overflow: auto;*/
-    /*height: calc(100% - 250px);*/
     height: 100%;
     min-width: 1000px;
   }

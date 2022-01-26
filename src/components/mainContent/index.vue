@@ -120,14 +120,13 @@
 
 <style lang="less" scoped>
 .container {
+  height: 100%;
   .content {
-    min-width: calc(100% - 100px);
-    height: calc(100% - 120px);
-    /deep/ .el-tabs__content {
-    position: relative;
-    /*height: 500px;*/
-      height: calc(100% - 120px);
-    overflow: auto;
+    height: 100%;
+    overflow-y: hidden;
+    ::v-deep .el-tabs__content {
+      overflow-y: auto;
+      height: calc(100vh - 210px);
     }
   }
     .playListDetail {
