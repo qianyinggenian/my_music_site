@@ -99,7 +99,7 @@
         } else if (tab.name === 'fourth') {
           this.$refs.ranking.getTopList();
         } else if (tab.name === 'five') {
-          this.$refs.singer.handleGetList();
+          this.$refs.singer.getList();
         } else {
           this.$refs.music.handleGetList();
         }

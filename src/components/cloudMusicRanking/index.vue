@@ -14,7 +14,7 @@
                 <img :src="item.img1v1Url" alt="">
               </div>
             </div>
-            <div class="num">{{index + 1}}</div>
+            <div class="num" v-if="index < 3">{{index + 1}}</div>
           </div>
         </div>
         <div class="table">

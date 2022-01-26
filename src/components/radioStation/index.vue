@@ -12,14 +12,13 @@
     </div>
     <div class="middle">
       <div class="middleContent" v-for="(item,index) in cateList" :key="index">
-<!--        <div></div>-->
        <span> {{item.name}}</span>
       </div>
     </div>
     <div class="bottom">
       <!--电台个性化推荐开始-->
-      <div class="title">
-        电台个性化推荐 <i class="el-icon-arrow-right"></i>
+      <div>
+        <span class="title">电台个性化推荐</span> <i class="el-icon-arrow-right"></i>
       </div>
       <div class="content">
         <div class="info" v-for="(item,index) in personalizeList" :key="index">
@@ -27,28 +26,27 @@
             <img :src="item.picUrl" alt="加载中……">
             <div class="user">{{item.name}}</div>
           </div>
-          <div class="rcmdText">{{item.rcmdtext}}</div>
+          <div class="rcmdText" :title="item.rcmdtext">{{item.rcmdtext}}</div>
         </div>
       </div>
       <!--  电台个性化推荐结束-->
       <!--  创作翻唱开始-->
-      <div class="title">
-        创作翻唱 <i class="el-icon-arrow-right"></i>
+      <div>
+        <span class="title">创作翻唱</span> <i class="el-icon-arrow-right"></i>
       </div>
       <div class="content">
         <div class="info" v-for="(item,index) in creativeCoverList" :key="index">
           <div class="info-img-user">
             <img :src="item.picUrl" alt="加载中……">
-            <!--            <div class="img" :style="{background: 'url(' + item.picUrl +')', backgroundSize:'cover'}"></div>-->
             <div class="user">{{item.name}}</div>
           </div>
-          <div class="rcmdText">{{item.rcmdtext}}</div>
+          <div class="rcmdText" :title="item.rcmdtext">{{item.rcmdtext}}</div>
         </div>
       </div>
       <!-- 创作翻唱结束-->
       <!-- 声之剧场开始-->
-      <div class="title">
-        声之剧场 <i class="el-icon-arrow-right"></i>
+      <div>
+        <span class="title">声之剧场</span> <i class="el-icon-arrow-right"></i>
       </div>
       <div class="content">
         <div class="info" v-for="(item,index) in theatreList" :key="index">
@@ -57,53 +55,49 @@
               付费精品
             </div>
             <img :src="item.picUrl" alt="加载中……">
-            <!--            <div class="img" :style="{background: 'url(' + item.picUrl +')', backgroundSize:'cover'}"></div>-->
             <div class="user">{{item.name}}</div>
           </div>
-          <div class="rcmdText">{{item.rcmdtext}}</div>
+          <div class="rcmdText" :title="item.rcmdtext">{{item.rcmdtext}}</div>
         </div>
       </div>
       <!-- 声之剧场结束-->
-      <div class="title">
-        音乐故事 <i class="el-icon-arrow-right"></i>
+      <div>
+        <span class="title"></span>音乐故事 <i class="el-icon-arrow-right"></i>
       </div>
       <div class="content">
         <div class="info" v-for="(item,index) in storyList" :key="index">
           <div class="info-img-user">
             <img :src="item.picUrl" alt="加载中……">
-            <!--            <div class="img" :style="{background: 'url(' + item.picUrl +')', backgroundSize:'cover'}"></div>-->
             <div class="user">{{item.name}}</div>
           </div>
-          <div class="rcmdText">{{item.rcmdtext}}</div>
+          <div class="rcmdText" :title="item.rcmdtext">{{item.rcmdtext}}</div>
         </div>
       </div>
       <!-- 情感调频开始-->
-      <div class="title">
-        情感调频 <i class="el-icon-arrow-right"></i>
+      <div>
+        <span class="title">情感调频</span><i class="el-icon-arrow-right"></i>
       </div>
       <div class="content">
         <div class="info" v-for="(item,index) in emotionList" :key="index">
           <div class="info-img-user">
             <img :src="item.picUrl" alt="加载中……">
-            <!--            <div class="img" :style="{background: 'url(' + item.picUrl +')', backgroundSize:'cover'}"></div>-->
             <div class="user">{{item.name}}</div>
           </div>
-          <div class="rcmdText">{{item.rcmdtext}}</div>
+          <div class="rcmdText" :title="item.rcmdtext">{{item.rcmdtext}}</div>
         </div>
       </div>
       <!-- 情感调频结束-->
       <!-- 声音恋人开始-->
-      <div class="title">
-        声音恋人 <i class="el-icon-arrow-right"></i>
+      <div>
+        <span class="title">声音恋人</span> <i class="el-icon-arrow-right"></i>
       </div>
       <div class="content">
         <div class="info" v-for="(item,index) in voiceLoverList" :key="index">
           <div class="info-img-user">
             <img :src="item.picUrl" alt="加载中……">
-            <!--            <div class="img" :style="{background: 'url(' + item.picUrl +')', backgroundSize:'cover'}"></div>-->
             <div class="user">{{item.name}}</div>
           </div>
-          <div class="rcmdText">{{item.rcmdtext}}</div>
+          <div class="rcmdText" :title="item.rcmdtext">{{item.rcmdtext}}</div>
         </div>
       </div>
       <!-- 声音恋人结束-->
@@ -244,11 +238,7 @@
       // 音乐故事
       async getStoryListFn () {
         const { data } = await this.$axios.get('/dj/radio/hot?cateId=2');
-          // if (data.code === 200) {
-          //     this.storyList = data.djRadios;
-          // }
         if (data.code === 200) {
-          // this.theatreList = data.djRadios;
           for (const key of data.djRadios) {
             this.storyList.push(key);
             if (this.storyList.length >= 6) {
@@ -305,68 +295,72 @@
   .bottom {
     margin: 0 50px;
     .title {
-      margin: 10px 0;
+      margin-top: 10px;
+      margin-left: 10px;
       height: 30px;
-      padding: 0 10px;
+      line-height: 30px;
+      cursor: pointer;
     }
     .content {
-        height: 250px;
-        .info {
-          float: left;
-          width: 160px;
-          height: 200px;
+      height: 280px;
+      margin-bottom: 10px;
+      .info {
+        float: left;
+        width: 240px;
+        height: 240px;
+        position: relative;
+        padding: 10px 12px 10px 10px;
+        .info-img-user {
           position: relative;
-          padding: 10px 12px 10px 10px;
-          .info-img-user {
-            position: relative;
-            height: 160px;
-            background-color: #b1b1b1;
-            cursor: pointer;
+          height: 240px;
+          background-color: #b1b1b1;
+          cursor: pointer;
+          border-radius: 10px;
+          img {
+            /*z-index: 20;*/
+            width: 240px;
+            height: 240px;
+            opacity: 0.6;
             border-radius: 10px;
-            img {
-              /*z-index: 20;*/
-              width: 160px;
-              height: 160px;
-              opacity: 0.6;
-              border-radius: 10px;
-              filter: alpha(opacity=60);
-            }
-            .user {
-              position: absolute;
-              left: 0;
-              bottom: 0;
-              margin: 0 0 5px 5px;
-              color: #ffffff;
-              width: 100%;
-              overflow:hidden;
-              white-space: nowrap;
-              text-overflow: ellipsis;
-              -o-text-overflow:ellipsis;
-              font-size: 14px;
-            }
-            .pay {
-              position: absolute;
-              top: 0;
-              left: 0;
-              background-color: #ec4141;
-              z-index: 10;
-              border-radius: 10px 0 10px 0;
-              font-size: 12px;
-              padding: 3px;
-              width: 50px;
-              color: white;
-              /*padding: 5px;*/
-            }
+            filter: alpha(opacity=60);
           }
-          .rcmdText {
-            cursor: pointer;
-            /*display: none;*/
-            /*word-break: break-word;*/
-            word-wrap: break-word;
-            margin-top: 10px;
+          .user {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            margin: 0 0 5px 5px;
+            color: #ffffff;
+            width: 100%;
+            overflow:hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            -o-text-overflow:ellipsis;
             font-size: 14px;
           }
+          .pay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #ec4141;
+            z-index: 10;
+            border-radius: 10px 0 10px 0;
+            font-size: 12px;
+            padding: 3px;
+            width: 50px;
+            color: white;
+          }
         }
+        .rcmdText {
+          cursor: pointer;
+          word-wrap: break-word;
+          overflow:hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          -o-text-overflow:ellipsis;
+          margin-top: 10px;
+          font-size: 14px;
+        }
+      }
     }
   }
 }
