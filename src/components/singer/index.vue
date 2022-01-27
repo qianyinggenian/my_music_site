@@ -58,7 +58,7 @@
           <div class="img" :style="{background: 'url(' + item.img1v1Url +')', backgroundSize:'cover'}">
           </div>
           <div class="name">
-            <div class="username" :title="item.name">{{item.name}}</div>
+            <div class="username" :title="item.name" @click="singerDetailFn(item.id)">{{item.name}}</div>
             <div class="userInfo" v-if="item.accountId"><el-avatar :size="18" icon="el-icon-user-solid"></el-avatar></div>
           </div>
         </div>
@@ -111,6 +111,14 @@
           this.artists = data.artists;
           console.log(this.artists);
         }
+      },
+      /**
+       * @Description 歌手详情
+       * @author wangkangzhang
+       * @date 2022/1/27
+      */
+      singerDetailFn (id) {
+        this.$router.push(`/singerDetail?id=${id}`);
       }
     }
   }
@@ -208,6 +216,9 @@
             align-items: center;
             display: flex;
             cursor: pointer;
+            .el-avatar {
+              background-color: #ec4141;
+            }
           }
           .username {
             width: calc(100% - 25px);

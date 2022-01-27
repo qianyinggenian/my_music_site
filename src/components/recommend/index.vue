@@ -21,7 +21,7 @@
               <div class="playCount"><i class="el-icon-caret-right "></i>{{item.playCount}}</div>
             </div>
             <div class="playBtn">
-              <i class="el-icon-caret-right "></i>
+              <i class="el-icon-video-play"></i>
             </div>
           </div>
           <div class="name">{{item.name}}</div>
@@ -307,14 +307,14 @@
           position: absolute;
           right: 10px;
           bottom: 10px;
-          background-color: white;
+          /*background-color: white;*/
           width: 30px;
           height: 30px;
           line-height: 30px;
           text-align: center;
           border-radius: 15px;
           i {
-            font-size: 18px;
+            font-size: 24px;
             color: red;
           }
         }
