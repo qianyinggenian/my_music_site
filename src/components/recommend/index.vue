@@ -138,7 +138,9 @@
         this.getRadioList();
       },
       songListFn () {
-        this.$router.push(`/mainContent?type=music&val=second`);
+        console.log(this.$router);
+        this.$emit('recommend', {value: 'second'});
+        // this.$router.push(`/mainContent?type=music&val=second`);
       },
       /**
        * @Description

@@ -147,9 +147,6 @@
         loading: true
       };
     },
-    mounted() {
-
-    },
     methods: {
       handleGetList () {
         this.getTopList(1, '全部');

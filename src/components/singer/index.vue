@@ -54,6 +54,14 @@
         </div>
       </div>
       <div class="middle">
+        <div class="container" v-for="(item,index) in artists" :key="index">
+          <div class="img" :style="{background: 'url(' + item.img1v1Url +')', backgroundSize:'cover'}">
+          </div>
+          <div class="name">
+            <div class="username" :title="item.name">{{item.name}}</div>
+            <div class="userInfo" v-if="item.accountId"><el-avatar :size="18" icon="el-icon-user-solid"></el-avatar></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -64,14 +72,14 @@
     name: "index",
     data () {
       return {
-        singerList: [],
+        artists: [],
         initial: '-1', // 热门值
         type: '-1', // 类型
         area: '-1' // 地区
       };
     },
     mounted () {
-      this.getList();
+      // this.getList();
     },
     methods: {
       /**
@@ -83,9 +91,6 @@
         this.type = type || this.type;
         this.area = area || this.area;
         this.initial = initial || this.initial;
-        console.log(this.type);
-        console.log(this.area);
-        console.log(this.initial);
         this.getList();
       },
       /**
@@ -103,7 +108,8 @@
           },
         });
         if (data.code === 200) {
-          this.singerList = data.result;
+          this.artists = data.artists;
+          console.log(this.artists);
         }
       }
     }
@@ -174,6 +180,45 @@
     }
     .middle {
       height: calc(100% - 110px);
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      .container {
+        height: 190px;
+        width: 180px;
+        margin: 10px 0;
+        .img {
+          width: 165px;
+          height: 165px;
+          display: flex;
+          border-radius: 5px;
+          justify-content: center;
+          background-repeat: no-repeat;
+        }
+        .name {
+          height: 25px;
+          width: 165px;
+          display: flex;
+          position: relative;
+          color: white;
+          .userInfo {
+            height: 25px;
+            width: 25px;
+            justify-content: flex-end;
+            align-items: center;
+            display: flex;
+            cursor: pointer;
+          }
+          .username {
+            width: calc(100% - 25px);
+            cursor: pointer;
+            overflow:hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            -o-text-overflow:ellipsis;
+          }
+        }
+      }
     }
   }
   .active {

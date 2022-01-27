@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container">
-      <div class="top" v-loading="topLoading">
+      <div class="top">
         <div class="left">
           <img :src="playlist.coverImgUrl" alt="" />
         </div>
@@ -141,6 +141,7 @@
   import tableMix from './tableMix';
   import subscribers from '../subscribers';
   import commentPlaylist from '../commentPlaylist';
+  import axios from 'axios';
   // import commonTable from '../commonTable';
   // import Table from '../table';
   export default {
@@ -184,6 +185,9 @@
       }
     },
     mounted() {
+      this.fn();
+      // this.getPlaylistSubscribersFn();
+      // this.getCommentPlaylistFn();
       //
     },
     methods: {
@@ -211,7 +215,8 @@
       // 获取歌单详情
       async getPlayListDetailFn(id) {
         this.playListDetailId = id;
-        // this.playListDetailId = 128635359;
+        this.getPlaylistSubscribersFn();
+        this.getCommentPlaylistFn();
         const { data } = await this.$axios.get('/playlist/detail', {
           params: {
             // 获取的数据量
@@ -244,10 +249,6 @@
             key.duration = this.formatDuration(key.dt);// 时长
           }
           this.topLoading = false;
-          this.$nextTick(() => {
-            this.getPlaylistSubscribersFn();
-            this.getCommentPlaylistFn();
-          });
         }
       },
       // 歌曲时长转换
@@ -319,7 +320,15 @@
         }
         return years + '-' + month + '-' + days + ' ' + hours + ':' + minutes + ':' + seconds;
       },
-      handleClick () {},
+      handleClick () {
+        if (this.activeName === 'first') {
+
+        } else if (this.activeName === 'second') {
+          this.getCommentPlaylistFn();
+        } else {
+          this.getPlaylistSubscribersFn();
+        }
+      },
     }
   }
 </script>

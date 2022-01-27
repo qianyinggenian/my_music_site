@@ -3,7 +3,7 @@
     <div class="content" v-if="flag">
       <el-tabs class="tabs" v-if="type === 'music'" v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="个性推荐" name="first">
-            <recommend ref="recommend" @recommend="musicFn" @playList="playListFn"></recommend>
+            <recommend ref="recommend" @recommend="recommendFn" @playList="playListFn"></recommend>
           </el-tab-pane>
           <el-tab-pane label="歌单" name="second">
             <songSheet ref="song"></songSheet>
@@ -76,7 +76,6 @@
       }
     },
     mounted () {
-
     },
     methods: {
       getInfo() {
@@ -87,25 +86,31 @@
         } else {
           this.type = this.$route.query.type ? this.$route.query.type : this.type;
           this.activeName = this.$route.query.val ? this.$route.query.val : this.activeName;
+          this.handleClick()
         }
       },
       handleClick(tab, event) {
-        if (tab.name === 'second') {
+        if (this.activeName === 'first') {
+          this.$nextTick(() => {
+            this.$refs.recommend.getListFn();
+          });
+        } else if (this.activeName === 'second') {
           this.$nextTick(() => {
             this.$refs.song.handleGetList();
           });
-        } else if (tab.name === 'third') {
+        } else if (this.activeName === 'third') {
           this.$refs.radio.handleGetList();
-        } else if (tab.name === 'fourth') {
+        } else if (this.activeName === 'fourth') {
           this.$refs.ranking.getTopList();
-        } else if (tab.name === 'five') {
+        } else if (this.activeName === 'five') {
           this.$refs.singer.getList();
         } else {
           this.$refs.music.handleGetList();
         }
       },
-      musicFn (params) {
+      recommendFn (params) {
         this.activeName = params.value;
+        this.handleClick();
       },
       playListFn (params) {
         this.playListDetailId = params.id;
