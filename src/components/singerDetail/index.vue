@@ -26,7 +26,17 @@
             </div>
             <div class="right">
               <div class="header">热门50首<i class="el-icon-video-play"></i><i class="el-icon-folder-add"></i></div>
-              <div class="content">swfraee</div>
+              <div class="content" v-if="index <= 9 " :class="(index + 1) % 2 === 1 ? 'active' : ''" v-for="(item,index) in hotSongs" :key="index">
+                <div class="content-left">
+                  <span v-if="index === 9">{{index + 1}}</span>
+                  <span v-else>0{{index + 1}}</span>
+                  <i class="el-icon-star-on" v-if="collect && collectIndex === index" @click="handleCollect(false,index)"></i>
+                  <i class="el-icon-star-off" v-else @click="handleCollect(true,index)"></i>
+                  <i class="icon iconfont icon-xiazai1" @click="handleDown(item.id)"></i>
+                </div>
+                <div class="content-middle">{{item.name}}</div>
+                <div class="content-right">{{item.dt}}</div>
+              </div>
             </div>
           </div>
         </el-tab-pane>
@@ -39,10 +49,14 @@
 </template>
 
 <script>
+  import { formatDuration } from '@/utils/util'
+  import axios from 'axios';
   export default {
     name: "index",
     data () {
       return {
+        collectIndex: null,
+        collect: false,
         activeName: 'first',
         singerId: '',
         detail: {},
@@ -60,8 +74,8 @@
         this.getSingerDesc();
         this.getSingerMv();
         this.getSingerArtists();
-        this.getSingerAlbum();
-        this.getSingerSame();
+        // this.getSingerAlbum();
+        // this.getSingerSame();
       },
       /**
        * @Description 获取歌手详情信息
@@ -115,7 +129,10 @@
         });
         if (data.code === 200) {
           this.artist = data.artist;
-          this.hotSongs = data.hotSongs;
+          this.hotSongs = data.hotSongs.map(val => {
+            val.dt = formatDuration(val.dt);
+            return val;
+          });
         }
       },
       /**
@@ -148,7 +165,59 @@
        * @author wangkangzhang
        * @date 2022/1/27
       */
-      handleClick () {}
+      handleClick () {},
+      /**
+       * @Description 是否收藏热门歌曲
+       * @author wangkangzhang
+       * @date 2022/1/27
+      */
+      handleCollect (val,index) {
+        this.collect = val;
+        this.collectIndex = index;
+      },
+      /**
+       * @Description
+       * @author wangkangzhang
+       * @date 2022/1/27
+      */
+      async handleDown (id) {
+        const { data } = await this.$axios.get('/song/download/url', {
+          params: {
+            id
+          },
+        });
+      },
+      down (url) {
+        // eslint-disable-next-line no-unused-vars
+        // let downUrl = this.$refs.audio.src; // 音乐地址 : 例如: http://m10.music.126.net/20201119111830/51f6bbc51ea067e9d258fa73183b16b1/ymusic/obj/w5zDlMODwrDDiGjCn8Ky/2828582250/29aa/7bcc/f324/6699f160b0c39b010e6e009d271e4948.mp3
+        let downUrl = url; // 音乐地址 : 例如: http://m10.music.126.net/20201119111830/51f6bbc51ea067e9d258fa73183b16b1/ymusic/obj/w5zDlMODwrDDiGjCn8Ky/2828582250/29aa/7bcc/f324/6699f160b0c39b010e6e009d271e4948.mp3
+        // eslint-disable-next-line no-unused-vars
+        let fileName = playerApi.downFileName; // 文件名设置: 起风了
+        // eslint-disable-next-line no-unused-vars
+        axios({
+          method: 'get',
+          url: downUrl,
+          responseType: 'blob',
+          headers: {'content-type': 'audio/mpeg'}
+          // headers: {'content-length': '4066786', 'content-type': 'audio/mpeg'}
+        }).then((res) => {
+          // eslint-disable-next-line no-unused-vars
+          let blobType = 'application/force-download'; // 设置blob请求头
+          // eslint-disable-next-line no-unused-vars
+          let blob = new Blob([res.data], {type: res.data.type}); // 创建blob 设置blob文件类型 data 设置为后端返回的文件(例如mp3,jpeg) type:这里设置后端返回的类型 为 mp3
+          let downa = document.createElement('a'); // 创建A标签
+          // eslint-disable-next-line no-unused-vars
+          let href = window.URL.createObjectURL(blob); // 创建下载的链接
+          downa.href = href; // 下载地址
+          downa.download = fileName; // 下载文件名
+          document.body.appendChild(downa);
+          downa.click(); // 模拟点击A标签
+          document.body.removeChild(downa); // 下载完成移除元素
+          window.URL.revokeObjectURL(href); // 释放blob对象
+        }).catch(function (error) {
+          console.log(error)
+        })
+      },
     }
   }
 </script>
@@ -220,7 +289,6 @@
       display: flex;
       .left {
         width: 200px;
-        background-color: #56A2E8;
         img {
           width: 145px;
           height: 145px;
@@ -238,8 +306,35 @@
             color: #ec4141;
           }
         }
+        .content {
+          display: flex;
+          line-height: 30px;
+          width: 100%;
+          height: 30px;
+          margin: 5px 0;
+          color: #555555;
+          .content-left {
+            width: 100px;
+            color: #555555;
+            padding: 0 10px;
+            i {
+              margin: 0 10px;
+            }
+          }
+          .content-middle {
+            width: calc(100% - 250px);
+            color: #ffffff;
+          }
+          .content-right {
+            width: 150px;
+          }
+        }
+        .active {
+          background-color: #2e2e2e;
+        }
       }
     }
   }
 }
+
 </style>
