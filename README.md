@@ -1,6 +1,8 @@
 # test
 参考：[CloudMusic](https://gitee.com/penggang-home/cloud-music) 
 
+参考：https://www.bookbook.cc/music/#/discovery
+
 API 接口：https://neteasecloudmusicapi.vercel.app/#/
 
 备注： 本项目仅做学习使用，请勿用于商业用途，在项目中引入的外部工具、代码和开发原型归原作者所有。

@@ -185,10 +185,6 @@
       }
     },
     mounted() {
-      this.fn();
-      // this.getPlaylistSubscribersFn();
-      // this.getCommentPlaylistFn();
-      //
     },
     methods: {
       // 双击播放

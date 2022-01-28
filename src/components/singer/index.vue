@@ -55,7 +55,7 @@
       </div>
       <div class="middle">
         <div class="container" v-for="(item,index) in artists" :key="index">
-          <div class="img" :style="{background: 'url(' + item.img1v1Url +')', backgroundSize:'cover'}">
+          <div class="img" :style="{background: 'url(' + item.img1v1Url +')', backgroundSize:'cover'}" @click="singerDetailFn(item.id)">
           </div>
           <div class="name">
             <div class="username" :title="item.name" @click="singerDetailFn(item.id)">{{item.name}}</div>
@@ -202,6 +202,7 @@
           border-radius: 5px;
           justify-content: center;
           background-repeat: no-repeat;
+          cursor: pointer;
         }
         .name {
           height: 25px;

@@ -26,16 +26,18 @@
             </div>
             <div class="right">
               <div class="header">热门50首<i class="el-icon-video-play"></i><i class="el-icon-folder-add"></i></div>
-              <div class="content" v-if="index <= 9 " :class="(index + 1) % 2 === 1 ? 'active' : ''" v-for="(item,index) in hotSongs" :key="index">
-                <div class="content-left">
-                  <span v-if="index === 9">{{index + 1}}</span>
-                  <span v-else>0{{index + 1}}</span>
-                  <i class="el-icon-star-on" v-if="collect && collectIndex === index" @click="handleCollect(false,index)"></i>
-                  <i class="el-icon-star-off" v-else @click="handleCollect(true,index)"></i>
-                  <i class="icon iconfont icon-xiazai1" @click="handleDown(item.id)"></i>
+              <div class="hot" v-if="index <= 9 " :class="(index + 1) % 2 === 1 ? 'active' : ''" v-for="(item,index) in hotSongs" :key="index">
+                <div class="content">
+                  <div class="content-left">
+                    <span v-if="index === 9">{{index + 1}}</span>
+                    <span v-else>0{{index + 1}}</span>
+                    <i class="el-icon-star-on" v-if="collect && collectIndex === index" @click="handleCollect(false,index)"></i>
+                    <i class="el-icon-star-off" v-else @click="handleCollect(true,index)"></i>
+                    <i class="icon iconfont icon-xiazai1" @click="handleDown(item.id)"></i>
+                  </div>
+                  <div class="content-middle">{{item.name}}</div>
+                  <div class="content-right">{{item.dt}}</div>
                 </div>
-                <div class="content-middle">{{item.name}}</div>
-                <div class="content-right">{{item.dt}}</div>
               </div>
             </div>
           </div>
@@ -74,8 +76,8 @@
         this.getSingerDesc();
         this.getSingerMv();
         this.getSingerArtists();
-        // this.getSingerAlbum();
-        // this.getSingerSame();
+        this.getSingerAlbum();
+        this.getSingerSame();
       },
       /**
        * @Description 获取歌手详情信息
@@ -306,27 +308,32 @@
             color: #ec4141;
           }
         }
-        .content {
-          display: flex;
-          line-height: 30px;
-          width: 100%;
-          height: 30px;
-          margin: 5px 0;
-          color: #555555;
-          .content-left {
-            width: 100px;
+        .hot {
+          .content {
+            display: flex;
+            line-height: 30px;
+            width: 100%;
+            height: 30px;
+            margin: 5px 0;
             color: #555555;
-            padding: 0 10px;
-            i {
-              margin: 0 10px;
+            .content-left {
+              width: 100px;
+              color: #555555;
+              padding: 0 10px;
+              i {
+                margin: 0 10px;
+              }
+            }
+            .content-middle {
+              width: calc(100% - 250px);
+              color: #ffffff;
+            }
+            .content-right {
+              width: 150px;
             }
           }
-          .content-middle {
-            width: calc(100% - 250px);
-            color: #ffffff;
-          }
-          .content-right {
-            width: 150px;
+          &:hover .content {
+            background-color: #373737;
           }
         }
         .active {
