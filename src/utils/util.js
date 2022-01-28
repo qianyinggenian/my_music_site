@@ -52,6 +52,23 @@ export function formatDuration(duration) {
   let second = Math.floor(duration /1000 % 60).toString().padStart(2, '0');
   return minute + ':' + second
 }
+// 毫秒时间格式转换，例如转化成"yyyy-MM-dd"格式
+export function formatDate(time,fmt) {
+  const date = new Date(time);
+  var o = {
+    "M+": date.getMonth() + 1, //月份
+    "d+": date.getDate(), //日
+    "h+": date.getHours(), //小时
+    "m+": date.getMinutes(), //分
+    "s+": date.getSeconds(), //秒
+    "q+": Math.floor((date.getMonth() + 3) / 3), //季度
+    "S": date.getMilliseconds() //毫秒
+  };
+  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+  for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+  return fmt;
+}
 // 秒
 export function changDuration(duration) {
   // 分钟：向下取整，转为字符，不足两位前边补零

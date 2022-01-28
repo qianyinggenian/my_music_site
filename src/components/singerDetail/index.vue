@@ -39,11 +39,11 @@
         <div class="album" v-if="activeName === 'first'">
           <div class="album-first" v-if="modelType === 'first'">
             <div class="album-container" v-for="(item,index) in hotAlbums" :key="index">
-              <div>
-                <img :src="item.blurPicUrl" alt="">
+              <div class="blurPicUrl" :style="{background: 'url(' + item.blurPicUrl +')', backgroundSize:'cover'}">
+                <div class="playBtn"><i class="el-icon-video-play "></i></div>
               </div>
-              <div></div>
-              <div class="publishTime"></div>
+              <div class="albumName">{{item.name}}<span>{{item.alias[0]}}</span></div>
+              <div class="publishTime">发布时间：{{item.publishTime}}</div>
             </div>
           </div>
           <div class="album-third" v-if="modelType === 'third'">
@@ -77,8 +77,7 @@
 </template>
 
 <script>
-  import { formatDuration } from '@/utils/util'
-  import axios from 'axios';
+  import { formatDuration, formatDate } from '@/utils/util'
   export default {
     name: "index",
     data () {
@@ -174,11 +173,14 @@
         const { data } = await this.$axios.get('/artist/album', {
           params: {
             id: this.singerId,
-            limit: 30
+            limit: 1000
           },
         });
         if (data.code === 200) {
-          this.hotAlbums = data.hotAlbums;
+          this.hotAlbums = data.hotAlbums.map(val => {
+            val.publishTime = formatDate(val.publishTime,'yyyy-MM-dd');
+            return val;
+          });
         }
       },
       /**
@@ -347,10 +349,37 @@
         }
         .album-container {
           width: 260px;
-          height: 310px;
-          img {
+          height: 300px;
+          margin: 0 5px;
+          .blurPicUrl {
             width: 250px;
             height: 220px;
+            border-radius: 5px;
+            line-height: 220px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .playBtn {
+              display: none;
+            }
+            i {
+              color: #ec4141;
+              font-size: 30px;
+            }
+            &:hover .playBtn {
+              display: block;
+            }
+          }
+          .albumName {
+            color: #ffffff;
+            span {
+              margin: 0 10px;
+              color: #606666;
+            }
+          }
+          .publishTime {
+            color: #606666;
+            font-size: 14px;
           }
         }
         .album-third {
