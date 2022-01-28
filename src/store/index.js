@@ -109,12 +109,11 @@ export default new Vuex.Store({
       })
     },
     // 下载音乐
-    downloadMusic (state, songName) {
-      console.log('state', state);
+    downloadMusic (state, params) {
       axios({
         method: 'get',
         // url: `https:/xxx.com${url}`,
-        url: `${state.state.songSrc}`,
+        url: params.url,
         // url: 'http://m801.music.126.net/20210723112237/700849b3070ee6585a42a46d9b1409f3/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/8708798537/d7df/5b6b/20be/c45ae8acfea229a31cd7bc85ce136669.mp3',
         // 必须显式指明响应类型是一个Blob对象，这样生成二进制的数据，才能通过window.URL.createObjectURL进行创建成功
         responseType: 'blob',
@@ -129,7 +128,7 @@ export default new Vuex.Store({
         link.style.display = 'none';
         link.href = blobUrl;
         // 设置a标签的下载属性，设置文件名及格式，后缀名最好让后端在数据格式中返回
-        link.download = `${songName}.mp3`;
+        link.download = `${params.name}.mp3`;
         // 自触发click事件
         link.click();
         document.body.removeChild(link);

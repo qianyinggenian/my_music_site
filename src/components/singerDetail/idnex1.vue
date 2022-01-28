@@ -19,29 +19,57 @@
     </div>
     <div class="bottom">
       <div class="title">
-        <div :class="activeName === 'first' ? 'activeTitle' : ''" @click="handleChangeTabs('first')">专辑</div>
-        <div :class="activeName === 'second' ? 'activeTitle' : ''"  @click="handleChangeTabs('second')">MV</div>
-        <div :class="activeName === 'third' ? 'activeTitle' : ''"  @click="handleChangeTabs('third')">歌手详情</div>
-        <div :class="activeName === 'fourth' ? 'activeTitle' : ''"  @click="handleChangeTabs('fourth')">相似歌手</div>
-        <div class="model" v-if="activeName === 'first'">
+        <div>专辑</div>
+        <div>MV</div>
+        <div>歌手详情</div>
+        <div>相似歌手</div>
+      </div>
+      <div class="model" v-if="activeName === 'first'">
         <span title="大图模式" :class="modelType === 'first' ? 'activeModel' : ''" @click="handleChangeModel('first')">
           <i class="iconfont icon-dasuolvetuliebiao"></i>
         </span>
-          <span title="列表模式" :class="modelType === 'second' ? 'activeModel' : ''"  @click="handleChangeModel('second')">
+        <span title="列表模式" :class="modelType === 'second' ? 'activeModel' : ''"  @click="handleChangeModel('second')">
           <i class="iconfont icon-danlieliebiao"></i>
         </span>
-          <span title="图列模式" :class="modelType === 'third' ? 'activeModel' : ''" @click="handleChangeModel('third')">
+        <span title="图列模式" :class="modelType === 'third' ? 'activeModel' : ''" @click="handleChangeModel('third')">
           <i class="iconfont icon-liebiao"></i>
         </span>
+      </div>
+      <div class="album-first" v-if="modelType === 'first'">
+        <div class="album-container" v-for="(item,index) in hotAlbums" :key="index">
+          <img :src="item.blurPicUrl" alt="">
+          <div></div>
+          <div class="publishTime"></div>
         </div>
       </div>
-      <div class="content">
-        <div class="album" v-if="activeName === 'first'">
+      <div class="album-third" v-if="modelType === 'third'">
+        <div class="left">
+          <img src="./img/top50.png" alt="">
+        </div>
+        <div class="right">
+          <div class="header">热门50首<i class="el-icon-video-play"></i><i class="el-icon-folder-add"></i></div>
+          <div class="content">
+            <div class="hot" :class="(index + 1) % 2 === 1 ? 'active' : ''" v-for="(item,index) in hotSongs" :key="index">
+              <div class="content">
+                <div class="content-left">
+                  <span v-if="index >= 9">{{index + 1}}</span>
+                  <span v-else>0{{index + 1}}</span>
+                  <i class="el-icon-star-on" v-if="collect && collectIndex === index" @click="handleCollect(false,index)"></i>
+                  <i class="el-icon-star-off" v-else @click="handleCollect(true,index)"></i>
+                  <i class="iconfont icon-xiazai1" @click="handleDownload(item)"></i>
+                </div>
+                <div class="content-middle">{{item.name}}</div>
+                <div class="content-right">{{item.dt}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <el-tabs v-if="false" v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="专辑" name="first">
           <div class="album-first" v-if="modelType === 'first'">
             <div class="album-container" v-for="(item,index) in hotAlbums" :key="index">
-              <div>
-                <img :src="item.blurPicUrl" alt="">
-              </div>
+              <img :src="item.blurPicUrl" alt="">
               <div></div>
               <div class="publishTime"></div>
             </div>
@@ -52,7 +80,8 @@
             </div>
             <div class="right">
               <div class="header">热门50首<i class="el-icon-video-play"></i><i class="el-icon-folder-add"></i></div>
-              <div class="hot" :class="(index + 1) % 2 === 1 ? 'active' : ''" v-for="(item,index) in hotSongs" :key="index">
+              <div class="content">
+                <div class="hot" :class="(index + 1) % 2 === 1 ? 'active' : ''" v-for="(item,index) in hotSongs" :key="index">
                   <div class="content">
                     <div class="content-left">
                       <span v-if="index >= 9">{{index + 1}}</span>
@@ -65,13 +94,14 @@
                     <div class="content-right">{{item.dt}}</div>
                   </div>
                 </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="MV" v-if="activeName === 'second'"></div>
-        <div class="detail" v-if="activeName === 'third'"></div>
-        <div class="same" v-if="activeName === 'fourth'"></div>
-      </div>
+        </el-tab-pane>
+        <el-tab-pane label="MV" name="second">MV</el-tab-pane>
+        <el-tab-pane label="歌手详情" name="third">歌手详情</el-tab-pane>
+        <el-tab-pane label="相似歌手" name="fourth">相似歌手</el-tab-pane>
+      </el-tabs>
     </div>
   </div>
 </template>
@@ -111,7 +141,7 @@
        * @Description 获取歌手详情信息
        * @author wangkangzhang
        * @date 2022/1/27
-      */
+       */
       async getSingerInfo () {
         const { data } = await this.$axios.get('/artist/detail', {
           params: {
@@ -126,7 +156,7 @@
        * @Description 获取歌手描述
        * @author wangkangzhang
        * @date 2022/1/27
-      */
+       */
       async getSingerDesc () {
         const { data } = await this.$axios.get('/artist/desc', {
           params: {
@@ -138,7 +168,7 @@
        * @Description 获取歌手 mv
        * @author wangkangzhang
        * @date 2022/1/27
-      */
+       */
       async getSingerMv () {
         const { data } = await this.$axios.get('/artist/mv', {
           params: {
@@ -150,7 +180,7 @@
        * @Description 获取歌手单曲
        * @author wangkangzhang
        * @date 2022/1/27
-      */
+       */
       async getSingerArtists () {
         const { data } = await this.$axios.get('/artists', {
           params: {
@@ -169,7 +199,7 @@
        * @Description 获取歌手专辑
        * @author wangkangzhang
        * @date 2022/1/27
-      */
+       */
       async getSingerAlbum () {
         const { data } = await this.$axios.get('/artist/album', {
           params: {
@@ -185,7 +215,7 @@
        * @Description 获取相似歌手
        * @author wangkangzhang
        * @date 2022/1/27
-      */
+       */
       async getSingerSame () {
         const { data } = await this.$axios.get('/simi/artist', {
           params: {
@@ -197,7 +227,7 @@
        * @Description 专辑显示模式
        * @author wangkangzhang
        * @date 2022/1/28
-      */
+       */
       handleChangeModel (val) {
         console.log(val);
         this.modelType = val;
@@ -207,15 +237,13 @@
        * @Description
        * @author wangkangzhang
        * @date 2022/1/27
-      */
-      handleChangeTabs (val) {
-        this.activeName = val;
-      },
+       */
+      handleClick () {},
       /**
        * @Description 是否收藏热门歌曲
        * @author wangkangzhang
        * @date 2022/1/27
-      */
+       */
       handleCollect (val,index) {
         this.collect = val;
         this.collectIndex = index;
@@ -224,7 +252,7 @@
        * @Description 下载
        * @author wangkangzhang
        * @date 2022/1/27
-      */
+       */
       async handleDownload (params) {
         const { data } = await this.$axios.get('/song/url', {
           params: {
@@ -245,68 +273,148 @@
 </script>
 
 <style lang="less" scoped>
-.singer-container {
-  height: calc(100vh - 160px);
-  width: 100%;
-  overflow-y: auto;
-  background-color: #2b2b2b;
-  .top {
-    padding: 10px;
-    height: 180px;
-    width: calc(100% - 20px);
-    display: flex;
-    border-radius: 5px 5px 0 0;
-    .left {
-      height: 100%;
-      width: 180px;
-      img {
+  .singer-container {
+    height: 100%;
+    width: 100%;
+    .top {
+      padding: 10px;
+      height: 180px;
+      width: calc(100% - 20px);
+      display: flex;
+      background-color: #2b2b2b;
+      border-radius: 5px 5px 0 0;
+      .left {
         height: 100%;
         width: 180px;
-        border-radius: 5px;
-      }
-    }
-    .right {
-      margin-left: 10px;
-      font-size: 20px;
-      color: #ffffff;
-      div {
-        margin: 5px 0;
-      }
-      .type {
-        display: flex;
-        font-size: 18px;
-        span {
-          margin: 0 10px;
+        img {
+          height: 100%;
+          width: 180px;
+          border-radius: 5px;
         }
       }
-      .collect {
-        border: 1px solid #ffffff;
-        width: 100px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      .right {
+        margin-left: 10px;
+        font-size: 20px;
+        color: #ffffff;
+        div {
+          margin: 5px 0;
+        }
+        .type {
+          display: flex;
+          font-size: 18px;
+          span {
+            margin: 0 10px;
+          }
+        }
+        .collect {
+          border: 1px solid #ffffff;
+          width: 100px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 30px;
+          border-radius: 15px;
+          i {
+            margin-right: 10px;
+          }
+        }
+      }
+    }
+    .bottom {
+      padding: 10px;
+      height: calc(100% - 220px);
+      width: calc(100% - 20px);
+      position: relative;
+      /*overflow-y: auto;*/
+      background-color: #2b2b2b;
+      ::v-deep .el-tabs__item {
+        color: #ffffff !important;
+      }
+      ::v-deep.el-tabs__active-bar {
+        background-color: #ec4141 !important;
+      }
+      .title {
+        background-color: #ec4141;
         height: 30px;
-        border-radius: 15px;
-        i {
-          margin-right: 10px;
+        line-height: 30px;
+        display: flex;
+      }
+      .album-third {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        .left {
+          width: 200px;
+          img {
+            width: 145px;
+            height: 145px;
+            border-radius: 5px;
+          }
+        }
+        .right {
+          width: 100%;
+          height: 500px;
+          padding: 0 10px;
+          .header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            i {
+              margin: 10px;
+              color: #ec4141;
+            }
+          }
+          .content {
+            height: calc(100% - 50px);
+            overflow-y: auto;
+          }
+          .hot {
+            .content {
+              display: flex;
+              line-height: 30px;
+              width: 100%;
+              height: 30px;
+              margin: 5px 0;
+              color: #555555;
+              .content-left {
+                width: 100px;
+                color: #555555;
+                padding: 0 10px;
+                i {
+                  margin: 0 10px;
+                }
+              }
+              .content-middle {
+                width: calc(100% - 250px);
+                color: #ffffff;
+              }
+              .content-right {
+                width: 150px;
+              }
+            }
+            &:hover .content {
+              background-color: #373737;
+            }
+          }
+          .active {
+            background-color: #2e2e2e;
+          }
         }
       }
-    }
-  }
-  .bottom {
-    padding: 0 10px;
-    height: calc(100% - 180px);
-    width: calc(100% - 20px);
-    position: relative;
-    .title {
-      height: 30px;
-      line-height: 30px;
-      display: flex;
-      color: #ffffff;
-      cursor: pointer;
-      margin-bottom: 5px;
-      div {
-        margin: 0 10px;
+      .album-first {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        overflow-y: auto;
+        .album-container {
+          width: 260px;
+          height: 310px;
+          img {
+            width: 250px;
+            height: 220px;
+          }
+        }
       }
       .model {
         height: 25px;
@@ -327,93 +435,11 @@
           padding: 5px;
         }
       }
-    }
-    .activeModel {
-      background-color: #5f5f5f;
-      color: #ffffff;
-    }
-    .activeTitle {
-      padding-bottom: 2px;
-      border-bottom: 2px solid red;
-    }
-    .content {
-      overflow-y: auto;
-      .album {
-        .album-first {
-          display: flex;
-          flex-wrap: wrap;
-          height: 100%;
-          width: 100%;
-        }
-        .album-container {
-          width: 260px;
-          height: 310px;
-          img {
-            width: 250px;
-            height: 220px;
-          }
-        }
-        .album-third {
-          height: 100%;
-          width: 100%;
-          display: flex;
-          .left {
-            width: 200px;
-            img {
-              width: 145px;
-              height: 145px;
-              border-radius: 5px;
-            }
-          }
-          .right {
-            width: 100%;
-            /*height: 500px;*/
-            padding: 0 10px;
-            .header {
-              font-size: 20px;
-              font-weight: bold;
-              color: #ffffff;
-              i {
-                margin: 10px;
-                color: #ec4141;
-              }
-            }
-            .hot {
-              .content {
-                display: flex;
-                line-height: 30px;
-                width: 100%;
-                height: 30px;
-                margin: 5px 0;
-                color: #555555;
-                .content-left {
-                  width: 100px;
-                  color: #555555;
-                  padding: 0 10px;
-                  i {
-                    margin: 0 10px;
-                  }
-                }
-                .content-middle {
-                  width: calc(100% - 250px);
-                  color: #ffffff;
-                }
-                .content-right {
-                  width: 150px;
-                }
-              }
-              &:hover .content {
-                background-color: #373737;
-              }
-            }
-            .active {
-              background-color: #2e2e2e;
-            }
-          }
-        }
+      .activeModel {
+        background-color: #5f5f5f;
+        color: #ffffff;
       }
     }
   }
-}
 
 </style>

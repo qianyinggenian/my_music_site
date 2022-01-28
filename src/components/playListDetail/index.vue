@@ -83,7 +83,7 @@
               >
                 <template slot-scope="scope">
                   <i class="icon iconfont icon-shoucang Icon"></i>
-                  <i class="icon iconfont icon-xiazai Icon"></i>
+                  <i class="icon iconfont icon-xiazai Icon" @click="download(scope.row)"></i>
                 </template>
               </el-table-column>
               <el-table-column
@@ -187,6 +187,21 @@
     mounted() {
     },
     methods: {
+      async download (row) {
+        const { data } = await this.$axios.get('/song/url', {
+          params: {
+            // 获取的数据量
+            id: row.id
+          },
+        });
+        if (data.code === 200) {
+          if (data.data[0].url) {
+            await  this.$store.dispatch('downloadMusic', {url: data.data[0].url, name: row.name});
+          } else {
+            this.$message.error('抱歉，该歌曲暂时不能下载！');
+          }
+        }
+      },
       // 双击播放
       cellDblclick (row, column, cell, event) {
         this.$store.dispatch('getSongUrlFn', row.id);
@@ -458,6 +473,7 @@
     }
     .Icon {
       margin: 0 5px;
+      cursor: pointer;
     }
     /deep/ .el-tabs__content {
       overflow: hidden !important;

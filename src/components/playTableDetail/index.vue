@@ -89,8 +89,6 @@
     },
     methods: {
       async fn (row) {
-        await this.$store.dispatch('getSongUrlFn', row.id);
-        await  this.$store.dispatch('downloadMusic', row.name);
       },
       // 自定义索引
       indexMethod(index) {
