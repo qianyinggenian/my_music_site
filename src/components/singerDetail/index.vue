@@ -38,7 +38,7 @@
       <div class="content">
         <div class="album" v-if="activeName === 'first'">
           <div class="album-first" v-if="modelType === 'first'">
-            <div class="album-container" v-for="(item,index) in hotAlbums" :key="index">
+            <div class="album-container" v-for="(item,index) in hotAlbums" :key="index" @click="handleAlbumDetail(item.id)">
               <div class="blurPicUrl" :style="{background: 'url(' + item.blurPicUrl +')', backgroundSize:'cover'}">
                 <div class="playBtn"><i class="el-icon-video-play "></i></div>
               </div>
@@ -182,6 +182,14 @@
             return val;
           });
         }
+      },
+      /**
+       * @Description
+       * @author wangkangzhang
+       * @date 2022/1/29
+      */
+      handleAlbumDetail (id) {
+        this.$router.push(`/albumDetail?id=${id}`);
       },
       /**
        * @Description 获取相似歌手
