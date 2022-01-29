@@ -55,7 +55,7 @@
       </div>
       <div class="middle">
         <div class="container" v-for="(item,index) in artists" :key="index">
-          <div class="img" :style="{background: 'url(' + item.img1v1Url +')', backgroundSize:'cover'}" @click="singerDetailFn(item.id)">
+          <div class="img" :style="{background: 'url(' + item.img1v1Url +')', backgroundSize:'contain'}" @click="singerDetailFn(item.id)">
           </div>
           <div class="name">
             <div class="username" :title="item.name" @click="singerDetailFn(item.id)">{{item.name}}</div>
