@@ -71,7 +71,11 @@
         <div class="MV" v-if="activeName === 'second'">
           <div class="content" v-for="(item,index) in mvs" :key="index" @click="handleMvDetail(item.id)">
             <div class="imgurl" :style="{background: 'url(' + item.imgurl +')', backgroundSize:'cover'}">
-              <div class="playBtn"><i class="el-icon-video-play "></i></div>
+              <div class="playCount"><i class="el-icon-video-play "></i>
+              <span v-if="item.playCount > 100000">{{parseInt((item.playCount)/10000)}}万</span>
+              <span v-else>{{item.playCount}}</span>
+              </div>
+              <div class="duration">{{item.duration}}</div>
             </div>
             <div class="mvName" :title="item.name">{{item.name}}</div>
           </div>
@@ -166,7 +170,10 @@
           },
         });
         if (data.code === 200) {
-          this.mvs = data.mvs;
+          this.mvs = data.mvs.map(val => {
+            val.duration = formatDuration(val.duration);
+            return val;
+          });
         }
       },
       /**
@@ -507,10 +514,27 @@
         width: 320px;
         height: 220px;
         margin: 0 5px;
+        cursor: pointer;
         .imgurl {
           height: 180px;
           width: 100%;
           border-radius: 5px;
+          position: relative;
+          .playCount {
+            color: #ffffff;
+            position: absolute;
+            top: 2px;
+            right: 5px;
+            i {
+              color: #ec4141;
+            }
+          }
+          .duration {
+            color: #ffffff;
+            position: absolute;
+            bottom: 2px;
+            right: 5px;
+          }
         }
         .mvName {
           overflow:hidden;
