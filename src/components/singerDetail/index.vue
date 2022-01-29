@@ -6,7 +6,7 @@
       </div>
       <div class="right">
         <div class="name">{{artist.name}}</div>
-        <div class="alias">{{artist.alias[0]}}</div>
+        <div class="alias">{{alias}}</div>
         <div class="collect">
           <i class="el-icon-folder-add"></i> 收藏
         </div>
@@ -68,8 +68,20 @@
             </div>
           </div>
         </div>
-        <div class="MV" v-if="activeName === 'second'"></div>
-        <div class="detail" v-if="activeName === 'third'"></div>
+        <div class="MV" v-if="activeName === 'second'">
+          <div class="content" v-for="(item,index) in mvs" :key="index" @click="handleMvDetail(item.id)">
+            <div class="imgurl" :style="{background: 'url(' + item.imgurl +')', backgroundSize:'cover'}">
+              <div class="playBtn"><i class="el-icon-video-play "></i></div>
+            </div>
+            <div class="mvName" :title="item.name">{{item.name}}</div>
+          </div>
+        </div>
+        <div class="detail" v-if="activeName === 'third'">
+          <div class="singerDetail" v-for="(item, index) in introduction" :key="index">
+            <div class="ti">{{item.ti}}</div>
+            <div class="txt">{{item.txt}}</div>
+          </div>
+        </div>
         <div class="same" v-if="activeName === 'fourth'"></div>
       </div>
     </div>
@@ -88,7 +100,11 @@
         activeName: 'first',
         singerId: '',
         detail: {},
+        descDetail: {}, // 歌手描述详情
+        introduction: [],
         artist: {},
+        alias: [],
+        mvs: [],
         hotSongs: [], // 热门歌曲
         hotAlbums: [] // 热门专辑
       };
@@ -132,6 +148,10 @@
             id: this.singerId
           },
         });
+        if (data.code === 200) {
+          this.descDetail = data;
+          this.introduction = this.descDetail.introduction;
+        }
       },
       /**
        * @Description 获取歌手 mv
@@ -141,9 +161,13 @@
       async getSingerMv () {
         const { data } = await this.$axios.get('/artist/mv', {
           params: {
-            id: this.singerId
+            id: this.singerId,
+            limit: 1000
           },
         });
+        if (data.code === 200) {
+          this.mvs = data.mvs;
+        }
       },
       /**
        * @Description 获取歌手单曲
@@ -158,6 +182,7 @@
         });
         if (data.code === 200) {
           this.artist = data.artist;
+          this.alias = this.artist.alias[0];
           this.hotSongs = data.hotSongs.map(val => {
             val.dt = formatDuration(val.dt);
             return val;
@@ -184,13 +209,19 @@
         }
       },
       /**
-       * @Description
+       * @Description 专辑详情
        * @author wangkangzhang
        * @date 2022/1/29
       */
       handleAlbumDetail (id) {
         this.$router.push(`/albumDetail?id=${id}`);
       },
+      /**
+       * @Description MV详情
+       * @author wangkangzhang
+       * @date 2022/1/29
+      */
+      handleMvDetail (id) {},
       /**
        * @Description 获取相似歌手
        * @author wangkangzhang
@@ -211,7 +242,6 @@
       handleChangeModel (val) {
         console.log(val);
         this.modelType = val;
-        console.log(this.modelType);
       },
       /**
        * @Description
@@ -279,6 +309,10 @@
       margin-left: 10px;
       font-size: 20px;
       color: #ffffff;
+      .name {
+        font-weight: bolder;
+        font-size: 22px;
+      }
       div {
         margin: 5px 0;
       }
@@ -447,6 +481,46 @@
               background-color: #2e2e2e;
             }
           }
+        }
+      }
+    }
+    .detail {
+      margin: 10px 0;
+      .singerDetail {
+        margin: 10px 0;
+        .ti {
+          color: #ffffff;
+          margin: 10px;
+        }
+        .txt {
+          white-space: pre-line;
+          color: #878787;
+          margin: 10px 10px 10px 40px;
+        }
+      }
+    }
+    .MV {
+      margin: 10px 0;
+      display: flex;
+      flex-wrap: wrap;
+      .content {
+        width: 320px;
+        height: 220px;
+        margin: 0 5px;
+        .imgurl {
+          height: 180px;
+          width: 100%;
+          border-radius: 5px;
+        }
+        .mvName {
+          overflow:hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          -o-text-overflow:ellipsis;
+          color: #ffffff;
+          width: 320px;
+          font-size: 14px;
+          margin: 5px 0;
         }
       }
     }

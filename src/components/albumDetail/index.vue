@@ -114,8 +114,10 @@
             >
             </commentPlaylist>
           </el-tab-pane>
-          <el-tab-pane label="收藏者" name="third">
-            <subscribers :list="list"></subscribers>
+          <el-tab-pane label="专辑详情" name="third">
+            <div class="albumDescription">
+              {{albumList.description}}
+            </div>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -125,18 +127,11 @@
 
 <script>
   import tableMix from './tableMix';
-  import subscribers from '../subscribers';
   import commentPlaylist from '../commentPlaylist';
-  import axios from 'axios';
   import { formatDate } from "@/utils/util";
-  // import commonTable from '../commonTable';
-  // import Table from '../table';
   export default {
     name: "index",
     components: {
-      // commonTable,
-      // Table
-      subscribers,
       commentPlaylist
     },
     mixins: [
@@ -218,7 +213,6 @@
       async getAlbumDetailFn(id) {
         this.albumDetailId = id;
         // this.getPlaylistSubscribersFn();
-        // this.getCommentPlaylistFn();
         this.handleDynamic();
         const { data } = await this.$axios.get('/album', {
           params: {
@@ -233,6 +227,7 @@
             val.duration = this.formatDuration(val.dt);
             return val;
           });
+          this.getCommentPlaylistFn();
         }
       },
       /**
@@ -275,7 +270,7 @@
       },
       // 歌单评论
       async getCommentPlaylistFn () {
-        const { data } = await this.$axios.get('/comment/playlist', {
+        const { data } = await this.$axios.get('/comment/album', {
           params: {
             id: this.albumDetailId,
             limit: 100
@@ -466,5 +461,8 @@
     /deep/ .el-tabs__content {
       overflow: hidden !important;
     }
+  }
+  .albumDescription {
+    white-space: pre-line;
   }
 </style>
