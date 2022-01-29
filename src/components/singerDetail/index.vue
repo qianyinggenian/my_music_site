@@ -86,7 +86,16 @@
             <div class="txt">{{item.txt}}</div>
           </div>
         </div>
-        <div class="same" v-if="activeName === 'fourth'"></div>
+        <div class="same" v-if="activeName === 'fourth'">
+          <div class="same-first">
+            <div class="same-container" v-for="(item,index) in artists" :key="index" @click="singerDetailFn(item.id)">
+              <div class="blurPicUrl">
+                <img :src="item.img1v1Url" alt="">
+              </div>
+              <div class="name">{{item.name}}</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -108,17 +117,31 @@
         introduction: [],
         artist: {},
         alias: [],
+        artists: [], // 相似歌手
         mvs: [],
         hotSongs: [], // 热门歌曲
         hotAlbums: [] // 热门专辑
       };
     },
+
+    watch: {
+      '$route': {
+        handler (val) {
+          if (val && val.length > 0) {
+          }
+          this.modelType= 'third';
+          this.activeName = 'first';
+          this.getInfo();
+        },
+        immediate: true
+      }
+    },
     mounted () {
-      this.singerId = this.$route.query.id;
       this.getInfo();
     },
     methods: {
       getInfo () {
+        this.singerId = this.$route.query.id;
         this.getSingerInfo();
         this.getSingerDesc();
         this.getSingerMv();
@@ -240,6 +263,10 @@
             id: this.singerId
           },
         });
+        if (data.code === 200) {
+          this.artists = data.artists;
+          console.log(this.artists);
+        }
       },
       /**
        * @Description 专辑显示模式
@@ -286,6 +313,14 @@
             this.$message.error('抱歉，该歌曲暂时不能下载！');
           }
         }
+      },
+      /**
+       * @Description 歌手详情
+       * @author wangkangzhang
+       * @date 2022/1/27
+       */
+      singerDetailFn (id) {
+        this.$router.push(`/singerDetail?id=${id}`);
       }
     }
   }
@@ -545,6 +580,46 @@
           width: 320px;
           font-size: 14px;
           margin: 5px 0;
+        }
+      }
+    }
+    .same {
+      margin: 10px 0;
+      .same-first {
+        display: flex;
+        flex-wrap: wrap;
+        height: 100%;
+        width: 100%;
+        cursor: pointer;
+      }
+      .same-container {
+        width: 320px;
+        height: 345px;
+        margin: 0 5px;
+        .blurPicUrl {
+          width: 100%;
+          height: 315px;
+          border-radius: 5px;
+          line-height: 220px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 5px;
+          }
+        }
+        .name {
+          color: #ffffff;
+          span {
+            margin: 0 10px;
+            color: #606666;
+          }
+        }
+        .publishTime {
+          color: #606666;
+          font-size: 14px;
         }
       }
     }
