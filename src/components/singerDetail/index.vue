@@ -46,6 +46,17 @@
               <div class="publishTime">发布时间：{{item.publishTime}}</div>
             </div>
           </div>
+          <div class="album-second" v-if="modelType === 'second'">
+            <div class="content" :class="(index + 1) % 2 === 1 ? 'active' : ''" v-for="(item,index) in hotAlbums" :key="index" >
+              <div class="album-container">
+                <div class="blurPicUrl" :style="{background: 'url(' + item.blurPicUrl +')', backgroundSize:'cover'}" @click="handleAlbumDetail(item.id)">
+                </div>
+                <div class="albumName" @click="handleAlbumDetail(item.id)">{{item.name}}<span>{{item.alias[0]}}</span></div>
+                <div class="num">{{item.size}}首</div>
+                <div class="publishTime">发行时间：{{item.publishTime}}</div>
+              </div>
+            </div>
+          </div>
           <div class="album-third" v-if="modelType === 'third'">
             <div class="left">
               <img src="./img/top50.png" alt="">
@@ -422,6 +433,9 @@
       padding-bottom: 2px;
       border-bottom: 2px solid red;
     }
+    .active {
+      background-color: #2e2e2e;
+    }
     .content {
       overflow-y: auto;
       .album {
@@ -466,6 +480,43 @@
             font-size: 14px;
           }
         }
+        .album-second {
+          height: 100%;
+          width: 100%;
+          .content {
+            .album-container {
+              height: 80px;
+              width: calc(100% - 10px);
+              display: flex;
+              margin: 0 5px;
+              align-items: center;
+              .blurPicUrl {
+                height: 60px;
+                width: 60px;
+                border-radius: 5px;
+                cursor: pointer;
+              }
+              .albumName {
+                margin-left: 10px;
+                cursor: pointer;
+                width: calc(70% - 60px);
+              }
+              .num {
+                width: 10%;
+                color: #606666;
+              }
+              .publishTime {
+                width: 20%;
+                color: #606666;
+                font-size: 14px;
+              }
+
+            }
+            &:hover .album-container {
+              background-color: #373737;
+            }
+          }
+        }
         .album-third {
           height: 100%;
           width: 100%;
@@ -480,7 +531,6 @@
           }
           .right {
             width: 100%;
-            /*height: 500px;*/
             padding: 0 10px;
             .header {
               font-size: 20px;
@@ -518,9 +568,6 @@
               &:hover .content {
                 background-color: #373737;
               }
-            }
-            .active {
-              background-color: #2e2e2e;
             }
           }
         }
