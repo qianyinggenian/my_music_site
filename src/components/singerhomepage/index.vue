@@ -15,7 +15,7 @@
             <i class="el-icon-female" v-else></i>
           </div>
           <div class="tool-right">
-            <div class="div"> <i class="el-icon-microphone"></i> 歌手页</div>
+            <div class="div" @click="singerDetailFn"> <i class="el-icon-microphone"></i> 歌手页</div>
             <div class="div"> <i class="el-icon-message"></i> 发私信</div>
             <div class="div"> <i class="el-icon-plus"></i> 关注</div>
             <div class="more"> <i class="el-icon-more"></i></div>
@@ -159,18 +159,11 @@
         immediate: true
       }
     },
-    mounted () {
-      // this.getInfo();
-    },
     methods: {
       getInfo () {
         this.singerId = this.$route.query.id;
         this.getSingerInfo();
         this.getSingerDesc();
-        // this.getSingerMv();
-        // this.getSingerArtists();
-        // this.getSingerAlbum();
-        // this.getSingerSame();
       },
       /**
        * @Description 获取歌手详情信息
@@ -187,8 +180,6 @@
           this.detail = data.data;
           this.user = this.detail.user;
           this.identify = this.detail.identify;
-          console.log(this.user);
-          console.log(this.detail);
         }
       },
       /**
@@ -208,93 +199,11 @@
         }
       },
       /**
-       * @Description 获取歌手 mv
-       * @author wangkangzhang
-       * @date 2022/1/27
-      */
-      async getSingerMv () {
-        const { data } = await this.$axios.get('/artist/mv', {
-          params: {
-            id: this.singerId,
-            limit: 1000
-          },
-        });
-        if (data.code === 200) {
-          this.mvs = data.mvs.map(val => {
-            val.duration = formatDuration(val.duration);
-            return val;
-          });
-        }
-      },
-      /**
-       * @Description 获取歌手单曲
-       * @author wangkangzhang
-       * @date 2022/1/27
-      */
-      async getSingerArtists () {
-        const { data } = await this.$axios.get('/artists', {
-          params: {
-            id: this.singerId
-          },
-        });
-        if (data.code === 200) {
-          this.artist = data.artist;
-          this.alias = this.artist.alias[0];
-          this.hotSongs = data.hotSongs.map(val => {
-            val.dt = formatDuration(val.dt);
-            return val;
-          });
-        }
-      },
-      /**
-       * @Description 获取歌手专辑
-       * @author wangkangzhang
-       * @date 2022/1/27
-      */
-      async getSingerAlbum () {
-        const { data } = await this.$axios.get('/artist/album', {
-          params: {
-            id: this.singerId,
-            limit: 1000
-          },
-        });
-        if (data.code === 200) {
-          this.hotAlbums = data.hotAlbums.map(val => {
-            val.publishTime = formatDate(val.publishTime,'yyyy-MM-dd');
-            return val;
-          });
-        }
-      },
-      /**
-       * @Description 专辑详情
-       * @author wangkangzhang
-       * @date 2022/1/29
-      */
-      handleAlbumDetail (id) {
-        this.$router.push(`/albumDetail?id=${id}`);
-      },
-      /**
        * @Description MV详情
        * @author wangkangzhang
        * @date 2022/1/29
       */
       handleMvDetail (id) {},
-      /**
-       * @Description 获取相似歌手
-       * @author wangkangzhang
-       * @date 2022/1/27
-      */
-      async getSingerSame () {
-        const { data } = await this.$axios.get('/simi/artist', {
-          params: {
-            id: this.singerId
-          },
-        });
-        if (data.code === 200) {
-          this.artists = data.artists;
-          console.log(this.artists);
-        }
-      },
       /**
        * @Description 专辑显示模式
        * @author wangkangzhang
@@ -313,41 +222,12 @@
         this.activeName = val;
       },
       /**
-       * @Description 是否收藏热门歌曲
-       * @author wangkangzhang
-       * @date 2022/1/27
-      */
-      handleCollect (val,index) {
-        this.collect = val;
-        this.collectIndex = index;
-      },
-      /**
-       * @Description 下载
-       * @author wangkangzhang
-       * @date 2022/1/27
-      */
-      async handleDownload (params) {
-        const { data } = await this.$axios.get('/song/url', {
-          params: {
-            // 获取的数据量
-            id: params.id
-          },
-        });
-        if (data.code === 200) {
-          if (data.data[0].url) {
-            await  this.$store.dispatch('downloadMusic', {url: data.data[0].url, name: params.name});
-          } else {
-            this.$message.error('抱歉，该歌曲暂时不能下载！');
-          }
-        }
-      },
-      /**
        * @Description 歌手详情
        * @author wangkangzhang
        * @date 2022/1/27
        */
       singerDetailFn (id) {
-        this.$router.push(`/singerDetail?id=${id}`);
+        this.$router.push(`/singerDetail?id=${this.singerId}`);
       }
     }
   }
