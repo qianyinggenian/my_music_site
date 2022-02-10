@@ -7,8 +7,13 @@
       <div class="right">
         <div class="name">{{artist.name}}</div>
         <div class="alias">{{alias}}</div>
-        <div class="collect">
-          <i class="el-icon-folder-add"></i> 收藏
+        <div class="tool">
+          <div class="collect">
+            <i class="el-icon-folder-add"></i> 收藏
+          </div>
+          <div class="collect" v-if="artist.accountId" @click="handleClickHomepage">
+            <i class="el-icon-user-solid"></i> 个人主页
+          </div>
         </div>
         <div class="type">
           <span>单曲数：{{artist.musicSize}}</span>
@@ -332,6 +337,14 @@
        */
       singerDetailFn (id) {
         this.$router.push(`/singerDetail?id=${id}`);
+      },
+      /**
+       * @Description 歌手个人主页
+       * @author wangkangzhang
+       * @date 2022/2/10
+      */
+      handleClickHomepage() {
+        this.$router.push(`/singerhomepage?id=${this.singerId}`);
       }
     }
   }
@@ -376,14 +389,20 @@
           margin: 0 10px;
         }
       }
+      .tool {
+        display: flex;
+        width: 300px;
+      }
       .collect {
         border: 1px solid #ffffff;
-        width: 100px;
+        width: 140px;
         display: flex;
+        margin: 0 10px;
         justify-content: center;
         align-items: center;
         height: 30px;
         border-radius: 15px;
+        cursor: pointer;
         i {
           margin-right: 10px;
         }

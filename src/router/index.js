@@ -13,6 +13,7 @@ import recommend from '../components/recommend/index'
 import singer from '../components/singer/index'
 import songDetail from '../components/songDetail/index'
 import singerDetail from '../components/singerDetail/index'
+import singerhomepage from '../components/singerhomepage/index'
 import albumDetail from '../components/albumDetail/index'
 import songSheet from '../components/songSheet/index'
 import mainContent from '../components/mainContent/index';
@@ -73,6 +74,10 @@ const router = new VueRouter({
     {
       path: '/singerDetail',
       component: singerDetail
+    },
+    {
+      path: '/singerhomepage',
+      component: singerhomepage
     },
     {
       path: '/albumDetail',

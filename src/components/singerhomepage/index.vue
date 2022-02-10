@@ -2,13 +2,24 @@
   <div class="singer-container">
     <div class="top">
       <div class="left">
-        <img :src="artist.img1v1Url" alt="">
+        <img :src="user.avatarUrl" alt="">
       </div>
       <div class="right">
-        <div class="name">{{artist.name}}</div>
-        <div class="alias">{{alias}}</div>
-        <div class="collect">
-          <i class="el-icon-folder-add"></i> 收藏
+        <div class="name">{{user.nickname}}</div>
+        <div class="tool">
+          <div class="imageDesc">
+            <img :src="identify.imageUrl"><span>{{identify.imageDesc}}</span>
+          </div>
+          <div class="gender" :class="user.gender === 1 ? 'gender1' : 'gender2'">
+            <i class="el-icon-male" v-if="user.gender === 1"></i>
+            <i class="el-icon-female" v-else></i>
+          </div>
+          <div class="tool-right">
+            <div class="div"> <i class="el-icon-microphone"></i> 歌手页</div>
+            <div class="div"> <i class="el-icon-message"></i> 发私信</div>
+            <div class="div"> <i class="el-icon-plus"></i> 关注</div>
+            <div class="more"> <i class="el-icon-more"></i></div>
+          </div>
         </div>
         <div class="type">
           <span>单曲数：{{artist.musicSize}}</span>
@@ -58,7 +69,7 @@
           </div>
           <div class="album-third" v-if="modelType === 'third'">
             <div class="left">
-              <img src="./img/top50.png" alt="">
+<!--              <img src="./img/top50.png" alt="">-->
             </div>
             <div class="right">
               <div class="header">热门50首<i class="el-icon-video-play"></i><i class="el-icon-folder-add"></i></div>
@@ -122,6 +133,8 @@
         collect: false,
         activeName: 'first',
         singerId: '',
+        user: {},
+        identify: {},
         detail: {},
         descDetail: {}, // 歌手描述详情
         introduction: [],
@@ -147,17 +160,17 @@
       }
     },
     mounted () {
-      this.getInfo();
+      // this.getInfo();
     },
     methods: {
       getInfo () {
         this.singerId = this.$route.query.id;
         this.getSingerInfo();
         this.getSingerDesc();
-        this.getSingerMv();
-        this.getSingerArtists();
-        this.getSingerAlbum();
-        this.getSingerSame();
+        // this.getSingerMv();
+        // this.getSingerArtists();
+        // this.getSingerAlbum();
+        // this.getSingerSame();
       },
       /**
        * @Description 获取歌手详情信息
@@ -172,6 +185,10 @@
         });
         if (data.code === 200) {
           this.detail = data.data;
+          this.user = this.detail.user;
+          this.identify = this.detail.identify;
+          console.log(this.user);
+          console.log(this.detail);
         }
       },
       /**
@@ -354,13 +371,14 @@
       img {
         height: 100%;
         width: 180px;
-        border-radius: 5px;
+        border-radius: 50%;
       }
     }
     .right {
       margin-left: 10px;
       font-size: 20px;
       color: #ffffff;
+      width: calc(100% - 180px);
       .name {
         font-weight: bolder;
         font-size: 22px;
@@ -375,16 +393,87 @@
           margin: 0 10px;
         }
       }
-      .collect {
+      .tool {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #434343;
+        width: 100%;
+        height: 30px;
+        padding-bottom: 5px;
+        position: relative;
+      }
+      .imageDesc {
         border: 1px solid #ffffff;
-        width: 100px;
+        /*width: 80px;*/
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        border-radius: 15px;
+        font-size: 16px;
+        background-color: #fde4e2;
+        img {
+          height: 15px;
+          width: 15px;
+          margin: 0 5px 0 1px;
+        }
+        span {
+          color: #ec4141;
+          padding-right: 5px;
+        }
+      }
+      .gender {
+        width: 20px;
+        height: 20px;
+        border-radius: 10px;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 30px;
-        border-radius: 15px;
-        i {
-          margin-right: 10px;
+        margin-left: 10px;
+      }
+      .gender1 {
+        color: #3081a3;
+        font-size: 16px;
+        background-color: #2b5e6a;
+      }
+      .gender2 {
+        color: #ae3669;
+        font-size: 16px;
+        background-color: #6a3853;
+      }
+      .tool-right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        right: 0;
+        .div {
+          border: 1px solid #434343;
+          display: flex;
+          margin: 0 5px;
+          justify-content: center;
+          align-items: center;
+          height: 20px;
+          font-size: 16px;
+          border-radius: 15px;
+          padding: 5px 5px;
+          cursor: pointer;
+          i {
+            margin-right: 10px;
+          }
+        }
+        ::v-deep .el-icon-plus {
+          color: #ec4141;
+        }
+        .more {
+          border: 1px solid #434343;
+          height: 30px;
+          width: 30px;
+          display: flex;
+          font-size: 16px;
+          color: #434343;
+          justify-content: center;
+          align-items: center;
+          border-radius: 15px;
         }
       }
     }
